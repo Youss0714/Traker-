@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MetricCard } from "@/components/ui/metric-card";
 import { DashboardChart } from "@/components/ui/dashboard-chart";
 import { ActivityItem } from "@/components/ui/activity-item";
@@ -7,16 +7,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAppContext } from "@/lib/context/AppContext";
 import { formatCurrency } from "@/lib/utils/helpers";
+import { 
+  Popover, 
+  PopoverContent, 
+  PopoverTrigger 
+} from "@/components/ui/popover";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
   const { setActivePage } = useAppContext();
+  const [timeRange, setTimeRange] = useState("week");
+  const [filters, setFilters] = useState<string[]>([]);
   
   useEffect(() => {
     setActivePage('dashboard');
   }, [setActivePage]);
   
   const { data, isLoading, error } = useQuery({
-    queryKey: ['/api/dashboard'],
+    queryKey: ['/api/dashboard', timeRange, filters],
   });
   
   if (isLoading) {
@@ -98,13 +112,119 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-medium text-[#212121]">Tableau de Bord</h2>
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="h-8">
-            <span className="material-icons text-[#757575] text-sm mr-1">calendar_today</span>
-            <span>Cette semaine</span>
-          </Button>
-          <Button variant="outline" size="sm" className="h-8 px-2">
-            <span className="material-icons text-[#757575] text-sm">more_vert</span>
-          </Button>
+          {/* Sélecteur de période */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8">
+                <span className="material-icons text-[#757575] text-sm mr-1">calendar_today</span>
+                <span>
+                  {timeRange === "day" && "Aujourd'hui"}
+                  {timeRange === "week" && "Cette semaine"}
+                  {timeRange === "month" && "Ce mois"}
+                  {timeRange === "year" && "Cette année"}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTimeRange("day")}>
+                Aujourd'hui
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTimeRange("week")}>
+                Cette semaine
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTimeRange("month")}>
+                Ce mois
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTimeRange("year")}>
+                Cette année
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {/* Filtres */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 px-2 relative">
+                <span className="material-icons text-[#757575] text-sm">tune</span>
+                {filters.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+                    {filters.length}
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-60" align="end">
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm">Filtres</h4>
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="filter-sales" className="text-sm">Ventes</label>
+                    <input 
+                      type="checkbox" 
+                      id="filter-sales" 
+                      checked={filters.includes('sales')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFilters([...filters, 'sales']);
+                        } else {
+                          setFilters(filters.filter(f => f !== 'sales'));
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="filter-clients" className="text-sm">Clients</label>
+                    <input 
+                      type="checkbox" 
+                      id="filter-clients"
+                      checked={filters.includes('clients')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFilters([...filters, 'clients']);
+                        } else {
+                          setFilters(filters.filter(f => f !== 'clients'));
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="filter-inventory" className="text-sm">Inventaire</label>
+                    <input 
+                      type="checkbox" 
+                      id="filter-inventory"
+                      checked={filters.includes('inventory')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFilters([...filters, 'inventory']);
+                        } else {
+                          setFilters(filters.filter(f => f !== 'inventory'));
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex justify-between mt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setFilters([])}
+                  >
+                    Réinitialiser
+                  </Button>
+                  <Button 
+                    size="sm"
+                    onClick={() => {
+                      // Fermer le popover après l'application des filtres
+                      document.body.click();
+                    }}
+                  >
+                    Appliquer
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
