@@ -4,6 +4,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Sheet, 
+  SheetTrigger, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetClose 
+} from "@/components/ui/sheet";
 
 export default function AppHeader() {
   const [location, navigate] = useLocation();
@@ -68,7 +76,122 @@ export default function AppHeader() {
               arrow_back
             </span>
           ) : (
-            <span className="material-icons">menu</span>
+            <Sheet>
+              <SheetTrigger asChild>
+                <span className="material-icons cursor-pointer">menu</span>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-72">
+                <SheetHeader className="mb-6">
+                  <SheetTitle>gYS Menu</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col space-y-4">
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span className="material-icons text-white">person</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">Youssouf Sawadogo</p>
+                        <p className="text-sm text-gray-500">Administrateur</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/')}
+                      >
+                        <span className="material-icons mr-2">dashboard</span>
+                        Tableau de bord
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/inventory')}
+                      >
+                        <span className="material-icons mr-2">inventory_2</span>
+                        Inventaire
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/clients')}
+                      >
+                        <span className="material-icons mr-2">people</span>
+                        Clients
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/sales')}
+                      >
+                        <span className="material-icons mr-2">point_of_sale</span>
+                        Ventes
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/invoices')}
+                      >
+                        <span className="material-icons mr-2">receipt</span>
+                        Factures
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/reports')}
+                      >
+                        <span className="material-icons mr-2">bar_chart</span>
+                        Rapports
+                      </Button>
+                    </SheetClose>
+                  </div>
+                  
+                  <div className="border-t pt-4">
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/settings')}
+                      >
+                        <span className="material-icons mr-2">settings</span>
+                        Paramètres
+                      </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/profile')}
+                      >
+                        <span className="material-icons mr-2">person</span>
+                        Profil
+                      </Button>
+                    </SheetClose>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start text-red-500 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <span className="material-icons mr-2">logout</span>
+                      Déconnexion
+                    </Button>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           )}
           <h1 className="text-xl font-medium">{getTitle()}</h1>
         </div>
