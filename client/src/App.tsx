@@ -26,6 +26,13 @@ function Router() {
       <Route path="/add-sale" component={AddSale} />
       <Route path="/add-product" component={AddProduct} />
       <Route path="/add-client" component={AddClient} />
+      <Route path="/invoices" component={() => import("@/pages/invoices").then(mod => <mod.default />)} />
+      <Route path="/catalog" component={() => import("@/pages/catalog").then(mod => <mod.default />)} />
+      <Route path="/export" component={() => import("@/pages/export").then(mod => <mod.default />)} />
+      <Route path="/reports" component={() => import("@/pages/reports").then(mod => <mod.default />)} />
+      <Route path="/settings" component={() => import("@/pages/settings").then(mod => <mod.default />)} />
+      <Route path="/profile" component={() => import("@/pages/profile").then(mod => <mod.default />)} />
+      <Route path="/sync" component={() => import("@/pages/sync").then(mod => <mod.default />)} />
       <Route component={NotFound} />
     </Switch>
   );
