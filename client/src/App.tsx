@@ -13,6 +13,13 @@ import More from "@/pages/more";
 import AddSale from "@/pages/add-sale";
 import AddProduct from "@/pages/add-product";
 import AddClient from "@/pages/add-client";
+import Invoices from "@/pages/invoices";
+import Catalog from "@/pages/catalog";
+import Export from "@/pages/export";
+import Reports from "@/pages/reports";
+import Settings from "@/pages/settings";
+import Profile from "@/pages/profile";
+import Sync from "@/pages/sync";
 import { AppProvider } from "./lib/context/AppContext";
 
 function Router() {
@@ -26,13 +33,13 @@ function Router() {
       <Route path="/add-sale" component={AddSale} />
       <Route path="/add-product" component={AddProduct} />
       <Route path="/add-client" component={AddClient} />
-      <Route path="/invoices" component={() => import("@/pages/invoices").then(mod => <mod.default />)} />
-      <Route path="/catalog" component={() => import("@/pages/catalog").then(mod => <mod.default />)} />
-      <Route path="/export" component={() => import("@/pages/export").then(mod => <mod.default />)} />
-      <Route path="/reports" component={() => import("@/pages/reports").then(mod => <mod.default />)} />
-      <Route path="/settings" component={() => import("@/pages/settings").then(mod => <mod.default />)} />
-      <Route path="/profile" component={() => import("@/pages/profile").then(mod => <mod.default />)} />
-      <Route path="/sync" component={() => import("@/pages/sync").then(mod => <mod.default />)} />
+      <Route path="/invoices" component={Invoices} />
+      <Route path="/catalog" component={Catalog} />
+      <Route path="/export" component={Export} />
+      <Route path="/reports" component={Reports} />
+      <Route path="/settings" component={Settings} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/sync" component={Sync} />
       <Route component={NotFound} />
     </Switch>
   );
