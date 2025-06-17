@@ -32,27 +32,32 @@ export default function Categories() {
   });
 
   const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(insertCategorySchema),
     defaultValues: {
       name: "",
-      description: null,
+      description: "",
       isActive: true
     },
   });
 
   const createCategoryMutation = useMutation({
     mutationFn: async (category: CategoryFormValues) => {
-      console.log('Creating category with data:', category);
+      // Nettoyer les données avant envoi
+      const cleanData = {
+        name: category.name.trim(),
+        description: category.description || null,
+        isActive: true
+      };
+      console.log('Creating category with cleaned data:', cleanData);
+      
       const response = await fetch(`/api/categories`, {
         method: "POST",
-        body: JSON.stringify(category),
+        body: JSON.stringify(cleanData),
         headers: { "Content-Type": "application/json" },
       });
-      console.log('Response status:', response.status);
+      
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`Failed to create category: ${errorText}`);
+        throw new Error(`Erreur ${response.status}: ${errorText}`);
       }
       return response.json();
     },
@@ -134,6 +139,16 @@ export default function Categories() {
     console.log('Form submitted with data:', data);
     console.log('Editing category:', editingCategory);
     
+    // Validation simple
+    if (!data.name || data.name.trim().length === 0) {
+      toast({
+        title: "Erreur",
+        description: "Le nom de la catégorie est requis.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (editingCategory) {
       updateCategoryMutation.mutate({ id: editingCategory.id, category: data });
     } else {
@@ -211,14 +226,19 @@ export default function Categories() {
               Ajouter
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md" aria-describedby="dialog-description">
             <DialogHeader>
               <DialogTitle>
                 {editingCategory ? "Modifier la catégorie" : "Nouvelle catégorie"}
               </DialogTitle>
+              <div id="dialog-description" className="sr-only">
+                Formulaire pour {editingCategory ? "modifier" : "créer"} une catégorie
+              </div>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                console.log('Form validation errors:', errors);
+              })} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
