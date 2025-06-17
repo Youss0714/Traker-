@@ -18,19 +18,19 @@ interface MenuItemProps {
 
 const MenuItem = ({ icon, label, link, iconBgColor, iconTextColor, badge, onClick }: MenuItemProps) => {
   const content = (
-    <Card className="card hover:shadow-lg transition-all duration-200 cursor-pointer border-2 border-gray-100 hover:border-blue-200 bg-white">
-      <CardContent className="p-5 flex items-center">
-        <div className={`${iconBgColor} ${iconTextColor} p-4 rounded-2xl mr-5 shadow-md`}>
-          <span className="material-icons text-2xl font-bold">{icon}</span>
+    <Card className="card hover:shadow-lg transition-all duration-200 cursor-pointer border-3 border-gray-300 hover:border-blue-400 bg-white shadow-md">
+      <CardContent className="p-6 flex items-center">
+        <div className={`${iconBgColor} ${iconTextColor} p-5 rounded-2xl mr-6 shadow-lg border-2 border-gray-200`}>
+          <span className="material-icons text-3xl font-black">{icon}</span>
         </div>
-        <span className="flex-1 text-gray-900 font-semibold text-lg">{label}</span>
+        <span className="flex-1 text-black font-black text-2xl tracking-wide">{label}</span>
         {badge ? (
           <div className="flex items-center">
-            <span className={`text-sm px-4 py-2 ${badge.color} rounded-full mr-4 font-bold shadow-sm`}>{badge.label}</span>
-            <span className="material-icons text-gray-600 text-xl">chevron_right</span>
+            <span className={`text-sm px-4 py-2 ${badge.color} rounded-full mr-4 font-black shadow-md border border-gray-300`}>{badge.label}</span>
+            <span className="material-icons text-black text-2xl font-bold">chevron_right</span>
           </div>
         ) : (
-          <span className="material-icons text-gray-600 text-xl">chevron_right</span>
+          <span className="material-icons text-black text-2xl font-bold">chevron_right</span>
         )}
       </CardContent>
     </Card>
