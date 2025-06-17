@@ -18,19 +18,19 @@ interface MenuItemProps {
 
 const MenuItem = ({ icon, label, link, iconBgColor, iconTextColor, badge, onClick }: MenuItemProps) => {
   const content = (
-    <Card className="card hover:shadow-md transition-shadow cursor-pointer border border-gray-200 hover:border-gray-300">
-      <CardContent className="p-4 flex items-center">
-        <div className={`${iconBgColor} ${iconTextColor} p-3 rounded-xl mr-4 shadow-sm`}>
-          <span className="material-icons text-xl">{icon}</span>
+    <Card className="card hover:shadow-lg transition-all duration-200 cursor-pointer border-2 border-gray-100 hover:border-blue-200 bg-white">
+      <CardContent className="p-5 flex items-center">
+        <div className={`${iconBgColor} ${iconTextColor} p-4 rounded-2xl mr-5 shadow-md`}>
+          <span className="material-icons text-2xl font-bold">{icon}</span>
         </div>
-        <span className="flex-1 text-gray-800 font-medium text-base">{label}</span>
+        <span className="flex-1 text-gray-900 font-semibold text-lg">{label}</span>
         {badge ? (
           <div className="flex items-center">
-            <span className={`text-xs px-3 py-1 ${badge.color} rounded-full mr-3 font-medium`}>{badge.label}</span>
-            <span className="material-icons text-gray-400 text-lg">chevron_right</span>
+            <span className={`text-sm px-4 py-2 ${badge.color} rounded-full mr-4 font-bold shadow-sm`}>{badge.label}</span>
+            <span className="material-icons text-gray-600 text-xl">chevron_right</span>
           </div>
         ) : (
-          <span className="material-icons text-gray-400 text-lg">chevron_right</span>
+          <span className="material-icons text-gray-600 text-xl">chevron_right</span>
         )}
       </CardContent>
     </Card>
@@ -55,91 +55,91 @@ export default function More() {
   }, [setActivePage]);
 
   return (
-    <div className="p-6 space-y-8 bg-gray-50 min-h-screen">
-      <div className="bg-white p-6 rounded-lg shadow-sm">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Menu Administrateur</h2>
-        <p className="text-gray-600">Gérez votre application et accédez aux outils avancés</p>
+    <div className="p-4 space-y-6 bg-white min-h-screen">
+      <div className="bg-blue-600 text-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-2">Menu Administrateur</h2>
+        <p className="text-blue-100">Gérez votre application et accédez aux outils avancés</p>
       </div>
 
       {/* Menu Categories */}
       <div className="space-y-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-gray-700 text-sm uppercase font-semibold mb-4 tracking-wide">Gestion</h3>
-          <div className="space-y-3">
+        <div className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200">
+          <h3 className="text-gray-800 text-base uppercase font-bold mb-6 tracking-wider">📋 GESTION</h3>
+          <div className="space-y-4">
             <MenuItem 
               icon="receipt_long" 
               label="Factures" 
-              iconBgColor="bg-[#1976D2] bg-opacity-10" 
-              iconTextColor="text-[#1976D2]" 
+              iconBgColor="bg-blue-500" 
+              iconTextColor="text-white" 
               link="/invoices"
             />
             <MenuItem 
               icon="category" 
               label="Catalogue de produits" 
-              iconBgColor="bg-[#1976D2] bg-opacity-10" 
-              iconTextColor="text-[#1976D2]" 
+              iconBgColor="bg-blue-500" 
+              iconTextColor="text-white" 
               link="/catalog"
             />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-gray-700 text-sm uppercase font-semibold mb-4 tracking-wide">Exportation & Analyses</h3>
-          <div className="space-y-3">
+        <div className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200">
+          <h3 className="text-gray-800 text-base uppercase font-bold mb-6 tracking-wider">📊 EXPORTATION & ANALYSES</h3>
+          <div className="space-y-4">
             <MenuItem 
               icon="file_download" 
               label="Exporter les données" 
-              iconBgColor="bg-orange-100" 
-              iconTextColor="text-orange-600" 
+              iconBgColor="bg-orange-500" 
+              iconTextColor="text-white" 
               link="/export"
             />
             <MenuItem 
               icon="insert_chart" 
               label="Rapports & Statistiques" 
-              iconBgColor="bg-orange-100" 
-              iconTextColor="text-orange-600" 
+              iconBgColor="bg-orange-500" 
+              iconTextColor="text-white" 
               link="/reports"
             />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-gray-700 text-sm uppercase font-semibold mb-4 tracking-wide">Configuration</h3>
-          <div className="space-y-3">
+        <div className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200">
+          <h3 className="text-gray-800 text-base uppercase font-bold mb-6 tracking-wider">⚙️ CONFIGURATION</h3>
+          <div className="space-y-4">
             <MenuItem 
               icon="settings" 
               label="Paramètres généraux" 
-              iconBgColor="bg-gray-100" 
-              iconTextColor="text-gray-600" 
+              iconBgColor="bg-gray-600" 
+              iconTextColor="text-white" 
               link="/settings"
             />
             <MenuItem 
               icon="account_circle" 
               label="Profil utilisateur" 
-              iconBgColor="bg-gray-100" 
-              iconTextColor="text-gray-600" 
+              iconBgColor="bg-gray-600" 
+              iconTextColor="text-white" 
               link="/profile"
             />
             <MenuItem 
               icon="sync" 
               label="Synchronisation" 
-              iconBgColor="bg-green-100" 
-              iconTextColor="text-green-600" 
+              iconBgColor="bg-green-500" 
+              iconTextColor="text-white" 
               badge={{
                 label: "Activée",
-                color: "bg-green-100 text-green-700"
+                color: "bg-green-600 text-white"
               }}
               link="/sync"
             />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-400">
+        <div className="bg-red-50 p-6 rounded-xl shadow-md border-2 border-red-200">
           <MenuItem 
             icon="logout" 
             label="Déconnexion" 
-            iconBgColor="bg-red-100" 
-            iconTextColor="text-red-600" 
+            iconBgColor="bg-red-600" 
+            iconTextColor="text-white" 
             onClick={() => alert("Déconnexion...")}
           />
         </div>
