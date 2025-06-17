@@ -27,7 +27,7 @@ export default function Categories() {
     setActivePage('categories');
   }, [setActivePage]);
 
-  const { data: categories = [], isLoading, error } = useQuery({
+  const { data: categories = [], isLoading, error } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
   });
 
@@ -256,7 +256,7 @@ export default function Categories() {
       </div>
 
       <div className="grid gap-4">
-        {categories?.map((category: Category) => (
+        {categories.map((category: Category) => (
           <Card key={category.id}>
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
@@ -314,7 +314,7 @@ export default function Categories() {
         ))}
       </div>
 
-      {categories?.length === 0 && (
+      {categories.length === 0 && (
         <Card>
           <CardContent className="p-8 text-center">
             <span className="material-icons text-4xl text-gray-400 mb-4">category</span>
