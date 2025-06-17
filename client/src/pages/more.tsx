@@ -18,19 +18,19 @@ interface MenuItemProps {
 
 const MenuItem = ({ icon, label, link, iconBgColor, iconTextColor, badge, onClick }: MenuItemProps) => {
   const content = (
-    <Card className="card">
+    <Card className="card hover:shadow-md transition-shadow cursor-pointer border border-gray-200 hover:border-gray-300">
       <CardContent className="p-4 flex items-center">
-        <div className={`${iconBgColor} ${iconTextColor} p-2 rounded-lg mr-3`}>
-          <span className="material-icons">{icon}</span>
+        <div className={`${iconBgColor} ${iconTextColor} p-3 rounded-xl mr-4 shadow-sm`}>
+          <span className="material-icons text-xl">{icon}</span>
         </div>
-        <span className="flex-1 text-[#212121]">{label}</span>
+        <span className="flex-1 text-gray-800 font-medium text-base">{label}</span>
         {badge ? (
           <div className="flex items-center">
-            <span className={`text-xs px-2 py-0.5 ${badge.color} rounded-full mr-2`}>{badge.label}</span>
-            <span className="material-icons text-[#757575]">chevron_right</span>
+            <span className={`text-xs px-3 py-1 ${badge.color} rounded-full mr-3 font-medium`}>{badge.label}</span>
+            <span className="material-icons text-gray-400 text-lg">chevron_right</span>
           </div>
         ) : (
-          <span className="material-icons text-[#757575]">chevron_right</span>
+          <span className="material-icons text-gray-400 text-lg">chevron_right</span>
         )}
       </CardContent>
     </Card>
@@ -55,14 +55,17 @@ export default function More() {
   }, [setActivePage]);
 
   return (
-    <div className="p-4 space-y-6">
-      <h2 className="text-lg font-medium text-[#212121] mb-4">Plus</h2>
+    <div className="p-6 space-y-8 bg-gray-50 min-h-screen">
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Menu Administrateur</h2>
+        <p className="text-gray-600">Gérez votre application et accédez aux outils avancés</p>
+      </div>
 
       {/* Menu Categories */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-[#757575] text-xs uppercase font-medium mb-2">Gestion</h3>
-          <div className="space-y-2">
+      <div className="space-y-6">
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h3 className="text-gray-700 text-sm uppercase font-semibold mb-4 tracking-wide">Gestion</h3>
+          <div className="space-y-3">
             <MenuItem 
               icon="receipt_long" 
               label="Factures" 
@@ -80,63 +83,63 @@ export default function More() {
           </div>
         </div>
 
-        <div>
-          <h3 className="text-[#757575] text-xs uppercase font-medium mb-2">Exportation</h3>
-          <div className="space-y-2">
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h3 className="text-gray-700 text-sm uppercase font-semibold mb-4 tracking-wide">Exportation & Analyses</h3>
+          <div className="space-y-3">
             <MenuItem 
               icon="file_download" 
               label="Exporter les données" 
-              iconBgColor="bg-[#FF9800] bg-opacity-10" 
-              iconTextColor="text-[#FF9800]" 
+              iconBgColor="bg-orange-100" 
+              iconTextColor="text-orange-600" 
               link="/export"
             />
             <MenuItem 
               icon="insert_chart" 
-              label="Rapports" 
-              iconBgColor="bg-[#FF9800] bg-opacity-10" 
-              iconTextColor="text-[#FF9800]" 
+              label="Rapports & Statistiques" 
+              iconBgColor="bg-orange-100" 
+              iconTextColor="text-orange-600" 
               link="/reports"
             />
           </div>
         </div>
 
-        <div>
-          <h3 className="text-[#757575] text-xs uppercase font-medium mb-2">Paramètres</h3>
-          <div className="space-y-2">
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h3 className="text-gray-700 text-sm uppercase font-semibold mb-4 tracking-wide">Configuration</h3>
+          <div className="space-y-3">
             <MenuItem 
               icon="settings" 
               label="Paramètres généraux" 
-              iconBgColor="bg-[#757575] bg-opacity-10" 
-              iconTextColor="text-[#212121]" 
+              iconBgColor="bg-gray-100" 
+              iconTextColor="text-gray-600" 
               link="/settings"
             />
             <MenuItem 
               icon="account_circle" 
-              label="Profil" 
-              iconBgColor="bg-[#757575] bg-opacity-10" 
-              iconTextColor="text-[#212121]" 
+              label="Profil utilisateur" 
+              iconBgColor="bg-gray-100" 
+              iconTextColor="text-gray-600" 
               link="/profile"
             />
             <MenuItem 
               icon="sync" 
               label="Synchronisation" 
-              iconBgColor="bg-[#757575] bg-opacity-10" 
-              iconTextColor="text-[#212121]" 
+              iconBgColor="bg-green-100" 
+              iconTextColor="text-green-600" 
               badge={{
                 label: "Activée",
-                color: "bg-[#2E7D32] bg-opacity-10 text-[#2E7D32]"
+                color: "bg-green-100 text-green-700"
               }}
               link="/sync"
             />
           </div>
         </div>
 
-        <div className="pt-4">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-400">
           <MenuItem 
             icon="logout" 
             label="Déconnexion" 
-            iconBgColor="bg-[#D32F2F] bg-opacity-10" 
-            iconTextColor="text-[#D32F2F]" 
+            iconBgColor="bg-red-100" 
+            iconTextColor="text-red-600" 
             onClick={() => alert("Déconnexion...")}
           />
         </div>
