@@ -35,20 +35,24 @@ export default function Categories() {
     resolver: zodResolver(insertCategorySchema),
     defaultValues: {
       name: "",
-      description: "",
+      description: null,
       isActive: true
     },
   });
 
   const createCategoryMutation = useMutation({
     mutationFn: async (category: CategoryFormValues) => {
+      console.log('Creating category with data:', category);
       const response = await fetch(`/api/categories`, {
         method: "POST",
         body: JSON.stringify(category),
         headers: { "Content-Type": "application/json" },
       });
+      console.log('Response status:', response.status);
       if (!response.ok) {
-        throw new Error('Failed to create category');
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to create category: ${errorText}`);
       }
       return response.json();
     },
@@ -127,6 +131,9 @@ export default function Categories() {
   });
 
   const onSubmit = (data: CategoryFormValues) => {
+    console.log('Form submitted with data:', data);
+    console.log('Editing category:', editingCategory);
+    
     if (editingCategory) {
       updateCategoryMutation.mutate({ id: editingCategory.id, category: data });
     } else {
