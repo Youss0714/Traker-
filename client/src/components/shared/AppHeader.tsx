@@ -158,6 +158,16 @@ export default function AppHeader() {
                         Rapports
                       </Button>
                     </SheetClose>
+                    <SheetClose asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start" 
+                        onClick={() => navigate('/categories')}
+                      >
+                        <span className="material-icons mr-2">category</span>
+                        Catégories
+                      </Button>
+                    </SheetClose>
                   </div>
                   
                   <div className="border-t pt-4">

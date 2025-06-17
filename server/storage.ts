@@ -10,7 +10,10 @@ import {
   type InsertClient,
   sales,
   type Sale,
-  type InsertSale
+  type InsertSale,
+  categories,
+  type Category,
+  type InsertCategory
 } from "@shared/schema";
 
 export interface IStorage {
@@ -41,6 +44,13 @@ export interface IStorage {
   updateSale(id: number, sale: Partial<InsertSale>): Promise<Sale | undefined>;
   deleteSale(id: number): Promise<boolean>;
   getRecentSales(limit: number): Promise<Sale[]>;
+  
+  // Category methods
+  getCategories(): Promise<Category[]>;
+  getCategory(id: number): Promise<Category | undefined>;
+  createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: number, category: Partial<InsertCategory>): Promise<Category | undefined>;
+  deleteCategory(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -48,22 +58,26 @@ export class MemStorage implements IStorage {
   private products: Map<number, Product>;
   private clients: Map<number, Client>;
   private sales: Map<number, Sale>;
+  private categories: Map<number, Category>;
   
   private currentUserId: number;
   private currentProductId: number;
   private currentClientId: number;
   private currentSaleId: number;
+  private currentCategoryId: number;
 
   constructor() {
     this.users = new Map();
     this.products = new Map();
     this.clients = new Map();
     this.sales = new Map();
+    this.categories = new Map();
     
     this.currentUserId = 1;
     this.currentProductId = 1;
     this.currentClientId = 1;
     this.currentSaleId = 1;
+    this.currentCategoryId = 1;
     
     // Add some initial data
     this.initData();
@@ -71,6 +85,25 @@ export class MemStorage implements IStorage {
 
   // Initialize with sample data
   private initData() {
+    // Create default categories first
+    this.createCategory({
+      name: "Électronique",
+      description: "Appareils électroniques et gadgets",
+      isActive: true
+    });
+    
+    this.createCategory({
+      name: "Vêtements",
+      description: "Vêtements et accessoires de mode",
+      isActive: true
+    });
+    
+    this.createCategory({
+      name: "Maison",
+      description: "Articles pour la maison et décoration",
+      isActive: true
+    });
+    
     // Create a default user
     this.createUser({
       username: "admin",
@@ -339,6 +372,39 @@ export class MemStorage implements IStorage {
         return dateB.getTime() - dateA.getTime();
       })
       .slice(0, limit);
+  }
+
+  // Category methods
+  async getCategories(): Promise<Category[]> {
+    return Array.from(this.categories.values()).filter(category => category.isActive);
+  }
+
+  async getCategory(id: number): Promise<Category | undefined> {
+    return this.categories.get(id);
+  }
+
+  async createCategory(insertCategory: InsertCategory): Promise<Category> {
+    const id = this.currentCategoryId++;
+    const category: Category = { 
+      ...insertCategory, 
+      id,
+      createdAt: new Date()
+    };
+    this.categories.set(id, category);
+    return category;
+  }
+
+  async updateCategory(id: number, categoryUpdate: Partial<InsertCategory>): Promise<Category | undefined> {
+    const existingCategory = this.categories.get(id);
+    if (!existingCategory) return undefined;
+
+    const updatedCategory: Category = { ...existingCategory, ...categoryUpdate };
+    this.categories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+
+  async deleteCategory(id: number): Promise<boolean> {
+    return this.categories.delete(id);
   }
 }
 

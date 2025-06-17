@@ -10,7 +10,10 @@ import {
   type InsertClient,
   sales,
   type Sale,
-  type InsertSale
+  type InsertSale,
+  categories,
+  type Category,
+  type InsertCategory
 } from "@shared/schema";
 import { db } from "./db";
 import { IStorage } from "./storage";
@@ -59,7 +62,7 @@ export class DBStorage implements IStorage {
   
   async deleteProduct(id: number): Promise<boolean> {
     const result = await db.delete(products).where(eq(products.id, id));
-    return result.count > 0;
+    return (result.rowCount || 0) > 0;
   }
   
   // Client methods
@@ -92,7 +95,7 @@ export class DBStorage implements IStorage {
   
   async deleteClient(id: number): Promise<boolean> {
     const result = await db.delete(clients).where(eq(clients.id, id));
-    return result.count > 0;
+    return (result.rowCount || 0) > 0;
   }
   
   async updateClientStats(id: number, orderAmount: number): Promise<Client | undefined> {
@@ -163,7 +166,7 @@ export class DBStorage implements IStorage {
   
   async deleteSale(id: number): Promise<boolean> {
     const result = await db.delete(sales).where(eq(sales.id, id));
-    return result.count > 0;
+    return (result.rowCount || 0) > 0;
   }
   
   async getRecentSales(limit: number): Promise<Sale[]> {
@@ -171,6 +174,39 @@ export class DBStorage implements IStorage {
       .from(sales)
       .orderBy(desc(sales.date))
       .limit(limit);
+  }
+
+  // Category methods
+  async getCategories(): Promise<Category[]> {
+    return await db.select().from(categories);
+  }
+
+  async getCategory(id: number): Promise<Category | undefined> {
+    const result = await db.select().from(categories).where(eq(categories.id, id));
+    return result[0];
+  }
+
+  async createCategory(insertCategory: InsertCategory): Promise<Category> {
+    const result = await db.insert(categories)
+      .values({
+        ...insertCategory,
+        createdAt: new Date()
+      })
+      .returning();
+    return result[0];
+  }
+
+  async updateCategory(id: number, categoryUpdate: Partial<InsertCategory>): Promise<Category | undefined> {
+    const result = await db.update(categories)
+      .set(categoryUpdate)
+      .where(eq(categories.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteCategory(id: number): Promise<boolean> {
+    const result = await db.delete(categories).where(eq(categories.id, id));
+    return (result.rowCount || 0) > 0;
   }
 
   // Méthode d'initialisation pour créer des données d'exemple

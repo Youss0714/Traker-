@@ -20,6 +20,7 @@ import Reports from "@/pages/reports";
 import Settings from "@/pages/settings";
 import Profile from "@/pages/profile";
 import Sync from "@/pages/sync";
+import Categories from "@/pages/categories";
 import { AppProvider } from "./lib/context/AppContext";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/settings" component={Settings} />
       <Route path="/profile" component={Profile} />
       <Route path="/sync" component={Sync} />
+      <Route path="/categories" component={Categories} />
       <Route component={NotFound} />
     </Switch>
   );
