@@ -305,6 +305,78 @@ export default function Dashboard() {
         amount: item.amount
       })) || []} />
 
+      {/* Alertes de stock faible */}
+      <Card className="shadow-sm border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
+        <CardHeader className="flex justify-between items-center pb-2">
+          <CardTitle className="text-sm font-medium text-amber-800 flex items-center">
+            <span className="material-icons text-amber-600 mr-2">warning</span>
+            Alertes Stock Faible
+          </CardTitle>
+          <Badge variant="destructive" className="bg-amber-500 hover:bg-amber-600">
+            3 alertes
+          </Badge>
+        </CardHeader>
+        <CardContent className="space-y-3 p-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                  <span className="material-icons text-white text-sm">inventory</span>
+                </div>
+                <div>
+                  <p className="font-medium text-amber-800">Pagne Wax Vlisco</p>
+                  <p className="text-xs text-amber-600">Stock: 3 unités restantes</p>
+                </div>
+              </div>
+              <Badge variant="outline" className="border-amber-400 text-amber-700">
+                Critique
+              </Badge>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                  <span className="material-icons text-white text-sm">inventory</span>
+                </div>
+                <div>
+                  <p className="font-medium text-amber-800">Chaussures Élégantes</p>
+                  <p className="text-xs text-amber-600">Stock: 5 unités restantes</p>
+                </div>
+              </div>
+              <Badge variant="outline" className="border-yellow-400 text-yellow-700">
+                Faible
+              </Badge>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                  <span className="material-icons text-white text-sm">inventory</span>
+                </div>
+                <div>
+                  <p className="font-medium text-amber-800">Sac à Main Cuir</p>
+                  <p className="text-xs text-amber-600">Stock: 7 unités restantes</p>
+                </div>
+              </div>
+              <Badge variant="outline" className="border-yellow-400 text-yellow-700">
+                Faible
+              </Badge>
+            </div>
+          </div>
+          
+          <div className="pt-2 border-t border-amber-200">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
+            >
+              <span className="material-icons mr-2 text-sm">add_box</span>
+              Réapprovisionner les stocks
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Recent Activity */}
       <Card className="shadow-sm">
         <CardHeader className="flex justify-between items-center pb-2">
