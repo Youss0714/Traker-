@@ -303,15 +303,15 @@ export default function Dashboard() {
       })) || []} />
 
       {/* Recent Activity */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="flex justify-between items-center pb-2">
           <CardTitle className="text-sm font-medium text-[#212121]">Activités Récentes</CardTitle>
-          <Button variant="link" size="sm" className="text-[#1976D2] h-auto p-0">
+          <Button variant="link" size="sm" className="text-[#1976D2] h-auto p-0 text-xs">
             Voir tout
           </Button>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {data?.recentActivities?.map((activity, index: number) => (
+        <CardContent className="space-y-3 p-4">
+          {data?.recentActivities?.slice(0, 4).map((activity, index: number) => (
             <ActivityItem
               key={index}
               type={activity.type}
