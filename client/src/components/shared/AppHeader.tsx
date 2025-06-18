@@ -20,6 +20,7 @@ export default function AppHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   
   // Get title based on the current path
@@ -238,9 +239,12 @@ export default function AppHeader() {
           </Dialog>
           
           {/* Aide */}
-          <Dialog>
+          <Dialog open={showHelp} onOpenChange={setShowHelp}>
             <DialogTrigger asChild>
-              <button className="relative cursor-pointer hover:scale-110 transition-transform bg-transparent border-none p-0">
+              <button 
+                className="relative cursor-pointer hover:scale-110 transition-transform bg-transparent border-none p-0"
+                onClick={() => setShowHelp(true)}
+              >
                 <span className="material-icons text-white">help_outline</span>
               </button>
             </DialogTrigger>
