@@ -64,6 +64,7 @@ export default function Dashboard() {
   
   const { data, isLoading, error } = useQuery<DashboardData>({
     queryKey: ['/api/dashboard', timeRange, filters],
+    retry: false,
   });
   
   if (isLoading) {

@@ -47,15 +47,26 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
 
   const setupMutation = useMutation({
     mutationFn: async (data: CompanyFormValues) => {
-      // Simuler la sauvegarde pour la démonstration
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return data;
+      const response = await fetch('/api/company/setup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to setup company');
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       toast({
         title: 'Configuration terminée',
         description: 'Les informations de votre entreprise ont été enregistrées avec succès.',
       });
+      queryClient.invalidateQueries({ queryKey: ['/api/company/status'] });
       queryClient.invalidateQueries({ queryKey: ['/api/company'] });
       onComplete();
     },

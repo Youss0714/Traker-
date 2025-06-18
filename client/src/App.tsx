@@ -53,18 +53,29 @@ function Router() {
 
 function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
-  const [needsSetup, setNeedsSetup] = useState(false);
+  const [needsSetup, setNeedsSetup] = useState<boolean | null>(null);
 
-  // Simuler la vérification du statut de l'entreprise
+  const { data: companyStatus, isLoading } = useQuery<{ isSetup: boolean; company?: any }>({
+    queryKey: ['/api/company/status'],
+    enabled: !showSplash,
+  });
+
   useEffect(() => {
-    if (!showSplash) {
-      // Pour cette démonstration, on considère que l'entreprise n'est pas configurée
-      setNeedsSetup(true);
+    if (!showSplash && companyStatus && 'isSetup' in companyStatus) {
+      setNeedsSetup(!companyStatus.isSetup);
     }
-  }, [showSplash]);
+  }, [showSplash, companyStatus]);
 
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
+  if (isLoading || needsSetup === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   if (needsSetup) {
