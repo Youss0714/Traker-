@@ -14,6 +14,7 @@ import { queryClient } from "@/lib/queryClient";
 import { formatCurrency } from "@/lib/utils/helpers";
 import { Company, Sale } from "@shared/schema";
 import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } from "@/lib/utils/tax";
+import { QuickAddClient } from "@/components/QuickAddClient";
 
 interface SaleItem {
   productId: number;
@@ -47,12 +48,12 @@ export default function AddSale() {
   }, []);
   
   // Query clients
-  const { data: clients } = useQuery({
+  const { data: clients } = useQuery<any[]>({
     queryKey: ['/api/clients'],
   });
   
   // Query products
-  const { data: products } = useQuery({
+  const { data: products } = useQuery<any[]>({
     queryKey: ['/api/products'],
   });
 
@@ -96,7 +97,7 @@ export default function AddSale() {
   const handleAddItem = () => {
     if (!selectedProduct || quantity <= 0) return;
     
-    const product = products.find((p: any) => p.id === parseInt(selectedProduct));
+    const product = products?.find((p: any) => p.id === parseInt(selectedProduct));
     if (!product) return;
     
     // Check if we already have this product in the items
@@ -308,12 +309,12 @@ export default function AddSale() {
     }
     
     // Find client details
-    const client = clients.find((c: any) => c.id === parseInt(selectedClient));
+    const client = clients?.find((c: any) => c.id === parseInt(selectedClient));
     
     const sale = {
       invoiceNumber,
       clientId: parseInt(selectedClient),
-      clientName: client.name,
+      clientName: client?.name || "Client inconnu",
       status,
       total: calculateTotal(),
       items: JSON.stringify(items),
@@ -328,7 +329,20 @@ export default function AddSale() {
       <Card>
         <CardContent className="pt-6 space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="client">Client</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="client">Client</Label>
+              <QuickAddClient 
+                onClientCreated={(newClient) => {
+                  setSelectedClient(newClient.id.toString());
+                }}
+                trigger={
+                  <Button variant="outline" size="sm" type="button">
+                    <span className="material-icons text-sm mr-1">person_add</span>
+                    Nouveau client
+                  </Button>
+                }
+              />
+            </div>
             <Select value={selectedClient} onValueChange={setSelectedClient}>
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionner un client" />
