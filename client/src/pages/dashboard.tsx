@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
 
 interface DashboardMetrics {
   sales: {
@@ -55,6 +56,7 @@ interface DashboardData {
 
 export default function Dashboard() {
   const { setActivePage } = useAppContext();
+  const [location, navigate] = useLocation();
   const [timeRange, setTimeRange] = useState("week");
   const [filters, setFilters] = useState<string[]>([]);
   
@@ -369,6 +371,7 @@ export default function Dashboard() {
               variant="outline" 
               size="sm" 
               className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
+              onClick={() => navigate('/inventory')}
             >
               <span className="material-icons mr-2 text-sm">add_box</span>
               Réapprovisionner les stocks
