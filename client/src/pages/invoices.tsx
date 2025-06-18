@@ -95,7 +95,6 @@ export default function Invoices() {
               ${company.address}<br>
               Tél: ${company.phone} | Email: ${company.email}<br>
               ${company.website ? `Site: ${company.website}<br>` : ''}
-              Propriétaire: ${company.ownerName}
             </div>
           ` : `
             <div class="company">gYS - Gestion d'Entreprise</div>

@@ -27,7 +27,6 @@ export const company = pgTable("company", {
   email: text("email").notNull(),
   website: text("website"),
   description: text("description"),
-  ownerName: text("owner_name").notNull(),
   isSetup: boolean("is_setup").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

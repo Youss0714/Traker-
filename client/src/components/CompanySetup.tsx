@@ -19,7 +19,6 @@ const companySchema = z.object({
   email: z.string().email('Veuillez saisir une adresse email valide'),
   website: z.string().optional(),
   description: z.string().optional(),
-  ownerName: z.string().min(2, 'Le nom du propriétaire doit contenir au moins 2 caractères'),
 });
 
 type CompanyFormValues = z.infer<typeof companySchema>;
@@ -41,7 +40,6 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
       email: '',
       website: '',
       description: '',
-      ownerName: '',
     },
   });
 
@@ -113,17 +111,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
                 )}
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="ownerName">Nom du propriétaire *</Label>
-                <Input
-                  id="ownerName"
-                  {...form.register('ownerName')}
-                  placeholder="Ex: Kouamé Yao"
-                />
-                {form.formState.errors.ownerName && (
-                  <p className="text-sm text-red-600">{form.formState.errors.ownerName.message}</p>
-                )}
-              </div>
+
             </div>
 
             <div className="space-y-2">
