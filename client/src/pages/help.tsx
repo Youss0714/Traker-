@@ -33,7 +33,7 @@ export default function Help() {
             </div>
             <Button 
               className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-              onClick={() => window.open('mailto:youssouphafil@gmail.com?subject=Support technique gYS App')}
+              onClick={() => window.open('mailto:youssouphafils@gmail.com?subject=Support technique gYS App')}
             >
               <span className="material-icons mr-2">email</span>
               Contacter le support
@@ -51,15 +51,93 @@ export default function Help() {
               <span className="text-green-800">Questions fréquentes</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-green-600">Consultez les réponses aux questions les plus courantes</p>
-            <Button 
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-              onClick={() => alert("Documentation FAQ en cours de développement")}
-            >
-              <span className="material-icons mr-2">quiz</span>
-              Voir la FAQ
-            </Button>
+          <CardContent className="space-y-6">
+            <div className="space-y-4">
+              {/* Question 1 */}
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                  <span className="material-icons text-green-600 mr-2 text-sm">help_outline</span>
+                  Comment ajouter un nouveau produit ?
+                </h4>
+                <p className="text-sm text-green-700">
+                  Allez dans le menu "Inventaire", cliquez sur le bouton "Ajouter un produit", 
+                  remplissez les informations (nom, prix, stock, catégorie) puis validez.
+                </p>
+              </div>
+
+              {/* Question 2 */}
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                  <span className="material-icons text-green-600 mr-2 text-sm">help_outline</span>
+                  Comment créer une facture ?
+                </h4>
+                <p className="text-sm text-green-700">
+                  Cliquez sur "Nouvelle facture" depuis le tableau de bord ou allez dans "Ventes" → "Ajouter une vente". 
+                  Sélectionnez le client, ajoutez les produits, et l'application génèrera automatiquement la facture.
+                </p>
+              </div>
+
+              {/* Question 3 */}
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                  <span className="material-icons text-green-600 mr-2 text-sm">help_outline</span>
+                  Comment gérer les stocks faibles ?
+                </h4>
+                <p className="text-sm text-green-700">
+                  L'application affiche automatiquement les alertes de stock faible sur le tableau de bord. 
+                  Cliquez sur "Réapprovisionner les stocks" pour accéder à la gestion d'inventaire.
+                </p>
+              </div>
+
+              {/* Question 4 */}
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                  <span className="material-icons text-green-600 mr-2 text-sm">help_outline</span>
+                  Comment configurer les informations de mon entreprise ?
+                </h4>
+                <p className="text-sm text-green-700">
+                  Allez dans "Paramètres" → "Informations de l'entreprise" pour modifier le nom, 
+                  l'adresse, l'email et autres détails de votre société.
+                </p>
+              </div>
+
+              {/* Question 5 */}
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                  <span className="material-icons text-green-600 mr-2 text-sm">help_outline</span>
+                  Comment exporter mes données ?
+                </h4>
+                <p className="text-sm text-green-700">
+                  Rendez-vous dans la section "Plus" → "Export" pour télécharger vos données 
+                  de ventes, clients et produits au format Excel.
+                </p>
+              </div>
+
+              {/* Question 6 */}
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                  <span className="material-icons text-green-600 mr-2 text-sm">help_outline</span>
+                  Comment modifier les taux de TVA ?
+                </h4>
+                <p className="text-sm text-green-700">
+                  Dans "Paramètres" → "Configuration fiscale", vous pouvez ajuster le taux de TVA 
+                  qui sera automatiquement appliqué à toutes les factures.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-green-200">
+              <p className="text-sm text-green-600 text-center">
+                Vous ne trouvez pas la réponse à votre question ? 
+                <Button 
+                  variant="link" 
+                  className="text-green-700 font-medium p-0 h-auto"
+                  onClick={() => window.open('mailto:youssouphafils@gmail.com?subject=Question sur gYS App')}
+                >
+                  Contactez-nous
+                </Button>
+              </p>
+            </div>
           </CardContent>
         </Card>
 
@@ -77,7 +155,7 @@ export default function Help() {
             <p className="text-purple-600">Partagez vos commentaires et suggestions d'amélioration</p>
             <Button 
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-              onClick={() => window.open('mailto:youssouphafil@gmail.com?subject=Feedback gYS App')}
+              onClick={() => window.open('mailto:youssouphafils@gmail.com?subject=Feedback gYS App')}
             >
               <span className="material-icons mr-2">feedback</span>
               Envoyer un feedback
@@ -121,7 +199,7 @@ export default function Help() {
             </div>
             <div className="flex items-center space-x-2">
               <span className="material-icons text-gray-600">email</span>
-              <span className="text-gray-700">youssouphafil@gmail.com</span>
+              <span className="text-gray-700">youssouphafils@gmail.com</span>
             </div>
           </div>
           <p className="text-sm text-gray-500">
