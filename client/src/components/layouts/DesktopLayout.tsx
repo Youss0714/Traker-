@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAppContext } from "@/lib/context/AppContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Logo } from "@/components/ui/logo";
 
 interface DesktopLayoutProps {
   children: ReactNode;
@@ -39,15 +40,7 @@ export default function DesktopLayout({ children }: DesktopLayoutProps) {
       <div className="w-64 bg-white shadow-lg flex flex-col">
         {/* Logo/Header */}
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">gYS</span>
-            </div>
-            <div>
-              <h1 className="font-bold text-xl text-gray-900">gYS</h1>
-              <p className="text-sm text-gray-500">Gestion d'Entreprise</p>
-            </div>
-          </div>
+          <Logo variant="full" size="lg" />
         </div>
 
         {/* Quick Actions */}

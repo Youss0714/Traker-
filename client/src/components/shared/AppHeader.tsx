@@ -13,6 +13,7 @@ import {
   SheetClose 
 } from "@/components/ui/sheet";
 import { CurrencyDropdown } from "@/components/ui/currency-dropdown";
+import { Logo } from "@/components/ui/logo";
 
 export default function AppHeader() {
   const [location, navigate] = useLocation();
@@ -83,17 +84,17 @@ export default function AppHeader() {
               </SheetTrigger>
               <SheetContent side="left" className="w-72">
                 <SheetHeader className="mb-6">
-                  <SheetTitle>gYS Menu</SheetTitle>
+                  <Logo variant="full" size="md" />
                 </SheetHeader>
                 <div className="flex flex-col space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
+                  <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-md">
                         <span className="material-icons text-white">person</span>
                       </div>
                       <div>
-                        <p className="font-medium">Youssouf Sawadogo</p>
-                        <p className="text-sm text-gray-500">Administrateur</p>
+                        <p className="font-medium text-blue-800">Youssouf Sawadogo</p>
+                        <p className="text-sm text-blue-600">Administrateur</p>
                       </div>
                     </div>
                   </div>
@@ -204,7 +205,11 @@ export default function AppHeader() {
               </SheetContent>
             </Sheet>
           )}
-          <h1 className="text-xl font-medium">{getTitle()}</h1>
+          {location === '/' ? (
+            <Logo variant="text" />
+          ) : (
+            <h1 className="text-xl font-medium">{getTitle()}</h1>
+          )}
         </div>
         <div className="flex items-center space-x-4">
           {/* Recherche */}
