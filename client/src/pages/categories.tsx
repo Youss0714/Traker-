@@ -239,9 +239,9 @@ export default function Categories() {
                 Nouvelle catégorie
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md" aria-describedby="dialog-description">
+            <DialogContent className="sm:max-w-md bg-white text-black" aria-describedby="dialog-description">
               <DialogHeader>
-                <DialogTitle>
+                <DialogTitle className="text-gray-900">
                   {editingCategory ? "Modifier la catégorie" : "Nouvelle catégorie"}
                 </DialogTitle>
                 <div id="dialog-description" className="sr-only">
@@ -255,11 +255,15 @@ export default function Categories() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nom de la catégorie</FormLabel>
+                        <FormLabel className="text-gray-700 font-medium">Nom de la catégorie</FormLabel>
                         <FormControl>
-                          <Input placeholder="Ex: Électronique" {...field} />
+                          <Input 
+                            placeholder="Ex: Électronique" 
+                            {...field} 
+                            className="bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                          />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -268,11 +272,16 @@ export default function Categories() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description (optionnelle)</FormLabel>
+                        <FormLabel className="text-gray-700 font-medium">Description (optionnelle)</FormLabel>
                         <FormControl>
-                          <Input placeholder="Description de la catégorie" {...field} value={field.value || ""} />
+                          <Input 
+                            placeholder="Description de la catégorie" 
+                            {...field} 
+                            value={field.value || ""} 
+                            className="bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                          />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
