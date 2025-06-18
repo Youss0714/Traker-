@@ -237,6 +237,124 @@ export default function AppHeader() {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Aide */}
+          <Dialog open={showHelp} onOpenChange={setShowHelp}>
+            <DialogTrigger asChild>
+              <span 
+                className="material-icons cursor-pointer hover:scale-110 transition-transform"
+                onClick={() => setShowHelp(true)}
+              >
+                help_outline
+              </span>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Centre d'aide
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <div className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                      <span className="material-icons text-white text-sm">support_agent</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-blue-800 mb-1">Support technique</h4>
+                      <p className="text-sm text-blue-600 mb-2">Contactez notre équipe pour toute assistance</p>
+                      <div className="flex items-center space-x-2">
+                        <span className="material-icons text-blue-500 text-sm">email</span>
+                        <a 
+                          href="mailto:youssouphafil@gmail.com" 
+                          className="text-blue-600 font-medium hover:text-blue-800 transition-colors text-sm"
+                        >
+                          youssouphafil@gmail.com
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => alert("Documentation en cours de développement")}
+                    className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors flex flex-col items-center space-y-1"
+                  >
+                    <span className="material-icons text-sm">quiz</span>
+                    <span className="text-xs font-medium">FAQ</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => window.open('mailto:youssouphafil@gmail.com?subject=Feedback gYS App')}
+                    className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors flex flex-col items-center space-y-1"
+                  >
+                    <span className="material-icons text-sm">feedback</span>
+                    <span className="text-xs font-medium">Feedback</span>
+                  </button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Notifications */}
+          <Dialog open={showNotifications} onOpenChange={setShowNotifications}>
+            <DialogTrigger asChild>
+              <div className="relative cursor-pointer hover:scale-110 transition-transform">
+                <span 
+                  className="material-icons"
+                  onClick={() => setShowNotifications(true)}
+                >
+                  notifications
+                </span>
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-gradient-to-r from-red-500 to-pink-500 border-none shadow-lg animate-pulse">3</Badge>
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md bg-gradient-to-br from-slate-50 to-gray-100 border-gray-200 shadow-xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Notifications
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3 mt-4">
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-3">
+                        <span className="material-icons text-white text-sm">trending_up</span>
+                      </div>
+                      <h4 className="font-medium text-green-800">Vente importante</h4>
+                    </div>
+                    <span className="text-xs text-green-600 font-medium">Il y a 30 min</span>
+                  </div>
+                  <p className="text-sm text-emerald-700 mt-2 ml-11">Une nouvelle vente de 127,500 FCFA a été enregistrée.</p>
+                </div>
+                
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-3">
+                        <span className="material-icons text-white text-sm">person_add</span>
+                      </div>
+                      <h4 className="font-medium text-blue-800">Nouveau client</h4>
+                    </div>
+                    <span className="text-xs text-blue-600 font-medium">Il y a 2 jours</span>
+                  </div>
+                  <p className="text-sm text-blue-700 mt-2 ml-11">Le client "Mamadou Traoré" a été ajouté à la base de données.</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-gray-200">
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  onClick={() => setShowNotifications(false)}
+                >
+                  <span className="material-icons text-sm mr-2">done_all</span>
+                  Marquer tout comme lu
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
           
           {/* Aide */}
           <Dialog open={showHelp} onOpenChange={setShowHelp}>
