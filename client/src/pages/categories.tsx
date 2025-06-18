@@ -171,7 +171,15 @@ export default function Categories() {
     deleteCategoryMutation.mutate(id);
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = (open: boolean) => {
+    setIsAddDialogOpen(open);
+    if (!open) {
+      setEditingCategory(null);
+      form.reset();
+    }
+  };
+
+  const handleCancelClick = () => {
     setIsAddDialogOpen(false);
     setEditingCategory(null);
     form.reset();
@@ -226,7 +234,7 @@ export default function Categories() {
         <div className="flex gap-3">
           <Dialog open={isAddDialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
-              <Button onClick={() => setIsAddDialogOpen(true)} className="bg-blue-600 hover:bg-blue-700">
+              <Button className="bg-blue-600 hover:bg-blue-700">
                 <span className="material-icons mr-2">add</span>
                 Nouvelle catégorie
               </Button>
@@ -269,7 +277,7 @@ export default function Categories() {
                     )}
                   />
                   <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={handleDialogClose}>
+                    <Button type="button" variant="outline" onClick={handleCancelClick}>
                       Annuler
                     </Button>
                     <Button 
