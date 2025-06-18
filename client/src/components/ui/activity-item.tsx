@@ -10,8 +10,15 @@ interface ActivityItemProps {
 
 export function ActivityItem({ type, description, time, extraInfo }: ActivityItemProps) {
   const formatTime = (date: Date | string) => {
-    const parsedDate = typeof date === 'string' ? new Date(date) : date;
-    return formatDistanceToNow(parsedDate, { addSuffix: true, locale: fr });
+    try {
+      const parsedDate = typeof date === 'string' ? new Date(date) : date;
+      if (isNaN(parsedDate.getTime())) {
+        return 'Il y a quelques instants';
+      }
+      return formatDistanceToNow(parsedDate, { addSuffix: true, locale: fr });
+    } catch (error) {
+      return 'Il y a quelques instants';
+    }
   };
 
   const getIconAndColor = () => {

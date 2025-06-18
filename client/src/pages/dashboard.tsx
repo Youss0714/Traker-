@@ -293,7 +293,7 @@ export default function Dashboard() {
       </div>
 
       {/* Sales Chart */}
-      <DashboardChart data={data?.dailySales?.map(item => ({
+      <DashboardChart data={data?.dailySales?.map((item) => ({
         day: item.date,
         amount: item.amount
       })) || []} />
@@ -307,13 +307,13 @@ export default function Dashboard() {
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
-          {data?.recentActivities?.map((activity: any, index: number) => (
+          {data?.recentActivities?.map((activity, index: number) => (
             <ActivityItem
               key={index}
               type={activity.type}
               description={activity.description}
-              time={activity.date}
-              extraInfo={activity.client}
+              time={activity.time}
+              extraInfo={activity.extraInfo}
             />
           ))}
         </CardContent>
