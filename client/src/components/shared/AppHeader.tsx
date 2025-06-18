@@ -253,7 +253,6 @@ export default function AppHeader() {
             <DialogTrigger asChild>
               <button 
                 className="relative cursor-pointer hover:scale-110 transition-transform bg-transparent border-none p-0"
-                onClick={() => setShowNotifications(true)}
               >
                 <span className="material-icons text-white">notifications</span>
                 <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-gradient-to-r from-red-500 to-pink-500 border-none shadow-lg animate-pulse">3</Badge>
