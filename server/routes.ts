@@ -365,9 +365,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Company setup routes
+  app.post("/api/company/setup", async (req: Request, res: Response) => {
+    try {
+      const companyData = req.body;
+      const company = await storage.createCompany(companyData);
+      res.json(company);
+    } catch (error) {
+      console.error("Company setup error:", error);
+      res.status(500).json({ error: "Failed to setup company" });
+    }
+  });
+
+  app.get("/api/company/status", async (req: Request, res: Response) => {
+    try {
+      const isSetup = await storage.isCompanySetup();
+      const company = await storage.getCompany();
+      res.json({ isSetup, company });
+    } catch (error) {
+      console.error("Company status error:", error);
+      res.status(500).json({ error: "Failed to check company status" });
+    }
+  });
+
   // Dashboard data API routes
   app.get("/api/dashboard", async (req: Request, res: Response) => {
     try {
+      // Check if company is set up
+      const isSetup = await storage.isCompanySetup();
+      if (!isSetup) {
+        return res.status(400).json({ error: "Company setup required" });
+      }
+
       const products = await storage.getProducts();
       const clients = await storage.getClients();
       const sales = await storage.getSales();

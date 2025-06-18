@@ -54,6 +54,12 @@ export interface IStorage {
   createCategory(category: InsertCategory): Promise<Category>;
   updateCategory(id: number, category: Partial<InsertCategory>): Promise<Category | undefined>;
   deleteCategory(id: number): Promise<boolean>;
+  
+  // Company methods
+  getCompany(): Promise<Company | undefined>;
+  createCompany(company: InsertCompany): Promise<Company>;
+  updateCompany(id: number, company: Partial<InsertCompany>): Promise<Company | undefined>;
+  isCompanySetup(): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -62,12 +68,14 @@ export class MemStorage implements IStorage {
   private clients: Map<number, Client>;
   private sales: Map<number, Sale>;
   private categories: Map<number, Category>;
+  private companyData: Company | null;
   
   private currentUserId: number;
   private currentProductId: number;
   private currentClientId: number;
   private currentSaleId: number;
   private currentCategoryId: number;
+  private currentCompanyId: number;
 
   constructor() {
     this.users = new Map();
@@ -75,12 +83,14 @@ export class MemStorage implements IStorage {
     this.clients = new Map();
     this.sales = new Map();
     this.categories = new Map();
+    this.companyData = null;
     
     this.currentUserId = 1;
     this.currentProductId = 1;
     this.currentClientId = 1;
     this.currentSaleId = 1;
     this.currentCategoryId = 1;
+    this.currentCompanyId = 1;
     
     // Add some initial data
     this.initData();
@@ -408,6 +418,35 @@ export class MemStorage implements IStorage {
 
   async deleteCategory(id: number): Promise<boolean> {
     return this.categories.delete(id);
+  }
+
+  // Company methods
+  async getCompany(): Promise<Company | undefined> {
+    return this.companyData || undefined;
+  }
+
+  async createCompany(insertCompany: InsertCompany): Promise<Company> {
+    const id = this.currentCompanyId++;
+    const company: Company = { 
+      ...insertCompany, 
+      id,
+      isSetup: true,
+      createdAt: new Date()
+    };
+    this.companyData = company;
+    return company;
+  }
+
+  async updateCompany(id: number, companyUpdate: Partial<InsertCompany>): Promise<Company | undefined> {
+    if (!this.companyData || this.companyData.id !== id) return undefined;
+
+    const updatedCompany: Company = { ...this.companyData, ...companyUpdate };
+    this.companyData = updatedCompany;
+    return updatedCompany;
+  }
+
+  async isCompanySetup(): Promise<boolean> {
+    return this.companyData?.isSetup || false;
   }
 }
 
