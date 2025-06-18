@@ -20,6 +20,39 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
+interface DashboardMetrics {
+  sales: {
+    total: number;
+    trend: string;
+  };
+  orders: {
+    total: number;
+    trend: string;
+  };
+  products: {
+    total: number;
+    trend: string;
+  };
+  clients: {
+    total: number;
+    trend: string;
+  };
+}
+
+interface DashboardData {
+  metrics: DashboardMetrics;
+  dailySales: Array<{
+    date: string;
+    amount: number;
+  }>;
+  recentActivities: Array<{
+    type: 'sale' | 'client' | 'inventory' | 'pending-sale';
+    description: string;
+    time: string;
+    extraInfo?: string;
+  }>;
+}
+
 export default function Dashboard() {
   const { setActivePage } = useAppContext();
   const [timeRange, setTimeRange] = useState("week");
@@ -29,7 +62,7 @@ export default function Dashboard() {
     setActivePage('dashboard');
   }, [setActivePage]);
   
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<DashboardData>({
     queryKey: ['/api/dashboard', timeRange, filters],
   });
   
@@ -236,31 +269,34 @@ export default function Dashboard() {
         <MetricCard 
           label="Ventes" 
           value={formatCurrency(data?.metrics?.sales?.total || 0)} 
-          trend={data?.metrics?.sales?.trend} 
+          trend={data?.metrics?.sales?.trend || ""} 
           trendUp={true}
         />
         <MetricCard 
           label="Commandes" 
           value={data?.metrics?.orders?.total || 0} 
-          trend={data?.metrics?.orders?.trend} 
+          trend={data?.metrics?.orders?.trend || ""} 
           trendUp={true}
         />
         <MetricCard 
           label="Clients" 
           value={data?.metrics?.clients?.total || 0} 
-          trend={data?.metrics?.clients?.trend} 
+          trend={data?.metrics?.clients?.trend || ""} 
           trendUp={true}
         />
         <MetricCard 
-          label="Produits en Alerte" 
-          value={data?.metrics?.inventory?.lowStock || 0} 
-          trend={data?.metrics?.inventory?.trend} 
+          label="Produits" 
+          value={data?.metrics?.products?.total || 0} 
+          trend={data?.metrics?.products?.trend || ""} 
           trendUp={false}
         />
       </div>
 
       {/* Sales Chart */}
-      <DashboardChart data={data?.dailySales || []} />
+      <DashboardChart data={data?.dailySales?.map(item => ({
+        day: item.date,
+        amount: item.amount
+      })) || []} />
 
       {/* Recent Activity */}
       <Card>
