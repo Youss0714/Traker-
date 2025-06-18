@@ -185,6 +185,48 @@ export default function Categories() {
     form.reset();
   };
 
+  const handleExport = () => {
+    if (!categories || categories.length === 0) {
+      toast({
+        title: "Aucune donnée",
+        description: "Il n'y a pas de catégories à exporter.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Créer le contenu CSV
+    const csvHeaders = ["ID", "Nom", "Description", "Statut", "Date de création"];
+    const csvRows = categories.map(category => [
+      category.id,
+      `"${category.name}"`,
+      `"${category.description || ''}"`,
+      category.isActive ? "Active" : "Inactive",
+      category.createdAt ? new Date(category.createdAt).toLocaleDateString('fr-FR') : ""
+    ]);
+
+    const csvContent = [
+      csvHeaders.join(","),
+      ...csvRows.map(row => row.join(","))
+    ].join("\n");
+
+    // Créer et télécharger le fichier
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `categories_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Export réussi",
+      description: `${categories.length} catégories exportées avec succès.`,
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -301,7 +343,7 @@ export default function Categories() {
               </Form>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex items-center gap-2" onClick={handleExport}>
             <span className="material-icons">file_download</span>
             Exporter
           </Button>
