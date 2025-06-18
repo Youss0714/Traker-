@@ -26,6 +26,7 @@ interface InvoiceData {
   clientAddress: string;
   invoiceNumber: string;
   date: string;
+  time: string;
   dueDate: string;
   items: InvoiceItem[];
   notes: string;
@@ -45,6 +46,7 @@ export default function Invoices() {
     clientAddress: "",
     invoiceNumber: `INV-${Date.now()}`,
     date: new Date().toISOString().split('T')[0],
+    time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     items: [
       {

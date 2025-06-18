@@ -4,10 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 interface InvoiceHeaderProps {
   invoiceNumber: string;
   date: string;
+  time?: string;
   dueDate?: string;
 }
 
-export function InvoiceHeader({ invoiceNumber, date, dueDate }: InvoiceHeaderProps) {
+export function InvoiceHeader({ invoiceNumber, date, time, dueDate }: InvoiceHeaderProps) {
   const companyLogo = useCompanyLogo();
   const { data: company } = useQuery<any>({
     queryKey: ['/api/company'],
@@ -64,6 +65,12 @@ export function InvoiceHeader({ invoiceNumber, date, dueDate }: InvoiceHeaderPro
               <span className="font-medium">Date:</span>
               <span>{date}</span>
             </div>
+            {time && (
+              <div className="flex justify-between">
+                <span className="font-medium">Heure:</span>
+                <span>{time}</span>
+              </div>
+            )}
             {dueDate && (
               <div className="flex justify-between">
                 <span className="font-medium">Échéance:</span>
@@ -78,7 +85,7 @@ export function InvoiceHeader({ invoiceNumber, date, dueDate }: InvoiceHeaderPro
 }
 
 // Composant pour l'impression/PDF
-export function PrintableInvoiceHeader({ invoiceNumber, date, dueDate }: InvoiceHeaderProps) {
+export function PrintableInvoiceHeader({ invoiceNumber, date, time, dueDate }: InvoiceHeaderProps) {
   const companyLogo = useCompanyLogo();
   const { data: company } = useQuery<any>({
     queryKey: ['/api/company'],
@@ -135,6 +142,12 @@ export function PrintableInvoiceHeader({ invoiceNumber, date, dueDate }: Invoice
               <span className="font-medium">Date:</span>
               <span>{date}</span>
             </div>
+            {time && (
+              <div className="flex justify-between">
+                <span className="font-medium">Heure:</span>
+                <span>{time}</span>
+              </div>
+            )}
             {dueDate && (
               <div className="flex justify-between">
                 <span className="font-medium">Échéance:</span>
