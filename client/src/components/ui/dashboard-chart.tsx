@@ -20,17 +20,17 @@ export function DashboardChart({ data, maxValue }: DashboardChartProps) {
   };
 
   return (
-    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
-      <CardHeader className="pb-0 bg-gradient-to-r from-blue-100 to-indigo-100">
+    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-sm">
+      <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium text-blue-800 flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-            <span className="material-icons text-white text-sm">trending_up</span>
+          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+            <span className="material-icons text-white text-xs">trending_up</span>
           </div>
           Évolution des Ventes
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
-        <div className="h-48 flex items-end space-x-2 border-b border-l border-blue-300 relative">
+      <CardContent className="p-4">
+        <div className="h-32 flex items-end space-x-2 border-b border-l border-blue-300 relative">
           {/* Chart Y-axis labels */}
           <div className="absolute -left-7 top-0 h-full flex flex-col justify-between text-xs text-blue-600">
             <span>{formatCurrency(highestValue)}</span>
@@ -47,10 +47,10 @@ export function DashboardChart({ data, maxValue }: DashboardChartProps) {
             return (
               <div key={index} className="flex flex-col items-center">
                 <div 
-                  className="w-6 bg-gradient-to-t from-blue-500 to-indigo-400 rounded-t-sm shadow-sm" 
+                  className="w-4 bg-gradient-to-t from-blue-500 to-indigo-400 rounded-t-sm" 
                   style={{ height: `${percentage}%` }}
                 ></div>
-                <span className="text-xs mt-1 text-blue-600 font-medium">{item.day}</span>
+                <span className="text-xs mt-1 text-blue-600">{item.day}</span>
               </div>
             );
           })}
