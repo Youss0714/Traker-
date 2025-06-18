@@ -26,6 +26,7 @@ export default function DesktopLayout({ children }: DesktopLayoutProps) {
     { icon: "sync", label: "Synchronisation", href: "/sync", key: "sync" },
     { icon: "settings", label: "Paramètres", href: "/settings", key: "settings" },
     { icon: "account_circle", label: "Profil", href: "/profile", key: "profile" },
+    { icon: "help_outline", label: "Aide", href: "/help", key: "help" },
   ];
 
   const quickActions = [
