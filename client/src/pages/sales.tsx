@@ -11,9 +11,9 @@ import { fr } from 'date-fns/locale';
 // Sale item card component
 const SaleItem = ({ sale }: { sale: any }) => {
   const saleStatusTag = {
-    'paid': { label: 'Payée', className: 'bg-[#2E7D32] bg-opacity-10 text-[#2E7D32]' },
-    'pending': { label: 'En attente', className: 'bg-[#FF9800] bg-opacity-10 text-[#FF9800]' },
-    'canceled': { label: 'Annulée', className: 'bg-[#D32F2F] bg-opacity-10 text-[#D32F2F]' }
+    'paid': { label: 'Payée', className: 'bg-green-100 text-green-600 border-green-200' },
+    'pending': { label: 'En attente', className: 'bg-orange-100 text-orange-600 border-orange-200' },
+    'canceled': { label: 'Annulée', className: 'bg-red-100 text-red-600 border-red-200' }
   }[sale.status || 'pending'];
 
   const formatDate = (dateString: string) => {
@@ -22,27 +22,32 @@ const SaleItem = ({ sale }: { sale: any }) => {
   };
 
   return (
-    <Card className="card">
+    <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <div className="flex justify-between items-start">
-          <div>
-            <div className="flex items-center">
-              <h3 className="text-[#212121] font-medium">Vente #{sale.invoiceNumber}</h3>
-              <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${saleStatusTag.className}`}>
-                {saleStatusTag.label}
-              </span>
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+              <span className="material-icons text-white text-sm">receipt_long</span>
             </div>
-            <p className="text-xs text-[#757575] mt-1">{formatDate(sale.date)}</p>
-            <p className="text-xs text-[#757575]">Client: {sale.clientName}</p>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-green-800 font-medium">Vente #{sale.invoiceNumber}</h3>
+                <span className={`text-xs px-2 py-1 rounded-full border ${saleStatusTag.className}`}>
+                  {saleStatusTag.label}
+                </span>
+              </div>
+              <p className="text-xs text-green-600 mt-1 bg-white px-2 py-1 rounded-full inline-block">{formatDate(sale.date)}</p>
+              <p className="text-xs text-green-600 mt-1">Client: {sale.clientName}</p>
+            </div>
           </div>
           <div className="text-right">
-            <p className="text-[#212121] font-medium">{formatCurrency(sale.total)}</p>
+            <p className="text-green-800 font-medium text-lg">{formatCurrency(sale.total)}</p>
             <div className="flex space-x-2 mt-2">
-              <button className="p-1 bg-[#1976D2] bg-opacity-10 rounded">
-                <span className="material-icons text-[#1976D2] text-sm">receipt</span>
+              <button className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
+                <span className="material-icons text-white text-sm">receipt</span>
               </button>
-              <button className="p-1 bg-[#1976D2] bg-opacity-10 rounded">
-                <span className="material-icons text-[#1976D2] text-sm">share</span>
+              <button className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
+                <span className="material-icons text-white text-sm">share</span>
               </button>
             </div>
           </div>

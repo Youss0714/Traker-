@@ -9,29 +9,29 @@ import { formatCurrency } from "@/lib/utils/helpers";
 // Inventory item card component
 const InventoryItem = ({ item }: { item: any }) => {
   const stockStatus = item.quantity <= (item.threshold || 5) ? 
-    { label: 'Stock faible', className: 'bg-[#D32F2F] bg-opacity-10 text-[#D32F2F]' } :
-    { label: 'En stock', className: 'bg-[#2E7D32] bg-opacity-10 text-[#2E7D32]' };
+    { label: 'Stock faible', className: 'bg-red-100 text-red-600 border-red-200' } :
+    { label: 'En stock', className: 'bg-green-100 text-green-600 border-green-200' };
 
   return (
-    <Card className="card">
+    <Card className="bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <div className="flex items-center">
-          <div className="bg-[#F5F7FA] rounded-lg p-2 mr-3">
-            <span className="material-icons text-[#FF9800]">inventory_2</span>
+          <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center mr-3">
+            <span className="material-icons text-white">inventory_2</span>
           </div>
           <div className="flex-1">
             <div className="flex justify-between">
-              <h3 className="text-[#212121] font-medium">{item.name}</h3>
-              <span className="text-[#212121] font-medium">{formatCurrency(item.price)}</span>
+              <h3 className="text-purple-800 font-medium">{item.name}</h3>
+              <span className="text-purple-800 font-medium">{formatCurrency(item.price)}</span>
             </div>
             <div className="flex justify-between mt-1">
-              <div className="flex items-center">
-                <span className="text-xs text-[#757575] mr-2">{item.category}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${stockStatus.className}`}>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">{item.category}</span>
+                <span className={`text-xs px-2 py-1 rounded-full border ${stockStatus.className}`}>
                   {stockStatus.label}
                 </span>
               </div>
-              <span className="text-xs text-[#757575]">{item.quantity} unités</span>
+              <span className="text-xs text-purple-600 bg-white px-2 py-1 rounded-full">{item.quantity} unités</span>
             </div>
           </div>
         </div>

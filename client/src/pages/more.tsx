@@ -18,19 +18,23 @@ interface MenuItemProps {
 
 const MenuItem = ({ icon, label, link, iconBgColor, iconTextColor, badge, onClick }: MenuItemProps) => {
   const content = (
-    <Card className="card hover:shadow-lg transition-all duration-200 cursor-pointer border-3 border-gray-300 hover:border-blue-400 bg-white shadow-md">
+    <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200 hover:shadow-lg transition-all duration-200 cursor-pointer hover:from-indigo-100 hover:to-purple-100">
       <CardContent className="p-6 flex items-center">
-        <div className={`${iconBgColor} ${iconTextColor} p-5 rounded-2xl mr-6 shadow-lg border-2 border-gray-200`}>
-          <span className="material-icons text-3xl font-black">{icon}</span>
+        <div className={`${iconBgColor} ${iconTextColor} p-4 rounded-full mr-6 shadow-lg`}>
+          <span className="material-icons text-2xl">{icon}</span>
         </div>
-        <span className="flex-1 text-black font-black text-2xl tracking-wide">{label}</span>
+        <span className="flex-1 text-indigo-800 font-bold text-lg">{label}</span>
         {badge ? (
           <div className="flex items-center">
-            <span className={`text-sm px-4 py-2 ${badge.color} rounded-full mr-4 font-black shadow-md border border-gray-300`}>{badge.label}</span>
-            <span className="material-icons text-black text-2xl font-bold">chevron_right</span>
+            <span className={`text-sm px-3 py-1 ${badge.color} rounded-full mr-3 font-medium shadow-sm`}>{badge.label}</span>
+            <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
+              <span className="material-icons text-white text-sm">chevron_right</span>
+            </div>
           </div>
         ) : (
-          <span className="material-icons text-black text-2xl font-bold">chevron_right</span>
+          <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
+            <span className="material-icons text-white text-sm">chevron_right</span>
+          </div>
         )}
       </CardContent>
     </Card>

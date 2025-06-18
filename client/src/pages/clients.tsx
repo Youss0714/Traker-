@@ -10,29 +10,33 @@ import { formatCurrency } from "@/lib/utils/helpers";
 // Client item card component
 const ClientItem = ({ client }: { client: any }) => {
   const clientTypeTag = {
-    'regular': { label: 'Client régulier', className: 'bg-[#1976D2] bg-opacity-10 text-[#1976D2]' },
-    'new': { label: 'Nouveau client', className: 'bg-[#FF9800] bg-opacity-10 text-[#FF9800]' },
-    'vip': { label: 'Client VIP', className: 'bg-[#2E7D32] bg-opacity-10 text-[#2E7D32]' }
+    'regular': { label: 'Client régulier', className: 'bg-blue-100 text-blue-600 border-blue-200' },
+    'new': { label: 'Nouveau client', className: 'bg-orange-100 text-orange-600 border-orange-200' },
+    'vip': { label: 'Client VIP', className: 'bg-green-100 text-green-600 border-green-200' }
   }[client.type || 'regular'];
 
   return (
-    <Card className="card">
+    <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <div className="flex items-center">
           <AvatarInitials name={client.name} type={client.type} />
           <div className="flex-1 ml-3">
             <div className="flex justify-between">
-              <h3 className="text-[#212121] font-medium">{client.name}</h3>
+              <h3 className="text-orange-800 font-medium">{client.name}</h3>
               <div className="flex items-center space-x-2">
-                <span className="material-icons text-[#FF9800] text-sm">call</span>
-                <span className="material-icons text-[#FF9800] text-sm">message</span>
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                  <span className="material-icons text-white text-sm">call</span>
+                </div>
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                  <span className="material-icons text-white text-sm">message</span>
+                </div>
               </div>
             </div>
             <div className="flex justify-between mt-1">
-              <span className="text-xs text-[#757575]">
+              <span className="text-xs text-orange-600 bg-white px-2 py-1 rounded-full">
                 {client.totalOrders} commandes • {formatCurrency(client.totalSpent)}
               </span>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${clientTypeTag.className}`}>
+              <span className={`text-xs px-2 py-1 rounded-full border ${clientTypeTag.className}`}>
                 {clientTypeTag.label}
               </span>
             </div>

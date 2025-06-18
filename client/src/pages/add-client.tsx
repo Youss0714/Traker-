@@ -156,9 +156,10 @@ export default function AddClient() {
               
               <Button 
                 type="submit" 
-                className="w-full bg-[#1976D2]"
+                className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg"
                 disabled={addClientMutation.isPending}
               >
+                <span className="material-icons mr-2">person_add</span>
                 {addClientMutation.isPending ? "Enregistrement..." : "Enregistrer le client"}
               </Button>
             </form>
