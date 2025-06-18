@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Sale } from "@shared/schema";
+import { Sale, Company } from "@shared/schema";
 
 export default function Invoices() {
   const { setActivePage } = useAppContext();
@@ -16,6 +16,10 @@ export default function Invoices() {
   
   const { data: sales, isLoading } = useQuery<Sale[]>({
     queryKey: ['/api/sales'],
+  });
+
+  const { data: company } = useQuery<Company>({
+    queryKey: ['/api/company'],
   });
   
   useEffect(() => {
@@ -68,6 +72,7 @@ export default function Invoices() {
           body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
           .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
           .company { font-size: 24px; font-weight: bold; color: #1976D2; }
+          .company-info { margin-top: 10px; font-size: 14px; color: #555; }
           .invoice-info { display: flex; justify-content: space-between; margin-bottom: 30px; }
           .invoice-details, .client-details { flex: 1; }
           .invoice-details { text-align: right; }
@@ -84,8 +89,18 @@ export default function Invoices() {
       </head>
       <body>
         <div class="header">
-          <div class="company">gYS - Gestion d'Entreprise</div>
-          <div>Système de gestion commerciale</div>
+          ${company ? `
+            <div class="company">${company.name}</div>
+            <div class="company-info">
+              ${company.address}<br>
+              Tél: ${company.phone} | Email: ${company.email}<br>
+              ${company.website ? `Site: ${company.website}<br>` : ''}
+              Propriétaire: ${company.ownerName}
+            </div>
+          ` : `
+            <div class="company">gYS - Gestion d'Entreprise</div>
+            <div>Système de gestion commerciale</div>
+          `}
         </div>
         
         <div class="invoice-info">
@@ -129,7 +144,11 @@ export default function Invoices() {
 
         <div class="footer">
           <p>Merci pour votre confiance !</p>
-          <p>Cette facture a été générée automatiquement par gYS le ${new Date().toLocaleDateString('fr-FR')}</p>
+          ${company ? `
+            <p>Cette facture a été générée par ${company.name} le ${new Date().toLocaleDateString('fr-FR')}</p>
+          ` : `
+            <p>Cette facture a été générée automatiquement par gYS le ${new Date().toLocaleDateString('fr-FR')}</p>
+          `}
         </div>
       </body>
       </html>

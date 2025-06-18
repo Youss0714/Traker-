@@ -388,6 +388,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/company", async (req: Request, res: Response) => {
+    try {
+      const company = await storage.getCompany();
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      res.json(company);
+    } catch (error) {
+      console.error("Company error:", error);
+      res.status(500).json({ error: "Failed to get company info" });
+    }
+  });
+
   // Dashboard data API routes
   app.get("/api/dashboard", async (req: Request, res: Response) => {
     try {
