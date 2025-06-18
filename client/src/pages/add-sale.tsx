@@ -457,9 +457,17 @@ export default function AddSale() {
             </Label>
           </div>
           
-          <div className="pt-4">
+          <div className="pt-4 flex gap-3">
             <Button 
-              className="w-full bg-[#1976D2]" 
+              variant="outline"
+              className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50"
+              onClick={() => navigate('/dashboard')}
+            >
+              <span className="material-icons mr-2">cancel</span>
+              Annuler
+            </Button>
+            <Button 
+              className="flex-1 bg-[#1976D2]" 
               onClick={handleSubmit}
               disabled={addSaleMutation.isPending}
             >
