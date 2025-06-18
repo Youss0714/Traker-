@@ -271,24 +271,28 @@ export default function Dashboard() {
           value={formatCurrency(data?.metrics?.sales?.total || 0)} 
           trend={data?.metrics?.sales?.trend || ""} 
           trendUp={true}
+          colorTheme="green"
         />
         <MetricCard 
           label="Commandes" 
           value={data?.metrics?.orders?.total || 0} 
           trend={data?.metrics?.orders?.trend || ""} 
           trendUp={true}
+          colorTheme="blue"
         />
         <MetricCard 
           label="Clients" 
           value={data?.metrics?.clients?.total || 0} 
           trend={data?.metrics?.clients?.trend || ""} 
           trendUp={true}
+          colorTheme="orange"
         />
         <MetricCard 
           label="Produits" 
           value={data?.metrics?.products?.total || 0} 
           trend={data?.metrics?.products?.trend || ""} 
           trendUp={false}
+          colorTheme="purple"
         />
       </div>
 

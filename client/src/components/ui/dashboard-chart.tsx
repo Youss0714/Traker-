@@ -20,14 +20,19 @@ export function DashboardChart({ data, maxValue }: DashboardChartProps) {
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-0">
-        <CardTitle className="text-sm font-medium text-[#212121]">Évolution des Ventes</CardTitle>
+    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
+      <CardHeader className="pb-0 bg-gradient-to-r from-blue-100 to-indigo-100">
+        <CardTitle className="text-sm font-medium text-blue-800 flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <span className="material-icons text-white text-sm">trending_up</span>
+          </div>
+          Évolution des Ventes
+        </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-48 flex items-end space-x-2 border-b border-l border-gray-200 relative">
+      <CardContent className="p-6">
+        <div className="h-48 flex items-end space-x-2 border-b border-l border-blue-300 relative">
           {/* Chart Y-axis labels */}
-          <div className="absolute -left-7 top-0 h-full flex flex-col justify-between text-xs text-[#757575]">
+          <div className="absolute -left-7 top-0 h-full flex flex-col justify-between text-xs text-blue-600">
             <span>{formatCurrency(highestValue)}</span>
             <span>{formatCurrency(highestValue * 0.75)}</span>
             <span>{formatCurrency(highestValue * 0.5)}</span>
@@ -42,10 +47,10 @@ export function DashboardChart({ data, maxValue }: DashboardChartProps) {
             return (
               <div key={index} className="flex flex-col items-center">
                 <div 
-                  className="w-6 bg-[#1976D2] rounded-t-sm" 
+                  className="w-6 bg-gradient-to-t from-blue-500 to-indigo-400 rounded-t-sm shadow-sm" 
                   style={{ height: `${percentage}%` }}
                 ></div>
-                <span className="text-xs mt-1 text-[#757575]">{item.day}</span>
+                <span className="text-xs mt-1 text-blue-600 font-medium">{item.day}</span>
               </div>
             );
           })}

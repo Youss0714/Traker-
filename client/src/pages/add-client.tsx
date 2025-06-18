@@ -71,8 +71,8 @@ export default function AddClient() {
   
   return (
     <div className="p-4 space-y-6 pb-20">
-      <Card>
-        <CardContent className="pt-6">
+      <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 shadow-lg">
+        <CardContent className="pt-6 bg-gradient-to-r from-orange-100 to-red-100 m-6 rounded-lg border border-orange-200">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
