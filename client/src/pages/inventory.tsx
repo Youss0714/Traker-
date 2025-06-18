@@ -74,68 +74,75 @@ const EditProductModal = ({ product, onUpdate }: { product: Product; onUpdate: (
           Modifier
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-white" aria-describedby="edit-product-description">
         <DialogHeader>
-          <DialogTitle>Modifier le produit</DialogTitle>
+          <DialogTitle className="text-gray-900">Modifier le produit</DialogTitle>
         </DialogHeader>
+        <div id="edit-product-description" className="sr-only">
+          Formulaire pour modifier les informations d'un produit
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">Nom du produit</Label>
+            <Label htmlFor="name" className="text-gray-700 font-medium">Nom du produit</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
+              className="mt-1 bg-white border-gray-300 text-gray-900"
             />
           </div>
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-gray-700 font-medium">Description</Label>
             <Input
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
+              className="mt-1 bg-white border-gray-300 text-gray-900"
             />
           </div>
           <div>
-            <Label htmlFor="price">Prix (FCFA)</Label>
+            <Label htmlFor="price" className="text-gray-700 font-medium">Prix (FCFA)</Label>
             <Input
               id="price"
               type="number"
-              value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) })}
+              value={formData.price.toString()}
+              onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) || 0 })}
               required
+              className="mt-1 bg-white border-gray-300 text-gray-900"
             />
           </div>
           <div>
-            <Label htmlFor="quantity">Quantité</Label>
+            <Label htmlFor="quantity" className="text-gray-700 font-medium">Quantité</Label>
             <Input
               id="quantity"
               type="number"
-              value={formData.quantity}
-              onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
+              value={formData.quantity.toString()}
+              onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 0 })}
               required
+              className="mt-1 bg-white border-gray-300 text-gray-900"
             />
           </div>
           <div>
-            <Label htmlFor="category">Catégorie</Label>
+            <Label htmlFor="category" className="text-gray-700 font-medium">Catégorie</Label>
             <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-              <SelectTrigger>
+              <SelectTrigger className="mt-1 bg-white border-gray-300 text-gray-900">
                 <SelectValue placeholder="Sélectionner une catégorie" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Électronique">Électronique</SelectItem>
-                <SelectItem value="Alimentaire">Alimentaire</SelectItem>
-                <SelectItem value="Vêtements">Vêtements</SelectItem>
-                <SelectItem value="Accessoires">Accessoires</SelectItem>
+              <SelectContent className="bg-white border-gray-300">
+                <SelectItem value="Électronique" className="text-gray-900">Électronique</SelectItem>
+                <SelectItem value="Alimentaire" className="text-gray-900">Alimentaire</SelectItem>
+                <SelectItem value="Vêtements" className="text-gray-900">Vêtements</SelectItem>
+                <SelectItem value="Accessoires" className="text-gray-900">Accessoires</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button type="button" variant="outline" onClick={() => setIsOpen(false)} className="border-gray-300 text-gray-700 hover:bg-gray-50">
               Annuler
             </Button>
-            <Button type="submit" disabled={updateMutation.isPending}>
+            <Button type="submit" disabled={updateMutation.isPending} className="bg-purple-600 hover:bg-purple-700 text-white">
               {updateMutation.isPending ? "Modification..." : "Modifier"}
             </Button>
           </div>
