@@ -123,10 +123,6 @@ export default function DesktopLayout({ children }: DesktopLayoutProps) {
                 <span className="material-icons mr-2">notifications</span>
                 Notifications
               </Button>
-              <Button variant="outline" size="sm">
-                <span className="material-icons mr-2">help</span>
-                Aide
-              </Button>
             </div>
           </div>
         </header>
