@@ -95,7 +95,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
                 <Input
                   id="name"
                   {...form.register('name')}
-                  placeholder="Ex: Mon Entreprise SARL"
+                  placeholder="Ex: Société Ivoirienne de Commerce"
                 />
                 {form.formState.errors.name && (
                   <p className="text-sm text-red-600">{form.formState.errors.name.message}</p>
@@ -107,7 +107,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
                 <Input
                   id="ownerName"
                   {...form.register('ownerName')}
-                  placeholder="Ex: Jean Dupont"
+                  placeholder="Ex: Kouamé Yao"
                 />
                 {form.formState.errors.ownerName && (
                   <p className="text-sm text-red-600">{form.formState.errors.ownerName.message}</p>

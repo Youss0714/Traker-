@@ -100,91 +100,128 @@ export class MemStorage implements IStorage {
   private initData() {
     // Create default categories first
     this.createCategory({
-      name: "Électronique",
-      description: "Appareils électroniques et gadgets",
+      name: "Textile et Mode",
+      description: "Pagnes, tissus wax, vêtements traditionnels",
       isActive: true
     });
     
     this.createCategory({
-      name: "Vêtements",
-      description: "Vêtements et accessoires de mode",
+      name: "Produits Agricoles",
+      description: "Cacao, café, igname, plantain, riz local",
       isActive: true
     });
     
     this.createCategory({
-      name: "Maison",
-      description: "Articles pour la maison et décoration",
+      name: "Artisanat Local",
+      description: "Sculptures, masques, bijoux traditionnels",
       isActive: true
     });
     
-    // Create a default user
-    this.createUser({
-      username: "admin",
-      password: "admin123",
-      fullName: "Admin User",
-      role: "admin"
+    this.createCategory({
+      name: "Alimentation",
+      description: "Attiéké, foutou, huile de palme, épices",
+      isActive: true
     });
     
     // Create some products
     this.createProduct({
-      name: "Smartphone XYZ",
-      description: "Latest smartphone model",
-      category: "Électronique",
-      price: 125000,
-      quantity: 5,
-      threshold: 10,
-      isActive: true
-    });
-    
-    this.createProduct({
-      name: "Ordinateur portable",
-      description: "Ordinateur portable haute performance",
-      category: "Électronique",
-      price: 450000,
-      quantity: 12,
-      threshold: 5,
-      isActive: true
-    });
-    
-    this.createProduct({
-      name: "T-shirt Coton",
-      description: "T-shirt en coton de haute qualité",
-      category: "Vêtements",
-      price: 8500,
+      name: "Pagne Wax Vlisco",
+      description: "Tissu wax authentique de haute qualité, 6 yards",
+      category: "Textile et Mode",
+      price: 25000,
       quantity: 45,
       threshold: 10,
       isActive: true
     });
     
+    this.createProduct({
+      name: "Cacao en Fèves - Qualité Premium",
+      description: "Fèves de cacao de Côte d'Ivoire, première qualité",
+      category: "Produits Agricoles",
+      price: 1500,
+      quantity: 250,
+      threshold: 50,
+      isActive: true
+    });
+    
+    this.createProduct({
+      name: "Masque Baoulé Traditionnel",
+      description: "Masque sculpté authentique de la tradition Baoulé",
+      category: "Artisanat Local",
+      price: 85000,
+      quantity: 8,
+      threshold: 3,
+      isActive: true
+    });
+    
+    this.createProduct({
+      name: "Attiéké Premium",
+      description: "Semoule de manioc traditionnel de Côte d'Ivoire, 1kg",
+      category: "Alimentation",
+      price: 1200,
+      quantity: 180,
+      threshold: 30,
+      isActive: true
+    });
+    
+    this.createProduct({
+      name: "Huile de Palme Rouge",
+      description: "Huile de palme rouge artisanale, bidon 5L",
+      category: "Alimentation",
+      price: 8500,
+      quantity: 65,
+      threshold: 15,
+      isActive: true
+    });
+    
+    this.createProduct({
+      name: "Café Robusta Daloa",
+      description: "Café robusta de la région de Daloa, sac 1kg",
+      category: "Produits Agricoles",
+      price: 3500,
+      quantity: 95,
+      threshold: 20,
+      isActive: true
+    });
+    
     // Create some clients
     this.createClient({
-      name: "Aminata Sanogo",
-      email: "aminata@example.com",
-      phone: "+22501234567",
-      address: "Abidjan, Côte d'Ivoire",
+      name: "Kouamé Yao",
+      email: "kouame.yao@gmail.com",
+      phone: "+225 07 45 78 32",
+      address: "Cocody Angré, Abidjan",
       type: "regular"
     });
     
     this.createClient({
-      name: "Oumar Keita",
-      email: "oumar@example.com",
-      phone: "+22502345678",
-      address: "Bamako, Mali",
-      type: "new"
-    });
-    
-    this.createClient({
-      name: "Fatima Diallo",
-      email: "fatima@example.com",
-      phone: "+22503456789",
-      address: "Dakar, Sénégal",
+      name: "Adjoua Konan",
+      email: "adjoua.konan@yahoo.fr",
+      phone: "+225 05 89 12 45",
+      address: "Marcory Zone 4, Abidjan",
       type: "vip"
     });
     
+    this.createClient({
+      name: "Bakayoko Ibrahim",
+      email: "ibrahim.bakayoko@hotmail.com",
+      phone: "+225 01 67 34 89",
+      address: "Bouaké Centre, Région du Gbêkê",
+      type: "regular"
+    });
+    
+    this.createClient({
+      name: "Gnagbo Marie",
+      email: "marie.gnagbo@orange.ci",
+      phone: "+225 09 23 56 71",
+      address: "San Pedro, Région du Bas-Sassandra",
+      type: "new"
+    });
+    
     // Update client stats
-    this.updateClientStats(1, 550000);
-    this.updateClientStats(2, 125000);
-    this.updateClientStats(3, 1250000);
+    this.updateClientStats(1, 155000);
+    this.updateClientStats(2, 285000);
+    this.updateClientStats(3, 75000);
+    this.updateClientStats(4, 42000);
     
     // Create some sales
     const now = new Date();
@@ -192,39 +229,55 @@ export class MemStorage implements IStorage {
     yesterday.setDate(yesterday.getDate() - 1);
     
     this.createSale({
-      invoiceNumber: "INV-1248",
+      invoiceNumber: "INV-2024-001",
       clientId: 1,
-      clientName: "Aminata Sanogo",
+      clientName: "Kouamé Yao",
+      status: "paid",
+      total: 110000,
+      items: JSON.stringify([
+        { productId: 1, name: "Pagne Wax Vlisco", price: 25000, quantity: 3, subtotal: 75000 },
+        { productId: 3, name: "Masque Baoulé Traditionnel", price: 85000, quantity: 1, subtotal: 85000 }
+      ]),
+      notes: "Livraison à Cocody"
+    });
+    
+    this.createSale({
+      invoiceNumber: "INV-2024-002",
+      clientId: 2,
+      clientName: "Adjoua Konan",
+      status: "paid",
+      total: 195000,
+      items: JSON.stringify([
+        { productId: 1, name: "Pagne Wax Vlisco", price: 25000, quantity: 4, subtotal: 100000 },
+        { productId: 3, name: "Masque Baoulé Traditionnel", price: 85000, quantity: 1, subtotal: 85000 },
+        { productId: 5, name: "Huile de Palme Rouge", price: 8500, quantity: 1, subtotal: 8500 }
+      ]),
+      notes: ""
+    });
+    
+    this.createSale({
+      invoiceNumber: "INV-2024-003",
+      clientId: 3,
+      clientName: "Bakayoko Ibrahim",
       status: "paid",
       total: 75000,
       items: JSON.stringify([
-        { productId: 1, name: "Smartphone XYZ", price: 125000, quantity: 0.6, subtotal: 75000 }
+        { productId: 2, name: "Cacao en Fèves - Qualité Premium", price: 1500, quantity: 50, subtotal: 75000 }
       ]),
-      notes: ""
+      notes: "Commande de cacao pour export"
     });
     
     this.createSale({
-      invoiceNumber: "INV-1247",
-      clientId: 2,
-      clientName: "Oumar Keita",
+      invoiceNumber: "INV-2024-004",
+      clientId: 4,
+      clientName: "Gnagbo Marie",
       status: "pending",
-      total: 42500,
+      total: 42000,
       items: JSON.stringify([
-        { productId: 3, name: "T-shirt Coton", price: 8500, quantity: 5, subtotal: 42500 }
+        { productId: 4, name: "Attiéké Premium", price: 1200, quantity: 20, subtotal: 24000 },
+        { productId: 5, name: "Huile de Palme Rouge", price: 8500, quantity: 2, subtotal: 17000 }
       ]),
-      notes: ""
-    });
-    
-    this.createSale({
-      invoiceNumber: "INV-1246",
-      clientId: 3,
-      clientName: "Fatima Diallo",
-      status: "paid",
-      total: 125000,
-      items: JSON.stringify([
-        { productId: 1, name: "Smartphone XYZ", price: 125000, quantity: 1, subtotal: 125000 }
-      ]),
-      notes: ""
+      notes: "Livraison à San Pedro"
     });
   }
 
