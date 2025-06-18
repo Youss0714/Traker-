@@ -235,48 +235,66 @@ export default function AppHeader() {
           {/* Notifications */}
           <Dialog open={showNotifications} onOpenChange={setShowNotifications}>
             <DialogTrigger asChild>
-              <div className="relative">
-                <span className="material-icons cursor-pointer">notifications</span>
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0" variant="destructive">3</Badge>
+              <div className="relative cursor-pointer hover:scale-110 transition-transform">
+                <span className="material-icons">notifications</span>
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-gradient-to-r from-red-500 to-pink-500 border-none shadow-lg animate-pulse">3</Badge>
               </div>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md bg-gradient-to-br from-slate-50 to-gray-100 border-gray-200 shadow-xl">
               <DialogHeader>
-                <DialogTitle>Notifications</DialogTitle>
+                <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Notifications
+                </DialogTitle>
               </DialogHeader>
-              <div className="space-y-4 mt-2">
-                <div className="bg-gray-100 p-3 rounded-lg">
+              <div className="space-y-3 mt-4">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center">
-                      <span className="material-icons text-amber-500 mr-2">warning</span>
-                      <h4 className="font-medium">Stock faible</h4>
+                      <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center mr-3">
+                        <span className="material-icons text-white text-sm">warning</span>
+                      </div>
+                      <h4 className="font-medium text-amber-800">Stock faible</h4>
                     </div>
-                    <span className="text-xs text-gray-500">Aujourd'hui</span>
+                    <span className="text-xs text-amber-600 font-medium">Aujourd'hui</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Le produit "Smartphone XYZ" a un stock faible (5 restants).</p>
+                  <p className="text-sm text-amber-700 mt-2 ml-11">Le produit "Smartphone XYZ" a un stock faible (5 restants).</p>
                 </div>
                 
-                <div className="bg-gray-100 p-3 rounded-lg">
+                <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-4 rounded-lg border border-emerald-200 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center">
-                      <span className="material-icons text-green-600 mr-2">monetization_on</span>
-                      <h4 className="font-medium">Nouvelle vente</h4>
+                      <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mr-3">
+                        <span className="material-icons text-white text-sm">monetization_on</span>
+                      </div>
+                      <h4 className="font-medium text-emerald-800">Nouvelle vente</h4>
                     </div>
-                    <span className="text-xs text-gray-500">Hier</span>
+                    <span className="text-xs text-emerald-600 font-medium">Hier</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Une nouvelle vente de 127,500 FCFA a été enregistrée.</p>
+                  <p className="text-sm text-emerald-700 mt-2 ml-11">Une nouvelle vente de 127,500 FCFA a été enregistrée.</p>
                 </div>
                 
-                <div className="bg-gray-100 p-3 rounded-lg">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center">
-                      <span className="material-icons text-blue-600 mr-2">person_add</span>
-                      <h4 className="font-medium">Nouveau client</h4>
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mr-3">
+                        <span className="material-icons text-white text-sm">person_add</span>
+                      </div>
+                      <h4 className="font-medium text-blue-800">Nouveau client</h4>
                     </div>
-                    <span className="text-xs text-gray-500">Il y a 2 jours</span>
+                    <span className="text-xs text-blue-600 font-medium">Il y a 2 jours</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Le client "Mamadou Traoré" a été ajouté à la base de données.</p>
+                  <p className="text-sm text-blue-700 mt-2 ml-11">Le client "Mamadou Traoré" a été ajouté à la base de données.</p>
                 </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-gray-200">
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  onClick={() => setShowNotifications(false)}
+                >
+                  <span className="material-icons text-sm mr-2">done_all</span>
+                  Marquer tout comme lu
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
