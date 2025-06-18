@@ -13,6 +13,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { formatCurrency } from "@/lib/utils/helpers";
 import { Company, Sale } from "@shared/schema";
+import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } from "@/lib/utils/tax";
 
 interface SaleItem {
   productId: number;
@@ -150,11 +151,15 @@ export default function AddSale() {
   // Fonction pour imprimer une facture
   const printInvoice = (sale: Sale) => {
     const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
+    const currentTaxRate = getCurrentTaxRate();
     
-    // Calculer le total basé sur les articles pour vérifier la cohérence
-    const calculatedTotal = Array.isArray(items) ? 
+    // Calculer le total HT et TVA
+    const subtotalHT = Array.isArray(items) ? 
       items.reduce((sum: number, item: any) => 
         sum + ((item.quantity || 1) * (item.price || item.unitPrice || 0)), 0) : 0;
+    
+    const taxAmount = calculateTaxAmount(subtotalHT, currentTaxRate);
+    const totalTTC = subtotalHT + taxAmount;
     
     const printContent = `
       <!DOCTYPE html>
@@ -232,7 +237,27 @@ export default function AddSale() {
         </table>
 
         <div class="total-section">
-          <div>Total: <strong>${formatAmount(calculatedTotal > 0 ? calculatedTotal : sale.total)}</strong></div>
+          <div style="margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span>Sous-total HT:</span>
+              <span><strong>${formatAmount(subtotalHT)}</strong></span>
+            </div>
+            ${currentTaxRate > 0 ? `
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>TVA (${currentTaxRate}%):</span>
+                <span><strong>${formatAmount(taxAmount)}</strong></span>
+              </div>
+              <div style="border-top: 1px solid #ddd; padding-top: 5px; display: flex; justify-content: space-between;">
+                <span>Total TTC:</span>
+                <span><strong>${formatAmount(totalTTC)}</strong></span>
+              </div>
+            ` : `
+              <div style="border-top: 1px solid #ddd; padding-top: 5px; display: flex; justify-content: space-between;">
+                <span>Total:</span>
+                <span><strong>${formatAmount(subtotalHT)}</strong></span>
+              </div>
+            `}
+          </div>
         </div>
 
         <div class="footer">
