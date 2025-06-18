@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
+import { PWAInstaller } from '@/components/PWAInstaller';
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -168,6 +169,9 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
           ))}
         </div>
       </nav>
+
+      {/* PWA Installer */}
+      <PWAInstaller />
     </div>
   );
 }
