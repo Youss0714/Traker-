@@ -37,15 +37,17 @@ export function CurrencySelector({ onCurrencyChange }: CurrencySelectorProps) {
   };
 
   return (
-    <Card className="border-green-200 shadow-sm">
-      <CardHeader className="bg-green-50">
-        <CardTitle className="text-lg font-medium text-green-800">
-          <span className="material-icons mr-2 align-middle text-green-600">monetization_on</span>
+    <Card className="border-green-200 shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-green-100 to-emerald-100">
+        <CardTitle className="text-lg font-medium text-green-800 flex items-center gap-3">
+          <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+            <span className="material-icons text-white text-lg">monetization_on</span>
+          </div>
           Devise
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
+      <CardContent className="space-y-4 p-6">
+        <div className="p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
           <label className="text-sm font-medium text-green-700 mb-2 block">
             Devise actuelle : {CURRENCIES[selectedCurrency].name}
           </label>
@@ -68,9 +70,11 @@ export function CurrencySelector({ onCurrencyChange }: CurrencySelectorProps) {
         
 
 
-        <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-          <p className="text-xs text-green-700">
-            <span className="material-icons text-sm mr-1 align-middle text-green-600">info</span>
+        <div className="bg-gradient-to-r from-green-100 to-emerald-100 p-3 rounded-lg border border-green-300">
+          <p className="text-xs text-green-700 flex items-center gap-2">
+            <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+              <span className="material-icons text-white text-xs">info</span>
+            </div>
             Le changement de devise s'appliquera à toute l'application et sera sauvegardé.
           </p>
         </div>

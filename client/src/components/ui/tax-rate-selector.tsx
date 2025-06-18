@@ -32,15 +32,17 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
   };
 
   return (
-    <Card className="border-purple-200 shadow-sm">
-      <CardHeader className="bg-purple-50">
-        <CardTitle className="text-lg font-medium text-purple-800">
-          <span className="material-icons mr-2 align-middle text-purple-600">receipt</span>
+    <Card className="border-purple-200 shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-purple-100 to-pink-100">
+        <CardTitle className="text-lg font-medium text-purple-800 flex items-center gap-3">
+          <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+            <span className="material-icons text-white text-lg">receipt</span>
+          </div>
           Configuration de la TVA
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
+      <CardContent className="space-y-4 p-6">
+        <div className="p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
           <label className="text-sm font-medium text-purple-700 mb-2 block">
             Taux de TVA actuel : {selectedTaxRate}%
           </label>
@@ -60,9 +62,11 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
         
 
 
-        <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
-          <p className="text-xs text-purple-700">
-            <span className="material-icons text-sm mr-1 align-middle text-purple-600">info</span>
+        <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-lg border border-purple-300">
+          <p className="text-xs text-purple-700 flex items-center gap-2">
+            <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center">
+              <span className="material-icons text-white text-xs">info</span>
+            </div>
             Ce taux sera appliqué par défaut sur toutes les nouvelles ventes et factures.
           </p>
         </div>
