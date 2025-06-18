@@ -58,16 +58,7 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
           </Select>
         </div>
         
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <p className="text-sm text-gray-600 mb-2">Taux disponibles :</p>
-          <div className="grid grid-cols-4 gap-2">
-            {Object.entries(TAX_RATES).map(([rate]) => (
-              <div key={rate} className="text-sm font-medium text-center">
-                {rate}%
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         <div className="bg-blue-50 p-3 rounded-lg">
           <p className="text-xs text-blue-700">

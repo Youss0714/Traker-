@@ -66,17 +66,7 @@ export function CurrencySelector({ onCurrencyChange }: CurrencySelectorProps) {
           </Select>
         </div>
         
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <p className="text-sm text-gray-600 mb-2">Devises disponibles :</p>
-          <div className="space-y-1">
-            {Object.entries(CURRENCIES).map(([code, config]) => (
-              <div key={code} className="flex justify-between text-sm">
-                <span>{config.name}</span>
-                <span className="font-medium">{config.symbol}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         <div className="bg-blue-50 p-3 rounded-lg">
           <p className="text-xs text-blue-700">
