@@ -41,7 +41,6 @@ export default function Categories() {
 
   const createCategoryMutation = useMutation({
     mutationFn: async (category: CategoryFormValues) => {
-      // Nettoyer les données avant envoi
       const cleanData = {
         name: category.name.trim(),
         description: category.description || null,
@@ -139,7 +138,6 @@ export default function Categories() {
     console.log('Form submitted with data:', data);
     console.log('Editing category:', editingCategory);
     
-    // Validation simple
     if (!data.name || data.name.trim().length === 0) {
       toast({
         title: "Erreur",
@@ -178,12 +176,12 @@ export default function Categories() {
 
   if (isLoading) {
     return (
-      <div className="p-4 space-y-4">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-medium text-[#212121]">Catégories</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Gestion des catégories</h2>
           <Button disabled>
             <span className="material-icons mr-2">add</span>
-            Ajouter
+            Nouvelle catégorie
           </Button>
         </div>
         <div className="grid gap-4">
@@ -202,7 +200,7 @@ export default function Categories() {
 
   if (error) {
     return (
-      <div className="p-4">
+      <div className="space-y-4">
         <Card className="bg-red-50 border-red-200">
           <CardContent className="p-4">
             <h3 className="text-red-700 font-medium">Erreur de chargement</h3>
@@ -222,67 +220,73 @@ export default function Categories() {
           <h2 className="text-2xl font-bold text-gray-900">Gestion des catégories</h2>
           <p className="text-gray-600 mt-1">Organisez vos produits par catégories</p>
         </div>
-        <Dialog open={isAddDialogOpen} onOpenChange={handleDialogClose}>
-          <DialogTrigger asChild>
-            <Button onClick={() => setIsAddDialogOpen(true)}>
-              <span className="material-icons mr-2">add</span>
-              Ajouter
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md" aria-describedby="dialog-description">
-            <DialogHeader>
-              <DialogTitle>
-                {editingCategory ? "Modifier la catégorie" : "Nouvelle catégorie"}
-              </DialogTitle>
-              <div id="dialog-description" className="sr-only">
-                Formulaire pour {editingCategory ? "modifier" : "créer"} une catégorie
-              </div>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
-                console.log('Form validation errors:', errors);
-              })} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom de la catégorie</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: Électronique" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description (optionnelle)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Description de la catégorie" {...field} value={field.value || ""} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={handleDialogClose}>
-                    Annuler
-                  </Button>
-                  <Button 
-                    type="submit" 
-                    disabled={createCategoryMutation.isPending || updateCategoryMutation.isPending}
-                  >
-                    {createCategoryMutation.isPending || updateCategoryMutation.isPending ? "En cours..." : editingCategory ? "Modifier" : "Créer"}
-                  </Button>
+        <div className="flex gap-3">
+          <Dialog open={isAddDialogOpen} onOpenChange={handleDialogClose}>
+            <DialogTrigger asChild>
+              <Button onClick={() => setIsAddDialogOpen(true)} className="bg-blue-600 hover:bg-blue-700">
+                <span className="material-icons mr-2">add</span>
+                Nouvelle catégorie
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md" aria-describedby="dialog-description">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingCategory ? "Modifier la catégorie" : "Nouvelle catégorie"}
+                </DialogTitle>
+                <div id="dialog-description" className="sr-only">
+                  Formulaire pour {editingCategory ? "modifier" : "créer"} une catégorie
                 </div>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                  console.log('Form validation errors:', errors);
+                })} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nom de la catégorie</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ex: Électronique" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description (optionnelle)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Description de la catégorie" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={handleDialogClose}>
+                      Annuler
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      disabled={createCategoryMutation.isPending || updateCategoryMutation.isPending}
+                    >
+                      {createCategoryMutation.isPending || updateCategoryMutation.isPending ? "En cours..." : editingCategory ? "Modifier" : "Créer"}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+          <Button variant="outline" className="flex items-center gap-2">
+            <span className="material-icons">file_download</span>
+            Exporter
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
