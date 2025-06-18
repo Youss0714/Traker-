@@ -23,10 +23,12 @@ import Profile from "@/pages/profile";
 import Sync from "@/pages/sync";
 import Categories from "@/pages/categories";
 import Help from "@/pages/help";
+import Backup from "@/pages/backup";
 import { AppProvider } from "./lib/context/AppContext";
 import { SplashScreen } from "@/components/SplashScreen";
 import { CompanySetup } from "@/components/CompanySetup";
 import { useQuery } from "@tanstack/react-query";
+import { RecoveryDialog, useRecoveryDetection } from "@/components/backup/RecoveryDialog";
 
 function Router() {
   return (
@@ -49,6 +51,7 @@ function Router() {
       <Route path="/sync" component={Sync} />
       <Route path="/categories" component={Categories} />
       <Route path="/help" component={Help} />
+      <Route path="/backup" component={Backup} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -57,6 +60,7 @@ function Router() {
 function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const [needsSetup, setNeedsSetup] = useState<boolean | null>(null);
+  const { recoveryBackup, showRecoveryDialog, closeRecoveryDialog } = useRecoveryDetection();
 
   const { data: companyStatus, isLoading } = useQuery<{ isSetup: boolean; company?: any }>({
     queryKey: ['/api/company/status'],
@@ -92,6 +96,15 @@ function AppContent() {
         <AppShell>
           <Router />
         </AppShell>
+        
+        {/* Dialogue de récupération automatique */}
+        {recoveryBackup && (
+          <RecoveryDialog
+            isOpen={showRecoveryDialog}
+            onClose={closeRecoveryDialog}
+            recoveryBackup={recoveryBackup}
+          />
+        )}
       </TooltipProvider>
     </AppProvider>
   );
