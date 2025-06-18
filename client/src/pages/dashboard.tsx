@@ -19,7 +19,6 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
 
 interface DashboardMetrics {
   sales: {
@@ -58,7 +57,6 @@ export default function Dashboard() {
   const { setActivePage } = useAppContext();
   const [timeRange, setTimeRange] = useState("week");
   const [filters, setFilters] = useState<string[]>([]);
-  const [isCustomizable, setIsCustomizable] = useState(false);
   
   useEffect(() => {
     setActivePage('dashboard');
@@ -142,10 +140,7 @@ export default function Dashboard() {
     );
   }
   
-  // Use customizable dashboard if enabled
-  if (isCustomizable) {
-    return <CustomizableDashboard />;
-  }
+
 
   return (
     <div className="space-y-6">
@@ -155,18 +150,6 @@ export default function Dashboard() {
           <p className="text-gray-600 mt-1">Suivez vos indicateurs clés en temps réel</p>
         </div>
         <div className="flex space-x-2">
-          {/* Dashboard Mode Toggle */}
-          <Button
-            variant={isCustomizable ? "default" : "outline"}
-            size="sm"
-            onClick={() => setIsCustomizable(!isCustomizable)}
-            className="h-8"
-          >
-            <span className="material-icons text-sm mr-1">
-              {isCustomizable ? 'dashboard' : 'widgets'}
-            </span>
-            {isCustomizable ? 'Vue standard' : 'Personnaliser'}
-          </Button>
           {/* Sélecteur de période */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
