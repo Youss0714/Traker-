@@ -239,14 +239,27 @@ export default function AddProduct() {
                 )}
               />
               
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
-                disabled={productMutation.isPending}
-              >
-                <span className="material-icons mr-2">save</span>
-                {productMutation.isPending ? "Enregistrement..." : (isEditing ? "Modifier le produit" : "Enregistrer le produit")}
-              </Button>
+              <div className="flex gap-3">
+                {isEditing && (
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50"
+                    onClick={() => navigate('/catalog')}
+                  >
+                    <span className="material-icons mr-2">cancel</span>
+                    Annuler
+                  </Button>
+                )}
+                <Button 
+                  type="submit" 
+                  className={`${isEditing ? 'flex-1' : 'w-full'} bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg`}
+                  disabled={productMutation.isPending}
+                >
+                  <span className="material-icons mr-2">save</span>
+                  {productMutation.isPending ? "Enregistrement..." : (isEditing ? "Modifier le produit" : "Enregistrer le produit")}
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
