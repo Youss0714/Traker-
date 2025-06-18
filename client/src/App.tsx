@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +23,7 @@ import Profile from "@/pages/profile";
 import Sync from "@/pages/sync";
 import Categories from "@/pages/categories";
 import { AppProvider } from "./lib/context/AppContext";
+import { SplashScreen } from "@/components/SplashScreen";
 
 function Router() {
   return (
@@ -48,6 +50,12 @@ function Router() {
 }
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
