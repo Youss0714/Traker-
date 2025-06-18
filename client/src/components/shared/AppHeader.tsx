@@ -237,6 +237,62 @@ export default function AppHeader() {
             </DialogContent>
           </Dialog>
           
+          {/* Aide */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="relative cursor-pointer hover:scale-110 transition-transform bg-transparent border-none p-0">
+                <span className="material-icons text-white">help_outline</span>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Centre d'aide
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <div className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                      <span className="material-icons text-white text-sm">support_agent</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-blue-800 mb-1">Support technique</h4>
+                      <p className="text-sm text-blue-600 mb-2">Contactez notre équipe pour toute assistance</p>
+                      <div className="flex items-center space-x-2">
+                        <span className="material-icons text-blue-500 text-sm">email</span>
+                        <a 
+                          href="mailto:youssouphafil@gmail.com" 
+                          className="text-blue-600 font-medium hover:text-blue-800 transition-colors text-sm"
+                        >
+                          youssouphafil@gmail.com
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => alert("Documentation en cours de développement")}
+                    className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors flex flex-col items-center space-y-1"
+                  >
+                    <span className="material-icons text-sm">quiz</span>
+                    <span className="text-xs font-medium">FAQ</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => window.open('mailto:youssouphafil@gmail.com?subject=Feedback gYS App')}
+                    className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors flex flex-col items-center space-y-1"
+                  >
+                    <span className="material-icons text-sm">feedback</span>
+                    <span className="text-xs font-medium">Feedback</span>
+                  </button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           {/* Notifications */}
           <Dialog open={showNotifications} onOpenChange={setShowNotifications}>
             <DialogTrigger asChild>
