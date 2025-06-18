@@ -96,28 +96,30 @@ export default function Catalog() {
               {filteredProducts.map((product) => {
                 const stockStatus = getStockStatus(product.quantity, product.threshold);
                 return (
-                  <Card key={product.id} className="overflow-hidden">
-                    <div className="h-48 bg-gray-100 flex items-center justify-center">
-                      <span className="material-icons text-6xl text-gray-300">inventory_2</span>
+                  <Card key={product.id} className="overflow-hidden bg-gradient-to-r from-cyan-50 to-blue-50 border-cyan-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="h-48 bg-gradient-to-r from-cyan-100 to-blue-100 flex items-center justify-center">
+                      <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center">
+                        <span className="material-icons text-3xl text-white">inventory_2</span>
+                      </div>
                     </div>
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-medium text-[#212121]">{product.name}</h3>
-                        <Badge className={stockStatus.color}>
+                        <h3 className="font-medium text-cyan-800">{product.name}</h3>
+                        <Badge className={`${stockStatus.color} border rounded-full`}>
                           {stockStatus.label}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-500 mb-2 line-clamp-2">{product.description}</p>
+                      <p className="text-sm text-cyan-600 mb-2 line-clamp-2">{product.description}</p>
                       <div className="mt-3 flex justify-between items-center">
-                        <span className="text-[#1976D2] font-bold">{formatPrice(product.price)}</span>
-                        <span className="text-sm text-gray-500">Qté: {product.quantity}</span>
+                        <span className="text-cyan-800 font-bold text-lg">{formatPrice(product.price)}</span>
+                        <span className="text-sm text-cyan-600 bg-white px-2 py-1 rounded-full">Qté: {product.quantity}</span>
                       </div>
                       <div className="mt-4 flex justify-between gap-2">
-                        <Button variant="outline" size="sm" className="flex-1">
+                        <Button variant="outline" size="sm" className="flex-1 bg-cyan-500 text-white border-cyan-500 hover:bg-cyan-600">
                           <span className="material-icons text-sm mr-1">edit</span>
                           Modifier
                         </Button>
-                        <Button variant="outline" size="sm" className="flex-1">
+                        <Button variant="outline" size="sm" className="flex-1 bg-blue-500 text-white border-blue-500 hover:bg-blue-600">
                           <span className="material-icons text-sm mr-1">add_shopping_cart</span>
                           Vendre
                         </Button>

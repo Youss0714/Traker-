@@ -185,8 +185,8 @@ export default function Invoices() {
         </div>
       </div>
 
-      <Card>
-        <CardContent className="p-4">
+      <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200 shadow-lg">
+        <CardContent className="p-6 bg-gradient-to-r from-yellow-100 to-orange-100 m-4 rounded-lg border border-yellow-200">
           <div className="flex flex-col lg:flex-row justify-between gap-4 mb-6">
             <div className="flex-1 max-w-md">
               <Input

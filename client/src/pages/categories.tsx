@@ -276,7 +276,7 @@ export default function Categories() {
         <div className="flex gap-3">
           <Dialog open={isAddDialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-lg">
                 <span className="material-icons mr-2">add</span>
                 Nouvelle catégorie
               </Button>
@@ -352,27 +352,33 @@ export default function Categories() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((category: Category) => (
-          <Card key={category.id}>
-            <CardHeader className="pb-2">
+          <Card key={category.id} className="bg-gradient-to-r from-pink-50 to-rose-50 border-pink-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="pb-2 bg-gradient-to-r from-pink-100 to-rose-100 m-4 rounded-lg border border-pink-200">
               <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-base">{category.name}</CardTitle>
-                  {category.description && (
-                    <p className="text-sm text-gray-600 mt-1">{category.description}</p>
-                  )}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+                    <span className="material-icons text-white text-lg">category</span>
+                  </div>
+                  <div>
+                    <CardTitle className="text-pink-800 text-base">{category.name}</CardTitle>
+                    {category.description && (
+                      <p className="text-sm text-pink-600 mt-1">{category.description}</p>
+                    )}
+                  </div>
                 </div>
                 <div className="flex space-x-2">
                   <Button 
                     variant="ghost" 
                     size="sm"
                     onClick={() => handleEdit(category)}
+                    className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors"
                   >
-                    <span className="material-icons text-sm">edit</span>
+                    <span className="material-icons text-sm text-white">edit</span>
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
-                        <span className="material-icons text-sm">delete</span>
+                      <Button variant="ghost" size="sm" className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                        <span className="material-icons text-sm text-white">delete</span>
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
