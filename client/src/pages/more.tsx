@@ -138,6 +138,46 @@ export default function More() {
           </div>
         </div>
 
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl shadow-md border border-blue-200">
+          <h3 className="text-blue-800 text-base uppercase font-bold mb-6 tracking-wider">💬 AIDE & SUPPORT</h3>
+          <div className="space-y-4">
+            <div className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                  <span className="material-icons text-white">help_outline</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-blue-800 mb-1">Centre d'aide</h4>
+                  <p className="text-sm text-blue-600 mb-2">Besoin d'assistance ? Contactez notre équipe support</p>
+                  <div className="flex items-center space-x-2">
+                    <span className="material-icons text-blue-500 text-sm">email</span>
+                    <a 
+                      href="mailto:youssouphafil@gmail.com" 
+                      className="text-blue-600 font-medium hover:text-blue-800 transition-colors"
+                    >
+                      youssouphafil@gmail.com
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <MenuItem 
+              icon="quiz" 
+              label="FAQ & Documentation" 
+              iconBgColor="bg-blue-500" 
+              iconTextColor="text-white" 
+              onClick={() => alert("Documentation en cours de développement")}
+            />
+            <MenuItem 
+              icon="feedback" 
+              label="Envoyer un commentaire" 
+              iconBgColor="bg-blue-500" 
+              iconTextColor="text-white" 
+              onClick={() => window.open('mailto:youssouphafil@gmail.com?subject=Feedback gYS App')}
+            />
+          </div>
+        </div>
+
         <div className="bg-red-50 p-6 rounded-xl shadow-md border-2 border-red-200">
           <MenuItem 
             icon="logout" 
