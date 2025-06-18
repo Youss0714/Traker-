@@ -54,6 +54,99 @@ export default function Invoices() {
     }
   };
 
+  // Fonction pour imprimer une facture
+  const printInvoice = (sale: Sale) => {
+    const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
+    
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Facture ${sale.invoiceNumber}</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+          .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+          .company { font-size: 24px; font-weight: bold; color: #1976D2; }
+          .invoice-info { display: flex; justify-content: space-between; margin-bottom: 30px; }
+          .invoice-details, .client-details { flex: 1; }
+          .invoice-details { text-align: right; }
+          .table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+          .table th, .table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+          .table th { background-color: #f5f5f5; font-weight: bold; }
+          .total-section { text-align: right; font-size: 18px; font-weight: bold; }
+          .footer { margin-top: 50px; text-align: center; color: #666; font-size: 12px; }
+          @media print { 
+            body { margin: 0; } 
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="company">gYS - Gestion d'Entreprise</div>
+          <div>Système de gestion commerciale</div>
+        </div>
+        
+        <div class="invoice-info">
+          <div class="client-details">
+            <h3>Facturé à:</h3>
+            <strong>${sale.clientName}</strong><br>
+            ${sale.clientId ? `Réf. Client: ${sale.clientId}` : ''}
+          </div>
+          <div class="invoice-details">
+            <h3>Détails de la facture:</h3>
+            <strong>N° Facture: ${sale.invoiceNumber}</strong><br>
+            Date: ${formatDate(sale.date)}<br>
+            Statut: ${getStatusBadge(sale.status).label}
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Article</th>
+              <th>Quantité</th>
+              <th>Prix unitaire</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Array.isArray(items) ? items.map((item: any) => `
+              <tr>
+                <td>${item.name || item.productName || 'Article'}</td>
+                <td>${item.quantity || 1}</td>
+                <td>${formatAmount(item.price || item.unitPrice || 0)}</td>
+                <td>${formatAmount((item.quantity || 1) * (item.price || item.unitPrice || 0))}</td>
+              </tr>
+            `).join('') : '<tr><td colspan="4">Aucun article disponible</td></tr>'}
+          </tbody>
+        </table>
+
+        <div class="total-section">
+          <div>Total: <strong>${formatAmount(sale.total)}</strong></div>
+        </div>
+
+        <div class="footer">
+          <p>Merci pour votre confiance !</p>
+          <p>Cette facture a été générée automatiquement par gYS le ${new Date().toLocaleDateString('fr-FR')}</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    }
+  };
+
   // Filtrer les ventes
   const filteredSales = sales?.filter(sale => {
     const matchesStatus = filterStatus === "all" || (sale.status?.toLowerCase() === filterStatus);
@@ -67,10 +160,26 @@ export default function Invoices() {
     <div className="p-4 space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-medium text-[#212121]">Factures</h2>
-        <Button>
-          <span className="material-icons mr-1 text-sm">add</span>
-          Nouvelle facture
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              if (filteredSales && filteredSales.length > 0) {
+                filteredSales.forEach((sale, index) => {
+                  setTimeout(() => printInvoice(sale), index * 1000);
+                });
+              }
+            }}
+            disabled={!filteredSales || filteredSales.length === 0}
+          >
+            <span className="material-icons mr-1 text-sm">print</span>
+            Imprimer tout
+          </Button>
+          <Button>
+            <span className="material-icons mr-1 text-sm">add</span>
+            Nouvelle facture
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -133,10 +242,15 @@ export default function Invoices() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" title="Voir les détails">
                               <span className="material-icons text-[18px]">visibility</span>
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              onClick={() => printInvoice(sale)}
+                              title="Imprimer la facture"
+                            >
                               <span className="material-icons text-[18px]">print</span>
                             </Button>
                           </div>
