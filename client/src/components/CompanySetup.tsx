@@ -120,7 +120,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
               <Textarea
                 id="address"
                 {...form.register('address')}
-                placeholder="Ex: 123 Rue de la République, Ouagadougou"
+                placeholder="Ex: Cocody Angré 7ème Tranche, Abidjan"
                 rows={2}
               />
               {form.formState.errors.address && (
@@ -134,7 +134,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
                 <Input
                   id="phone"
                   {...form.register('phone')}
-                  placeholder="Ex: +226 70 12 34 56"
+                  placeholder="Ex: +225 07 45 78 32"
                 />
                 {form.formState.errors.phone && (
                   <p className="text-sm text-red-600">{form.formState.errors.phone.message}</p>
@@ -147,7 +147,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
                   id="email"
                   type="email"
                   {...form.register('email')}
-                  placeholder="Ex: contact@monentreprise.com"
+                  placeholder="Ex: contact@societe-ci.com"
                 />
                 {form.formState.errors.email && (
                   <p className="text-sm text-red-600">{form.formState.errors.email.message}</p>
@@ -160,7 +160,7 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
               <Input
                 id="website"
                 {...form.register('website')}
-                placeholder="Ex: https://monentreprise.com"
+                placeholder="Ex: https://societe-ci.com"
               />
             </div>
 
