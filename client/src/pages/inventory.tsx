@@ -55,7 +55,7 @@ export default function Inventory() {
   
   const categories = ["Tous", "Faible stock", "Électronique", "Alimentaire", "Vêtements"];
   
-  const filteredProducts = products ? products.filter((product: any) => {
+  const filteredProducts = Array.isArray(products) ? products.filter((product: Product) => {
     // Filter by search term
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.category.toLowerCase().includes(searchTerm.toLowerCase());
@@ -63,7 +63,7 @@ export default function Inventory() {
     // Filter by category
     let matchesCategory = true;
     if (selectedCategory === "Faible stock") {
-      matchesCategory = product.quantity <= (product.threshold || 5);
+      matchesCategory = product.quantity <= 5;
     } else if (selectedCategory !== "Tous") {
       matchesCategory = product.category === selectedCategory;
     }
