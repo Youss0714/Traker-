@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
+import { useMobileDevice } from "@/hooks/use-mobile";
+import MobileDashboard from "@/components/mobile/MobileDashboard";
 
 interface DashboardMetrics {
   sales: {
@@ -59,10 +61,16 @@ export default function Dashboard() {
   const [location, navigate] = useLocation();
   const [timeRange, setTimeRange] = useState("week");
   const [filters, setFilters] = useState<string[]>([]);
+  const { isMobileDevice } = useMobileDevice();
   
   useEffect(() => {
     setActivePage('dashboard');
   }, [setActivePage]);
+
+  // Use mobile-optimized dashboard for Android and small screens
+  if (isMobileDevice) {
+    return <MobileDashboard />;
+  }
   
   const { data, isLoading, error } = useQuery<DashboardData>({
     queryKey: ['/api/dashboard', timeRange, filters],
