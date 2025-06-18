@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { dbStorage as storage } from "./dbStorage";
+import { storage } from "./storage";
 import { 
   insertProductSchema, 
   insertClientSchema, 

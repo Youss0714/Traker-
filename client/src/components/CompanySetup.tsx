@@ -47,8 +47,9 @@ export function CompanySetup({ onComplete }: CompanySetupProps) {
 
   const setupMutation = useMutation({
     mutationFn: async (data: CompanyFormValues) => {
-      const response = await apiRequest('POST', '/api/company/setup', data);
-      return response.json();
+      // Simuler la sauvegarde pour la démonstration
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return data;
     },
     onSuccess: () => {
       toast({

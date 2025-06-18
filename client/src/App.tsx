@@ -51,23 +51,42 @@ function Router() {
   );
 }
 
-function App() {
+function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
+  const [needsSetup, setNeedsSetup] = useState(false);
+
+  // Simuler la vérification du statut de l'entreprise
+  useEffect(() => {
+    if (!showSplash) {
+      // Pour cette démonstration, on considère que l'entreprise n'est pas configurée
+      setNeedsSetup(true);
+    }
+  }, [showSplash]);
 
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
   }
 
+  if (needsSetup) {
+    return <CompanySetup onComplete={() => setNeedsSetup(false)} />;
+  }
+
+  return (
+    <AppProvider>
+      <TooltipProvider>
+        <Toaster />
+        <AppShell>
+          <Router />
+        </AppShell>
+      </TooltipProvider>
+    </AppProvider>
+  );
+}
+
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppProvider>
-        <TooltipProvider>
-          <Toaster />
-          <AppShell>
-            <Router />
-          </AppShell>
-        </TooltipProvider>
-      </AppProvider>
+      <AppContent />
     </QueryClientProvider>
   );
 }
