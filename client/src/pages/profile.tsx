@@ -28,7 +28,6 @@ export default function Profile() {
               </div>
             </Avatar>
             <h3 className="text-lg font-medium text-indigo-800">Youssouf Sawadogo</h3>
-            <p className="text-sm text-indigo-600">Administrateur</p>
             <Button className="mt-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg">
               <span className="material-icons text-sm mr-2">photo_camera</span>
               Changer la photo
@@ -44,7 +43,7 @@ export default function Profile() {
               
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-indigo-700 font-medium">Nom d'utilisateur</Label>
-                <Input id="username" defaultValue="admin" className="border-indigo-200 focus:border-indigo-400" />
+                <Input id="username" defaultValue="ysawadogo" className="border-indigo-200 focus:border-indigo-400" />
               </div>
             </div>
             

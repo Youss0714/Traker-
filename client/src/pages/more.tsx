@@ -61,8 +61,8 @@ export default function More() {
   return (
     <div className="p-4 space-y-6 bg-white min-h-screen">
       <div className="bg-blue-600 text-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-2">Menu Administrateur</h2>
-        <p className="text-blue-100">Gérez votre application et accédez aux outils avancés</p>
+        <h2 className="text-2xl font-bold mb-2">Menu Principal</h2>
+        <p className="text-blue-100">Gérez votre application et accédez aux outils</p>
       </div>
 
       {/* Menu Categories */}
