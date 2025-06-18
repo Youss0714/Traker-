@@ -5,14 +5,14 @@
 export type TaxRate = 0 | 4 | 5 | 6 | 10 | 17 | 18 | 20;
 
 export const TAX_RATES = {
-  0: { label: "0% - Exonéré", description: "Produits exonérés de TVA" },
-  4: { label: "4% - Taux réduit", description: "Produits de première nécessité" },
-  5: { label: "5% - Taux réduit", description: "Certains produits alimentaires" },
-  6: { label: "6% - Taux intermédiaire", description: "Services spécialisés" },
-  10: { label: "10% - Taux intermédiaire", description: "Restauration, hôtellerie" },
-  17: { label: "17% - Taux normal", description: "Taux normal pour certains pays" },
-  18: { label: "18% - Taux normal", description: "Taux normal standard" },
-  20: { label: "20% - Taux normal", description: "Taux normal européen" }
+  0: { label: "0%", description: "" },
+  4: { label: "4%", description: "" },
+  5: { label: "5%", description: "" },
+  6: { label: "6%", description: "" },
+  10: { label: "10%", description: "" },
+  17: { label: "17%", description: "" },
+  18: { label: "18%", description: "" },
+  20: { label: "20%", description: "" }
 } as const;
 
 /**

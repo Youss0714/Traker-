@@ -51,10 +51,7 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
             <SelectContent>
               {Object.entries(TAX_RATES).map(([rate, config]) => (
                 <SelectItem key={rate} value={rate}>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{config.label}</span>
-                    <span className="text-xs text-gray-500">{config.description}</span>
-                  </div>
+                  <span className="font-medium">{config.label}</span>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -63,10 +60,10 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
         
         <div className="bg-gray-50 p-3 rounded-lg">
           <p className="text-sm text-gray-600 mb-2">Taux disponibles :</p>
-          <div className="grid grid-cols-2 gap-2">
-            {Object.entries(TAX_RATES).map(([rate, config]) => (
-              <div key={rate} className="text-xs">
-                <span className="font-medium">{rate}%</span> - {config.description}
+          <div className="grid grid-cols-4 gap-2">
+            {Object.entries(TAX_RATES).map(([rate]) => (
+              <div key={rate} className="text-sm font-medium text-center">
+                {rate}%
               </div>
             ))}
           </div>
