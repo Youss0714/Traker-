@@ -27,20 +27,23 @@ export default function Settings() {
             <h3 className="text-sm font-medium text-blue-800 mb-4">Préférences d'affichage</h3>
             
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 bg-blue-100 rounded-lg border border-blue-300">
                 <div>
-                  <Label htmlFor="dark-mode" className="text-sm">Mode sombre</Label>
-                  <p className="text-xs text-gray-500">Activer le thème sombre pour l'application</p>
+                  <Label htmlFor="dark-mode" className="text-sm font-medium text-blue-800">Mode sombre</Label>
+                  <p className="text-xs text-blue-600">Activer le thème sombre pour l'application</p>
                 </div>
-                <Switch id="dark-mode" />
+                <Switch id="dark-mode" className="data-[state=checked]:bg-blue-500" />
               </div>
               
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 bg-blue-100 rounded-lg border border-blue-300">
                 <div>
-                  <Label htmlFor="notifications" className="text-sm">Notifications</Label>
-                  <p className="text-xs text-gray-500">Recevoir des notifications de l'application</p>
+                  <Label htmlFor="notifications" className="text-sm font-medium text-blue-800">Notifications</Label>
+                  <p className="text-xs text-blue-600">Recevoir des notifications de l'application</p>
                 </div>
-                <Switch id="notifications" defaultChecked />
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-blue-700 font-medium">Activé</span>
+                  <Switch id="notifications" defaultChecked className="data-[state=checked]:bg-blue-500" />
+                </div>
               </div>
               
 
@@ -76,12 +79,15 @@ export default function Settings() {
             <h3 className="text-sm font-medium text-orange-800 mb-4">Paramètres de l'entreprise</h3>
             
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 bg-orange-100 rounded-lg border border-orange-300">
                 <div>
-                  <Label htmlFor="auto-backup" className="text-sm">Sauvegarde automatique</Label>
-                  <p className="text-xs text-gray-500">Sauvegarder vos données automatiquement</p>
+                  <Label htmlFor="auto-backup" className="text-sm font-medium text-orange-800">Sauvegarde automatique</Label>
+                  <p className="text-xs text-orange-600">Sauvegarder vos données automatiquement</p>
                 </div>
-                <Switch id="auto-backup" defaultChecked />
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-orange-700 font-medium">Activé</span>
+                  <Switch id="auto-backup" defaultChecked className="data-[state=checked]:bg-orange-500" />
+                </div>
               </div>
               
 
