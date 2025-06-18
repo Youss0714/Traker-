@@ -156,15 +156,13 @@ export function CustomizableDashboard() {
   };
 
   const getDefaultSize = (type: WidgetType) => {
-    const sizes = {
+    const sizes: Record<WidgetType, { width: number; height: number }> = {
       'metrics-overview': { width: 500, height: 200 },
       'sales-chart': { width: 600, height: 300 },
       'recent-activities': { width: 400, height: 300 },
       'quick-actions': { width: 300, height: 200 },
       'top-products': { width: 350, height: 300 },
       'inventory-alerts': { width: 350, height: 250 },
-      'client-stats': { width: 400, height: 250 },
-      'revenue-trends': { width: 500, height: 300 },
     };
     return sizes[type] || { width: 300, height: 200 };
   };
@@ -226,7 +224,7 @@ export function CustomizableDashboard() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {(['top-products', 'inventory-alerts', 'client-stats', 'revenue-trends'] as WidgetType[]).map(type => (
+              {(['top-products', 'inventory-alerts'] as WidgetType[]).map(type => (
                 <Button
                   key={type}
                   variant="outline"

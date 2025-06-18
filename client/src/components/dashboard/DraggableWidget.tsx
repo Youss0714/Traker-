@@ -47,8 +47,8 @@ export function DraggableWidget({
                 : 'shadow-sm hover:shadow-md'
             } ${!widget.isVisible ? 'opacity-50' : ''}`}
             style={{
-              width: `${widget.size.width}px`,
-              height: `${widget.size.height}px`,
+              minWidth: '280px',
+              minHeight: '200px',
             }}
           >
             {/* Widget Header with Drag Handle */}
