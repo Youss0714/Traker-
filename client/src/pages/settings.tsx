@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { CurrencySelector } from "@/components/ui/currency-selector";
+import { TaxRateSelector } from "@/components/ui/tax-rate-selector";
 
 export default function Settings() {
   const { setActivePage } = useAppContext();
@@ -73,21 +74,7 @@ export default function Settings() {
                 <Switch id="auto-backup" defaultChecked />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="tax-rate" className="text-sm">Taux de TVA (%)</Label>
-                <Select defaultValue="18">
-                  <SelectTrigger id="tax-rate">
-                    <SelectValue placeholder="Sélectionner un taux" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">0%</SelectItem>
-                    <SelectItem value="5">5%</SelectItem>
-                    <SelectItem value="10">10%</SelectItem>
-                    <SelectItem value="18">18%</SelectItem>
-                    <SelectItem value="20">20%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
             </div>
           </div>
         </CardContent>
@@ -95,6 +82,9 @@ export default function Settings() {
 
       {/* Currency Settings */}
       <CurrencySelector />
+
+      {/* Tax Rate Settings */}
+      <TaxRateSelector />
     </div>
   );
 }
