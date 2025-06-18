@@ -285,7 +285,7 @@ export default function Categories() {
         </Dialog>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((category: Category) => (
           <Card key={category.id}>
             <CardHeader className="pb-2">
