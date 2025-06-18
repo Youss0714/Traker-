@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
 
 interface DashboardMetrics {
   sales: {
