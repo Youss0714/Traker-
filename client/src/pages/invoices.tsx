@@ -9,9 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Sale, Company } from "@shared/schema";
 import { getCurrentTaxRate, calculateTaxAmount } from "@/lib/utils/tax";
+import { useLocation } from "wouter";
 
 export default function Invoices() {
   const { setActivePage } = useAppContext();
+  const [, navigate] = useLocation();
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
   
@@ -226,7 +228,7 @@ export default function Invoices() {
             <span className="material-icons mr-1 text-sm">print</span>
             Imprimer tout
           </Button>
-          <Button>
+          <Button onClick={() => navigate('/add-sale')}>
             <span className="material-icons mr-1 text-sm">add</span>
             Nouvelle facture
           </Button>
