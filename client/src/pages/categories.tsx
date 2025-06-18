@@ -136,9 +136,11 @@ export default function Categories() {
 
   const onSubmit = (data: CategoryFormValues) => {
     console.log('Form submitted with data:', data);
+    console.log('Form errors:', form.formState.errors);
     console.log('Editing category:', editingCategory);
     
     if (!data.name || data.name.trim().length === 0) {
+      console.log('Name validation failed');
       toast({
         title: "Erreur",
         description: "Le nom de la catégorie est requis.",
@@ -147,6 +149,7 @@ export default function Categories() {
       return;
     }
     
+    console.log('Proceeding with mutation...');
     if (editingCategory) {
       updateCategoryMutation.mutate({ id: editingCategory.id, category: data });
     } else {
@@ -238,9 +241,7 @@ export default function Categories() {
                 </div>
               </DialogHeader>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
-                  console.log('Form validation errors:', errors);
-                })} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
                     control={form.control}
                     name="name"
