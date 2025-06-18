@@ -7,40 +7,59 @@ import { AvatarInitials } from "@/components/ui/avatar-initials";
 import { useAppContext } from "@/lib/context/AppContext";
 import { formatCurrency } from "@/lib/utils/helpers";
 
+interface Client {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  type: string;
+  totalSpent: number;
+  lastOrderDate: string;
+}
+
 // Client item card component
-const ClientItem = ({ client }: { client: any }) => {
-  const clientTypeTag = {
+const ClientItem = ({ client }: { client: Client }) => {
+  const typeMap: Record<string, { label: string; className: string }> = {
     'regular': { label: 'Client régulier', className: 'bg-blue-100 text-blue-600 border-blue-200' },
     'new': { label: 'Nouveau client', className: 'bg-orange-100 text-orange-600 border-orange-200' },
     'vip': { label: 'Client VIP', className: 'bg-green-100 text-green-600 border-green-200' }
-  }[client.type || 'regular'];
+  };
+  const clientTypeTag = typeMap[client.type] || typeMap['regular'];
 
   return (
     <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <div className="flex items-center">
-          <AvatarInitials name={client.name} type={client.type} />
-          <div className="flex-1 ml-3">
-            <div className="flex justify-between">
-              <h3 className="text-orange-800 font-medium">{client.name}</h3>
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                  <span className="material-icons text-white text-sm">call</span>
-                </div>
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                  <span className="material-icons text-white text-sm">message</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between mt-1">
-              <span className="text-xs text-orange-600 bg-white px-2 py-1 rounded-full">
-                {client.totalOrders} commandes • {formatCurrency(client.totalSpent)}
-              </span>
-              <span className={`text-xs px-2 py-1 rounded-full border ${clientTypeTag.className}`}>
+          <div className="mr-3">
+            <AvatarInitials 
+              name={client.name} 
+              type={client.type as "regular" | "new" | "vip" | undefined}
+              size="md" 
+            />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="font-medium text-orange-800">{client.name}</h3>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${clientTypeTag.className}`}>
                 {clientTypeTag.label}
               </span>
             </div>
+            <p className="text-sm text-orange-600">{client.email}</p>
+            <p className="text-sm text-orange-600">{client.phone}</p>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-lg font-semibold text-orange-800">{formatCurrency(client.totalSpent)}</span>
+              <span className="text-sm text-orange-600">Total dépensé</span>
+            </div>
           </div>
+        </div>
+        <div className="mt-3 flex gap-2">
+          <Button size="sm" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-md flex-1">
+            <span className="material-icons text-sm mr-1">edit</span>
+            Modifier
+          </Button>
+          <Button size="sm" variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
+            <span className="material-icons text-sm">visibility</span>
+          </Button>
         </div>
       </CardContent>
     </Card>
@@ -62,7 +81,7 @@ export default function Clients() {
   
   const categories = ["Tous", "Réguliers", "Nouveaux", "VIP"];
   
-  const filteredClients = clients ? clients.filter((client: any) => {
+  const filteredClients = Array.isArray(clients) ? clients.filter((client: Client) => {
     // Filter by search term
     const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         (client.email && client.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -80,130 +99,70 @@ export default function Clients() {
     
     return matchesSearch && matchesCategory;
   }) : [];
-  
+
   if (isLoading) {
     return (
       <div className="p-4 space-y-6">
-        <div className="flex justify-between mb-4">
-          <h2 className="text-lg font-medium text-[#212121]">Clients</h2>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm" className="h-8">
-              <span className="material-icons text-[#757575] text-sm mr-1">filter_list</span>
-              <span>Filtres</span>
-            </Button>
-            <Button variant="outline" size="sm" className="h-8 px-2">
-              <span className="material-icons text-[#757575] text-sm">sort</span>
-            </Button>
-          </div>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm p-3 flex items-center">
-          <span className="material-icons text-[#757575]">search</span>
-          <div className="ml-2 flex-1 h-5 bg-gray-200 animate-pulse rounded"></div>
-        </div>
-        
-        <div className="flex overflow-x-auto pb-2 space-x-3 -mx-4 px-4">
-          {categories.map((category, index) => (
-            <div key={index} className="h-10 w-20 bg-gray-200 animate-pulse rounded-full"></div>
-          ))}
-        </div>
-        
-        <div className="space-y-3">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="h-[80px]">
-              <CardContent className="p-4 flex items-center">
-                <div className="h-10 w-10 bg-gray-200 animate-pulse rounded-full mr-3"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-5 bg-gray-200 animate-pulse rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 animate-pulse rounded w-3/4"></div>
-                </div>
-              </CardContent>
-            </Card>
+        <div className="animate-pulse space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
           ))}
         </div>
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="p-4">
-        <Card className="bg-red-50 border-red-200">
-          <CardContent className="p-4">
-            <h3 className="text-red-700 font-medium">Erreur de chargement</h3>
-            <p className="text-sm text-red-600 mt-1">
-              Impossible de charger les données des clients.
-            </p>
-            <Button className="mt-4 bg-red-600" onClick={() => window.location.reload()}>
-              Réessayer
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="text-center py-8">
+          <span className="material-icons text-4xl text-gray-400 mb-2">error_outline</span>
+          <p className="text-gray-500">Erreur lors du chargement des clients</p>
+        </div>
       </div>
     );
   }
-  
+
   return (
     <div className="p-4 space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium text-[#212121]">Clients</h2>
-        <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="h-8">
-            <span className="material-icons text-[#757575] text-sm mr-1">filter_list</span>
-            <span>Filtres</span>
-          </Button>
-          <Button variant="outline" size="sm" className="h-8 px-2">
-            <span className="material-icons text-[#757575] text-sm">sort</span>
-          </Button>
+      {/* Search and Filter Section */}
+      <div className="space-y-4">
+        <Input
+          placeholder="Rechercher un client..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full"
+        />
+        
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <Button
+              key={category}
+              variant={selectedCategory === category ? "default" : "outline"}
+              onClick={() => setSelectedCategory(category)}
+              className={`whitespace-nowrap ${
+                selectedCategory === category 
+                  ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-md" 
+                  : "border-orange-300 text-orange-600 hover:bg-orange-50"
+              }`}
+            >
+              {category}
+            </Button>
+          ))}
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="bg-white rounded-lg shadow-sm flex items-center px-3 py-2">
-        <span className="material-icons text-[#757575]">search</span>
-        <Input 
-          type="text" 
-          placeholder="Rechercher un client..." 
-          className="ml-2 flex-1 border-none shadow-none focus-visible:ring-0 text-sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      {/* Client Categories */}
-      <div className="flex overflow-x-auto pb-2 space-x-3 -mx-4 px-4">
-        {categories.map((category, index) => (
-          <Button
-            key={index}
-            variant={selectedCategory === category ? "default" : "outline"}
-            className={`px-4 py-2 text-sm rounded-full shadow-sm whitespace-nowrap ${
-              selectedCategory === category 
-                ? "bg-[#1976D2] text-white" 
-                : "bg-white text-[#212121]"
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
-
-      {/* Client List */}
-      <div className="space-y-3">
-        {filteredClients.length > 0 ? (
-          filteredClients.map((client: any) => (
+      {/* Clients List */}
+      <div className="space-y-4">
+        {filteredClients.length === 0 ? (
+          <div className="text-center py-8">
+            <span className="material-icons text-4xl text-gray-400 mb-2">people</span>
+            <p className="text-gray-500">Aucun client trouvé</p>
+          </div>
+        ) : (
+          filteredClients.map((client: Client) => (
             <ClientItem key={client.id} client={client} />
           ))
-        ) : (
-          <Card>
-            <CardContent className="p-6 text-center">
-              <span className="material-icons text-3xl text-[#757575] mb-2">people</span>
-              <h3 className="text-[#212121] font-medium">Aucun client trouvé</h3>
-              <p className="text-sm text-[#757575] mt-1">
-                Aucun client ne correspond à vos critères de recherche.
-              </p>
-            </CardContent>
-          </Card>
         )}
       </div>
     </div>
