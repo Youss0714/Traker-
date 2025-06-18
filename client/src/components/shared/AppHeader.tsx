@@ -66,7 +66,7 @@ export default function AppHeader() {
   };
   
   return (
-    <header className="bg-[#1976D2] text-white shadow-md z-10">
+    <header className="bg-[#1976D2] text-white shadow-md z-40 relative">
       <div className="px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           {showBackButton ? (

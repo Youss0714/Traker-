@@ -35,7 +35,7 @@ export function CurrencyDropdown() {
           <span className="material-icons text-sm">keyboard_arrow_down</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-white border shadow-lg">
+      <DropdownMenuContent align="end" side="bottom" className="w-56 bg-white border shadow-xl z-[9999] mt-2">
         <div className="px-3 py-2 text-sm font-medium text-gray-700 border-b">
           Choisir une devise
         </div>
