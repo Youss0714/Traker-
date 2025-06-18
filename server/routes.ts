@@ -6,6 +6,7 @@ import {
   insertClientSchema, 
   insertSaleSchema,
   insertCategorySchema,
+  insertCompanySchema,
   saleItemsSchema
 } from "@shared/schema";
 import { z } from "zod";
@@ -398,6 +399,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Company error:", error);
       res.status(500).json({ error: "Failed to get company info" });
+    }
+  });
+
+  app.patch("/api/company/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid company ID" });
+      }
+      
+      const companyUpdate = insertCompanySchema.partial().parse(req.body);
+      const updatedCompany = await storage.updateCompany(id, companyUpdate);
+      
+      if (!updatedCompany) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+      
+      res.json(updatedCompany);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      res.status(500).json({ message: "Error updating company" });
     }
   });
 
