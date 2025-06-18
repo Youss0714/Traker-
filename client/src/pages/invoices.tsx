@@ -46,7 +46,7 @@ export default function Invoices() {
     clientAddress: "",
     invoiceNumber: `INV-${Date.now()}`,
     date: new Date().toISOString().split('T')[0],
-    time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    time: new Date().toTimeString().slice(0, 5),
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     items: [
       {
@@ -192,6 +192,7 @@ export default function Invoices() {
             <PrintableInvoiceHeader 
               invoiceNumber={invoiceData.invoiceNumber}
               date={invoiceData.date}
+              time={invoiceData.time}
               dueDate={invoiceData.dueDate}
             />
 
@@ -282,11 +283,12 @@ export default function Invoices() {
           <InvoiceHeader 
             invoiceNumber={invoiceData.invoiceNumber}
             date={invoiceData.date}
+            time={invoiceData.time}
             dueDate={invoiceData.dueDate}
           />
 
           {/* Informations de la facture */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="space-y-2">
               <Label htmlFor="invoiceNumber">Numéro de facture</Label>
               <Input 
@@ -302,6 +304,15 @@ export default function Invoices() {
                 type="date"
                 value={invoiceData.date}
                 onChange={(e) => setInvoiceData(prev => ({ ...prev, date: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="time">Heure</Label>
+              <Input 
+                id="time"
+                type="time"
+                value={invoiceData.time}
+                onChange={(e) => setInvoiceData(prev => ({ ...prev, time: e.target.value }))}
               />
             </div>
             <div className="space-y-2">
