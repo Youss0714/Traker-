@@ -194,16 +194,14 @@ export default function AppHeader() {
                         Profil
                       </Button>
                     </SheetClose>
-                    <SheetClose asChild>
-                      <Button 
-                        variant="ghost" 
-                        className="w-full justify-start" 
-                        onClick={() => setShowHelp(true)}
-                      >
-                        <span className="material-icons mr-2">help_outline</span>
-                        Aide
-                      </Button>
-                    </SheetClose>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start" 
+                      onClick={() => setShowHelp(true)}
+                    >
+                      <span className="material-icons mr-2">help_outline</span>
+                      Aide
+                    </Button>
                     <Button 
                       variant="ghost" 
                       className="w-full justify-start text-red-500 hover:text-red-700 hover:bg-red-50"
