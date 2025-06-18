@@ -21,10 +21,10 @@ export default function Settings() {
         <h2 className="text-lg font-medium text-[#212121]">Paramètres généraux</h2>
       </div>
 
-      <Card>
+      <Card className="border-blue-200 shadow-sm">
         <CardContent className="p-6 space-y-6">
-          <div>
-            <h3 className="text-sm font-medium text-[#212121] mb-4">Préférences d'affichage</h3>
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <h3 className="text-sm font-medium text-blue-800 mb-4">Préférences d'affichage</h3>
             
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -46,14 +46,24 @@ export default function Settings() {
 
               
               <div className="space-y-2">
-                <Label htmlFor="language" className="text-sm">Langue</Label>
+                <Label htmlFor="language" className="text-sm font-medium text-blue-700">Langue</Label>
                 <Select defaultValue="fr">
-                  <SelectTrigger id="language">
+                  <SelectTrigger id="language" className="border-blue-300 focus:border-blue-500 focus:ring-blue-500">
                     <SelectValue placeholder="Sélectionner une langue" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fr">Français</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fr">
+                      <div className="flex items-center gap-2">
+                        <span className="text-blue-600">🇫🇷</span>
+                        <span>Français</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="en">
+                      <div className="flex items-center gap-2">
+                        <span className="text-blue-600">🇺🇸</span>
+                        <span>English</span>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -62,8 +72,8 @@ export default function Settings() {
           
           <Separator />
           
-          <div>
-            <h3 className="text-sm font-medium text-[#212121] mb-4">Paramètres de l'entreprise</h3>
+          <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+            <h3 className="text-sm font-medium text-orange-800 mb-4">Paramètres de l'entreprise</h3>
             
             <div className="space-y-4">
               <div className="flex items-center justify-between">
