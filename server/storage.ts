@@ -233,7 +233,7 @@ export class MemStorage implements IStorage {
       clientId: 1,
       clientName: "Kouamé Yao",
       status: "paid",
-      total: 110000,
+      total: 160000,
       items: JSON.stringify([
         { productId: 1, name: "Pagne Wax Vlisco", price: 25000, quantity: 3, subtotal: 75000 },
         { productId: 3, name: "Masque Baoulé Traditionnel", price: 85000, quantity: 1, subtotal: 85000 }
@@ -246,7 +246,7 @@ export class MemStorage implements IStorage {
       clientId: 2,
       clientName: "Adjoua Konan",
       status: "paid",
-      total: 195000,
+      total: 193500,
       items: JSON.stringify([
         { productId: 1, name: "Pagne Wax Vlisco", price: 25000, quantity: 4, subtotal: 100000 },
         { productId: 3, name: "Masque Baoulé Traditionnel", price: 85000, quantity: 1, subtotal: 85000 },
@@ -272,7 +272,7 @@ export class MemStorage implements IStorage {
       clientId: 4,
       clientName: "Gnagbo Marie",
       status: "pending",
-      total: 42000,
+      total: 41000,
       items: JSON.stringify([
         { productId: 4, name: "Attiéké Premium", price: 1200, quantity: 20, subtotal: 24000 },
         { productId: 5, name: "Huile de Palme Rouge", price: 8500, quantity: 2, subtotal: 17000 }

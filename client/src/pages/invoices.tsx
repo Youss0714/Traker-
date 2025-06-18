@@ -62,6 +62,11 @@ export default function Invoices() {
   const printInvoice = (sale: Sale) => {
     const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
     
+    // Calculer le total basé sur les articles pour vérifier la cohérence
+    const calculatedTotal = Array.isArray(items) ? 
+      items.reduce((sum: number, item: any) => 
+        sum + ((item.quantity || 1) * (item.price || item.unitPrice || 0)), 0) : 0;
+    
     const printContent = `
       <!DOCTYPE html>
       <html>
@@ -138,7 +143,7 @@ export default function Invoices() {
         </table>
 
         <div class="total-section">
-          <div>Total: <strong>${formatAmount(sale.total)}</strong></div>
+          <div>Total: <strong>${formatAmount(calculatedTotal > 0 ? calculatedTotal : sale.total)}</strong></div>
         </div>
 
         <div class="footer">
