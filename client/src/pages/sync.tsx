@@ -47,65 +47,70 @@ export default function Sync() {
         <h2 className="text-lg font-medium text-[#212121]">Synchronisation</h2>
       </div>
 
-      <Card>
-        <CardContent className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-base font-medium">Synchronisation automatique</Label>
-              <p className="text-sm text-gray-500">Activer la synchronisation des données</p>
+      <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 border-teal-200 shadow-lg">
+        <CardContent className="p-6 bg-gradient-to-r from-teal-100 to-cyan-100 m-4 rounded-lg border border-teal-200 space-y-6">
+          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-teal-200 to-cyan-200 rounded-lg border border-teal-300">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center">
+                <span className="material-icons text-white text-lg">cloud_sync</span>
+              </div>
+              <div>
+                <Label className="text-base font-medium text-teal-800">Synchronisation automatique</Label>
+                <p className="text-sm text-teal-600">Activer la synchronisation des données</p>
+              </div>
             </div>
-            <Switch checked={syncEnabled} onCheckedChange={setSyncEnabled} />
+            <Switch checked={syncEnabled} onCheckedChange={setSyncEnabled} className="data-[state=checked]:bg-teal-500" />
           </div>
           
           {syncEnabled && (
             <>
-              <div className="space-y-2">
+              <div className="space-y-2 p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg border border-teal-200">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Dernière synchronisation:</span>
-                  <span className="text-sm font-medium">{lastSyncDate}</span>
+                  <span className="text-sm text-teal-700">Dernière synchronisation:</span>
+                  <span className="text-sm font-medium text-teal-800">{lastSyncDate}</span>
                 </div>
                 
                 {isSyncing ? (
                   <div className="space-y-2">
-                    <Progress value={syncProgress} className="h-2" />
-                    <div className="flex justify-between text-xs text-gray-500">
+                    <Progress value={syncProgress} className="h-2 bg-teal-200" />
+                    <div className="flex justify-between text-xs text-teal-600">
                       <span>Synchronisation en cours...</span>
                       <span>{syncProgress}%</span>
                     </div>
                   </div>
                 ) : (
-                  <Button onClick={handleSync} className="w-full">
+                  <Button onClick={handleSync} className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white shadow-lg">
                     <span className="material-icons text-sm mr-2">sync</span>
                     Synchroniser maintenant
                   </Button>
                 )}
               </div>
               
-              <div className="space-y-3 pt-4">
-                <h3 className="text-sm font-medium">Paramètres de synchronisation</h3>
+              <div className="space-y-3 pt-4 p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg border border-teal-200">
+                <h3 className="text-sm font-medium text-teal-800">Paramètres de synchronisation</h3>
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-sm">Synchroniser sur Wi-Fi uniquement</Label>
-                    <p className="text-xs text-gray-500">Économiser les données mobiles</p>
+                    <Label className="text-sm text-teal-700">Synchroniser sur Wi-Fi uniquement</Label>
+                    <p className="text-xs text-teal-600">Économiser les données mobiles</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch defaultChecked className="data-[state=checked]:bg-teal-500" />
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-sm">Synchronisation des images</Label>
-                    <p className="text-xs text-gray-500">Inclure les images des produits</p>
+                    <Label className="text-sm text-teal-700">Synchronisation des images</Label>
+                    <p className="text-xs text-teal-600">Inclure les images des produits</p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch defaultChecked className="data-[state=checked]:bg-teal-500" />
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-sm">Synchronisation en arrière-plan</Label>
-                    <p className="text-xs text-gray-500">Mettre à jour même quand l'app est fermée</p>
+                    <Label className="text-sm text-teal-700">Synchronisation en arrière-plan</Label>
+                    <p className="text-xs text-teal-600">Mettre à jour même quand l'app est fermée</p>
                   </div>
-                  <Switch />
+                  <Switch className="data-[state=checked]:bg-teal-500" />
                 </div>
               </div>
             </>
