@@ -13,7 +13,10 @@ import {
   type InsertSale,
   categories,
   type Category,
-  type InsertCategory
+  type InsertCategory,
+  company,
+  type Company,
+  type InsertCompany
 } from "@shared/schema";
 
 export interface IStorage {

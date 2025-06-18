@@ -18,6 +18,25 @@ export const insertUserSchema = createInsertSchema(users).pick({
   role: true,
 });
 
+// Company schema
+export const company = pgTable("company", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  phone: text("phone").notNull(),
+  email: text("email").notNull(),
+  website: text("website"),
+  description: text("description"),
+  ownerName: text("owner_name").notNull(),
+  isSetup: boolean("is_setup").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertCompanySchema = createInsertSchema(company).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Categories schema
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
@@ -110,5 +129,8 @@ export type Sale = typeof sales.$inferSelect;
 
 export type InsertCategory = z.infer<typeof insertCategorySchema>;
 export type Category = typeof categories.$inferSelect;
+
+export type InsertCompany = z.infer<typeof insertCompanySchema>;
+export type Company = typeof company.$inferSelect;
 
 export type SaleItem = z.infer<typeof saleItemSchema>;
