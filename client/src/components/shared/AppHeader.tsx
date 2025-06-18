@@ -12,6 +12,7 @@ import {
   SheetTitle, 
   SheetClose 
 } from "@/components/ui/sheet";
+import { CurrencyDropdown } from "@/components/ui/currency-dropdown";
 
 export default function AppHeader() {
   const [location, navigate] = useLocation();
@@ -279,6 +280,9 @@ export default function AppHeader() {
               </div>
             </DialogContent>
           </Dialog>
+          
+          {/* Currency Selector */}
+          <CurrencyDropdown />
           
           {/* Synchronisation */}
           <span 

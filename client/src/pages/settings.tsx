@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { CurrencySelector } from "@/components/ui/currency-selector";
 
 export default function Settings() {
   const { setActivePage } = useAppContext();
@@ -41,19 +42,7 @@ export default function Settings() {
                 <Switch id="notifications" defaultChecked />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="currency" className="text-sm">Devise</Label>
-                <Select defaultValue="xof">
-                  <SelectTrigger id="currency">
-                    <SelectValue placeholder="Sélectionner une devise" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="xof">Franc CFA (XOF)</SelectItem>
-                    <SelectItem value="usd">Dollar américain (USD)</SelectItem>
-                    <SelectItem value="eur">Euro (EUR)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+
               
               <div className="space-y-2">
                 <Label htmlFor="language" className="text-sm">Langue</Label>
@@ -103,6 +92,9 @@ export default function Settings() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Currency Settings */}
+      <CurrencySelector />
     </div>
   );
 }

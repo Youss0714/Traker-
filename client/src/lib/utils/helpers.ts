@@ -3,13 +3,55 @@
  */
 
 /**
- * Formats a number as currency in FCFA format
+ * Available currencies in the application
+ */
+export type Currency = 'FCFA' | 'USD' | 'GHS';
+
+export const CURRENCIES = {
+  FCFA: { symbol: 'FCFA', name: 'Franc CFA', locale: 'fr-FR' },
+  USD: { symbol: '$', name: 'Dollar US', locale: 'en-US' },
+  GHS: { symbol: '₵', name: 'Cedi ghanéen', locale: 'en-GH' }
+} as const;
+
+/**
+ * Get the current currency from localStorage or default to FCFA
+ */
+export function getCurrentCurrency(): Currency {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('currency') as Currency;
+    return stored && stored in CURRENCIES ? stored : 'FCFA';
+  }
+  return 'FCFA';
+}
+
+/**
+ * Set the current currency in localStorage
+ */
+export function setCurrentCurrency(currency: Currency): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('currency', currency);
+  }
+}
+
+/**
+ * Formats a number as currency based on current currency setting
  * @param amount - The amount to format
+ * @param currency - Optional currency override
  * @returns Formatted currency string
  */
-export function formatCurrency(amount: number): string {
-  // Format with thousand separators and FCFA suffix
-  return `${amount.toLocaleString('fr-FR')} FCFA`;
+export function formatCurrency(amount: number, currency?: Currency): string {
+  const currentCurrency = currency || getCurrentCurrency();
+  const currencyConfig = CURRENCIES[currentCurrency];
+  
+  // Format with thousand separators
+  const formattedAmount = amount.toLocaleString(currencyConfig.locale);
+  
+  // Return with appropriate symbol
+  if (currentCurrency === 'USD') {
+    return `${currencyConfig.symbol}${formattedAmount}`;
+  } else {
+    return `${formattedAmount} ${currencyConfig.symbol}`;
+  }
 }
 
 /**
