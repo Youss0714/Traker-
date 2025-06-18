@@ -292,6 +292,7 @@ export default function Categories() {
                     <Button 
                       type="submit" 
                       disabled={createCategoryMutation.isPending || updateCategoryMutation.isPending}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       {createCategoryMutation.isPending || updateCategoryMutation.isPending ? "En cours..." : editingCategory ? "Modifier" : "Créer"}
                     </Button>
