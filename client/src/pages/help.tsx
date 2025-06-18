@@ -25,10 +25,10 @@ export default function Help() {
             <div className="flex items-center space-x-2">
               <span className="material-icons text-blue-500 text-sm">email</span>
               <a 
-                href="mailto:youssouphafil@gmail.com" 
+                href="mailto:youssouphafils@gmail.com" 
                 className="text-blue-600 font-medium hover:text-blue-800 transition-colors"
               >
-                youssouphafil@gmail.com
+                youssouphafils@gmail.com
               </a>
             </div>
             <Button 
