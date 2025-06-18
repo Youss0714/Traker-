@@ -17,3 +17,26 @@ export function useIsMobile() {
 
   return !!isMobile
 }
+
+export function useIsAndroid() {
+  const [isAndroid, setIsAndroid] = React.useState(false)
+
+  React.useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    const androidCheck = userAgent.includes('android')
+    setIsAndroid(androidCheck)
+  }, [])
+
+  return isAndroid
+}
+
+export function useMobileDevice() {
+  const isMobile = useIsMobile()
+  const isAndroid = useIsAndroid()
+  
+  return {
+    isMobile,
+    isAndroid,
+    isMobileDevice: isMobile || isAndroid
+  }
+}
