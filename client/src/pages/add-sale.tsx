@@ -27,12 +27,16 @@ export default function AddSale() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   
+  // Get URL parameters for product preselection
+  const searchParams = new URLSearchParams(window.location.search);
+  const preselectedProductId = searchParams.get('product');
+  
   const [selectedClient, setSelectedClient] = useState("");
   const [status, setStatus] = useState("pending");
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<SaleItem[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(preselectedProductId || "");
   const [quantity, setQuantity] = useState(1);
   const [shouldPrintInvoice, setShouldPrintInvoice] = useState(true);
   

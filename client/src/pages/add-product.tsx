@@ -112,6 +112,11 @@ export default function AddProduct() {
   
   return (
     <div className="p-4 space-y-6 pb-20">
+      <div className="mb-4">
+        <h2 className="text-lg font-medium text-[#212121]">
+          {isEditing ? "Modifier le produit" : "Ajouter un nouveau produit"}
+        </h2>
+      </div>
       <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 shadow-lg">
         <CardContent className="pt-6 bg-gradient-to-r from-purple-100 to-pink-100 m-6 rounded-lg border border-purple-200">
           <Form {...form}>
@@ -237,10 +242,10 @@ export default function AddProduct() {
               <Button 
                 type="submit" 
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
-                disabled={addProductMutation.isPending}
+                disabled={productMutation.isPending}
               >
                 <span className="material-icons mr-2">save</span>
-                {addProductMutation.isPending ? "Enregistrement..." : "Enregistrer le produit"}
+                {productMutation.isPending ? "Enregistrement..." : (isEditing ? "Modifier le produit" : "Enregistrer le produit")}
               </Button>
             </form>
           </Form>
