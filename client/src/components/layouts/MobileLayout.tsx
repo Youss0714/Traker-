@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { PWAInstaller } from '@/components/PWAInstaller';
+import { BackupStatus } from '@/components/backup/BackupStatus';
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -40,6 +41,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
     { icon: 'library_books', label: 'Catalogue', href: '/catalog', key: 'catalog' },
     { icon: 'receipt_long', label: 'Factures', href: '/invoices', key: 'invoices' },
     { icon: 'assessment', label: 'Rapports', href: '/reports', key: 'reports' },
+    { icon: 'backup', label: 'Sauvegarde', href: '/backup', key: 'backup' },
   ];
 
   const quickActions = [
@@ -172,6 +174,9 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
 
       {/* PWA Installer */}
       <PWAInstaller />
+      
+      {/* Backup Status Indicator */}
+      <BackupStatus />
     </div>
   );
 }
