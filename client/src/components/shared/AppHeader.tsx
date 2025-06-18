@@ -72,7 +72,7 @@ export default function AppHeader() {
           {showBackButton ? (
             <span 
               className="material-icons cursor-pointer" 
-              onClick={() => navigate(-1)}
+              onClick={() => window.history.back()}
             >
               arrow_back
             </span>
