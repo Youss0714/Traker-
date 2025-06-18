@@ -30,6 +30,23 @@ const SaleItem = ({ sale }: { sale: Sale }) => {
   const statusTag = statusMap[sale.status] || statusMap['pending'];
 
   const handlePrint = () => {
+    // Parse items correctly
+    let items = [];
+    try {
+      if (typeof sale.items === 'string') {
+        items = JSON.parse(sale.items);
+      } else if (Array.isArray(sale.items)) {
+        items = sale.items;
+      }
+    } catch (e) {
+      console.error('Error parsing items for print:', e);
+    }
+
+    // Calculate VAT
+    const VAT_RATE = 0.18; // 18% TVA
+    const subtotalHT = sale.total / (1 + VAT_RATE);
+    const vatAmount = sale.total - subtotalHT;
+
     const printContent = `
       <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
@@ -62,7 +79,7 @@ const SaleItem = ({ sale }: { sale: Sale }) => {
               </tr>
             </thead>
             <tbody>
-              ${Array.isArray(sale.items) ? sale.items.map(item => `
+              ${items.length > 0 ? items.map(item => `
                 <tr>
                   <td style="padding: 10px; border: 1px solid #ddd;">${item.name || 'Article'}</td>
                   <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">${item.quantity || 1}</td>
@@ -76,7 +93,20 @@ const SaleItem = ({ sale }: { sale: Sale }) => {
         
         <div style="text-align: right; margin-top: 20px;">
           <div style="display: inline-block; text-align: left;">
-            <p style="margin: 5px 0; font-size: 18px;"><strong>Total: ${formatCurrency(sale.total)}</strong></p>
+            <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>Sous-total HT:</span>
+                <span>${formatCurrency(subtotalHT)}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>TVA (18%):</span>
+                <span>${formatCurrency(vatAmount)}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-top: 1px solid #333; padding-top: 5px; font-weight: bold; font-size: 18px;">
+                <span>Total TTC:</span>
+                <span>${formatCurrency(sale.total)}</span>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -168,31 +198,64 @@ const SaleItem = ({ sale }: { sale: Sale }) => {
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <h4 className="font-medium text-gray-800 mb-3">Articles vendus</h4>
                   <div className="space-y-2">
-                    {Array.isArray(sale.items) && sale.items.length > 0 ? (
-                      sale.items.map((item: any, index: number) => (
-                        <div key={index} className="flex justify-between items-center bg-white p-3 rounded border">
-                          <div>
-                            <p className="font-medium">{item.name || 'Article'}</p>
-                            <p className="text-sm text-gray-600">Quantité: {item.quantity || 1}</p>
+                    {(() => {
+                      let items = [];
+                      try {
+                        if (typeof sale.items === 'string') {
+                          items = JSON.parse(sale.items);
+                        } else if (Array.isArray(sale.items)) {
+                          items = sale.items;
+                        }
+                      } catch (e) {
+                        console.error('Error parsing items:', e);
+                      }
+                      
+                      return items.length > 0 ? (
+                        items.map((item: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center bg-white p-3 rounded border">
+                            <div>
+                              <p className="font-medium">{item.name || 'Article'}</p>
+                              <p className="text-sm text-gray-600">Quantité: {item.quantity || 1}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium">{formatCurrency(item.subtotal || 0)}</p>
+                              <p className="text-sm text-gray-600">{formatCurrency(item.price || 0)} / unité</p>
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <p className="font-medium">{formatCurrency(item.subtotal || 0)}</p>
-                            <p className="text-sm text-gray-600">{formatCurrency(item.price || 0)} / unité</p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500 text-center py-4">Aucun article disponible</p>
-                    )}
+                        ))
+                      ) : (
+                        <p className="text-gray-500 text-center py-4">Aucun article disponible</p>
+                      );
+                    })()}
                   </div>
                 </div>
 
-                {/* Total */}
+                {/* Calculs de total avec TVA */}
                 <div className="bg-green-100 p-4 rounded-lg border border-green-300">
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold text-green-800">Total de la vente:</span>
-                    <span className="text-2xl font-bold text-green-800">{formatCurrency(sale.total)}</span>
-                  </div>
+                  {(() => {
+                    const VAT_RATE = 0.18; // 18% TVA
+                    const subtotalHT = sale.total / (1 + VAT_RATE);
+                    const vatAmount = sale.total - subtotalHT;
+                    
+                    return (
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-green-700">Sous-total HT:</span>
+                          <span className="text-sm text-green-800">{formatCurrency(subtotalHT)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-green-700">TVA (18%):</span>
+                          <span className="text-sm text-green-800">{formatCurrency(vatAmount)}</span>
+                        </div>
+                        <div className="border-t border-green-300 pt-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-lg font-semibold text-green-800">Total TTC:</span>
+                            <span className="text-2xl font-bold text-green-800">{formatCurrency(sale.total)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Actions */}
