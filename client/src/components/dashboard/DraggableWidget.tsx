@@ -1,8 +1,17 @@
 import { Draggable } from '@hello-pangea/dnd';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DashboardWidget } from "@/../../shared/dashboard-types";
 import { useState } from 'react';
+
+interface DashboardWidget {
+  id: string;
+  type: string;
+  title: string;
+  position: { x: number; y: number; };
+  size: { width: number; height: number; };
+  config?: any;
+  isVisible: boolean;
+}
 
 interface DraggableWidgetProps {
   widget: DashboardWidget;

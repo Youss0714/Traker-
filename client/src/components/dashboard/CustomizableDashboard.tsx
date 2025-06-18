@@ -11,7 +11,24 @@ import { RecentActivitiesWidget } from './widgets/RecentActivitiesWidget';
 import { QuickActionsWidget } from './widgets/QuickActionsWidget';
 import { TopProductsWidget } from './widgets/TopProductsWidget';
 import { InventoryAlertsWidget } from './widgets/InventoryAlertsWidget';
-import { DashboardWidget, WidgetType } from '@/../../shared/dashboard-types';
+// Local type definitions
+interface DashboardWidget {
+  id: string;
+  type: WidgetType;
+  title: string;
+  position: { x: number; y: number; };
+  size: { width: number; height: number; };
+  config?: any;
+  isVisible: boolean;
+}
+
+type WidgetType = 
+  | 'metrics-overview'
+  | 'sales-chart'
+  | 'recent-activities'
+  | 'top-products'
+  | 'quick-actions'
+  | 'inventory-alerts';
 
 export function CustomizableDashboard() {
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -127,15 +144,13 @@ export function CustomizableDashboard() {
   };
 
   const getWidgetTitle = (type: WidgetType): string => {
-    const titles = {
+    const titles: Record<WidgetType, string> = {
       'metrics-overview': 'Aperçu des métriques',
       'sales-chart': 'Graphique des ventes',
       'recent-activities': 'Activités récentes',
       'quick-actions': 'Actions rapides',
       'top-products': 'Produits populaires',
       'inventory-alerts': 'Alertes stock',
-      'client-stats': 'Statistiques clients',
-      'revenue-trends': 'Tendances revenus',
     };
     return titles[type] || 'Widget';
   };
