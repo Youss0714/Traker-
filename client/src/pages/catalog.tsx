@@ -23,7 +23,7 @@ export default function Catalog() {
 
   // Récupérer toutes les catégories uniques
   const categories = products ? 
-    ["all", ...new Set(products.map(product => product.category))] :
+    ["all", ...Array.from(new Set(products.map(product => product.category)))] :
     ["all"];
 
   // Filtrer les produits par catégorie et terme de recherche
