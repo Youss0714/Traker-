@@ -216,9 +216,12 @@ export default function Categories() {
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-medium text-[#212121]">Catégories</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Gestion des catégories</h2>
+          <p className="text-gray-600 mt-1">Organisez vos produits par catégories</p>
+        </div>
         <Dialog open={isAddDialogOpen} onOpenChange={handleDialogClose}>
           <DialogTrigger asChild>
             <Button onClick={() => setIsAddDialogOpen(true)}>

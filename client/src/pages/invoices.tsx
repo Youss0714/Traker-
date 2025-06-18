@@ -157,9 +157,12 @@ export default function Invoices() {
   });
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium text-[#212121]">Factures</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Gestion des factures</h2>
+          <p className="text-gray-600 mt-1">Consultez et imprimez vos factures clients</p>
+        </div>
         <div className="flex gap-2">
           <Button 
             variant="outline" 
@@ -184,19 +187,19 @@ export default function Invoices() {
 
       <Card>
         <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row justify-between gap-3 mb-4">
-            <div className="flex-1">
+          <div className="flex flex-col lg:flex-row justify-between gap-4 mb-6">
+            <div className="flex-1 max-w-md">
               <Input
-                placeholder="Rechercher une facture..."
+                placeholder="Rechercher par numéro de facture ou nom de client..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
+                className="h-10"
               />
             </div>
-            <div>
+            <div className="flex gap-3">
               <Select value={filterStatus} onValueChange={setFilterStatus}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Tous les statuts" />
+                <SelectTrigger className="w-[200px] h-10">
+                  <SelectValue placeholder="Filtrer par statut" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les statuts</SelectItem>
@@ -205,6 +208,10 @@ export default function Invoices() {
                   <SelectItem value="cancelled">Annulées</SelectItem>
                 </SelectContent>
               </Select>
+              <Button variant="outline" className="h-10">
+                <span className="material-icons mr-2">file_download</span>
+                Exporter
+              </Button>
             </div>
           </div>
 

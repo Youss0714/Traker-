@@ -108,9 +108,12 @@ export default function Dashboard() {
   }
   
   return (
-    <div className="p-4 space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium text-[#212121]">Tableau de Bord</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Aperçu des performances</h2>
+          <p className="text-gray-600 mt-1">Suivez vos indicateurs clés en temps réel</p>
+        </div>
         <div className="flex space-x-2">
           {/* Sélecteur de période */}
           <DropdownMenu>
@@ -229,7 +232,7 @@ export default function Dashboard() {
       </div>
 
       {/* Key Metrics Cards Row */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard 
           label="Ventes" 
           value={formatCurrency(data?.metrics?.sales?.total || 0)} 
