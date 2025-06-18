@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -13,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
+import { Product } from "@shared/schema";
 
 // Define schema for product form
 const productSchema = z.object({
@@ -31,6 +33,17 @@ export default function AddProduct() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   
+  // Get URL parameters
+  const searchParams = new URLSearchParams(window.location.search);
+  const editId = searchParams.get('edit');
+  const isEditing = !!editId;
+  
+  // Fetch product data if editing
+  const { data: product } = useQuery<Product>({
+    queryKey: ['/api/products', editId],
+    enabled: isEditing && !!editId,
+  });
+  
   // Define form
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -45,23 +58,43 @@ export default function AddProduct() {
     }
   });
   
+  // Update form when product data is loaded
+  useEffect(() => {
+    if (product && isEditing) {
+      form.reset({
+        name: product.name,
+        description: product.description || "",
+        category: product.category,
+        price: product.price,
+        quantity: product.quantity,
+        threshold: product.threshold || 5,
+        isActive: product.isActive ?? true
+      });
+    }
+  }, [product, isEditing, form]);
+  
   // Categories list
   const categories = ["Électronique", "Vêtements", "Alimentaire", "Mobilier", "Papeterie", "Autres"];
   
-  // Add product mutation
-  const addProductMutation = useMutation({
+  // Product mutation (create or update)
+  const productMutation = useMutation({
     mutationFn: async (product: ProductFormValues) => {
-      const response = await apiRequest('POST', '/api/products', product);
-      return response.json();
+      if (isEditing && editId) {
+        const response = await apiRequest('PATCH', `/api/products/${editId}`, product);
+        return response.json();
+      } else {
+        const response = await apiRequest('POST', '/api/products', product);
+        return response.json();
+      }
     },
     onSuccess: () => {
       toast({
-        title: "Produit ajouté",
-        description: "Le produit a été ajouté avec succès",
+        title: isEditing ? "Produit modifié" : "Produit ajouté",
+        description: isEditing ? "Le produit a été modifié avec succès" : "Le produit a été ajouté avec succès",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard'] });
-      navigate('/inventory');
+      navigate('/catalog');
     },
     onError: (error) => {
       toast({
@@ -74,7 +107,7 @@ export default function AddProduct() {
   
   // Form submission handler
   const onSubmit = (data: ProductFormValues) => {
-    addProductMutation.mutate(data);
+    productMutation.mutate(data);
   };
   
   return (

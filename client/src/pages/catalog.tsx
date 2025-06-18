@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Product } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLocation } from "wouter";
 
 export default function Catalog() {
   const { setActivePage } = useAppContext();
+  const [, navigate] = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   
@@ -51,11 +53,21 @@ export default function Catalog() {
     }
   };
 
+  // Fonction pour naviguer vers la page de modification d'un produit
+  const handleEditProduct = (productId: number) => {
+    navigate(`/add-product?edit=${productId}`);
+  };
+
+  // Fonction pour naviguer vers la page de vente avec le produit présélectionné
+  const handleSellProduct = (productId: number) => {
+    navigate(`/add-sale?product=${productId}`);
+  };
+
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-medium text-[#212121]">Catalogue de produits</h2>
-        <Button>
+        <Button onClick={() => navigate("/add-product")}>
           <span className="material-icons mr-1 text-sm">add</span>
           Ajouter un produit
         </Button>
@@ -115,11 +127,21 @@ export default function Catalog() {
                         <span className="text-sm text-cyan-600 bg-white px-2 py-1 rounded-full">Qté: {product.quantity}</span>
                       </div>
                       <div className="mt-4 flex justify-between gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 bg-cyan-500 text-white border-cyan-500 hover:bg-cyan-600">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1 bg-cyan-500 text-white border-cyan-500 hover:bg-cyan-600"
+                          onClick={() => handleEditProduct(product.id)}
+                        >
                           <span className="material-icons text-sm mr-1">edit</span>
                           Modifier
                         </Button>
-                        <Button variant="outline" size="sm" className="flex-1 bg-blue-500 text-white border-blue-500 hover:bg-blue-600">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1 bg-blue-500 text-white border-blue-500 hover:bg-blue-600"
+                          onClick={() => handleSellProduct(product.id)}
+                        >
                           <span className="material-icons text-sm mr-1">add_shopping_cart</span>
                           Vendre
                         </Button>
