@@ -28,9 +28,9 @@ export function QuickAddClient({ onClientCreated, trigger }: QuickAddClientProps
     resolver: zodResolver(insertClientSchema),
     defaultValues: {
       name: "",
-      email: null,
-      phone: null,
-      address: null,
+      email: "",
+      phone: "",
+      address: "",
       type: "individual",
     },
   });

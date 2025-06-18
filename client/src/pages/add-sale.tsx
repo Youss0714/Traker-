@@ -15,6 +15,7 @@ import { formatCurrency } from "@/lib/utils/helpers";
 import { Company, Sale } from "@shared/schema";
 import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } from "@/lib/utils/tax";
 import { QuickAddClient } from "@/components/QuickAddClient";
+import { Plus } from "lucide-react";
 
 interface SaleItem {
   productId: number;
@@ -337,7 +338,7 @@ export default function AddSale() {
                 }}
                 trigger={
                   <Button variant="outline" size="sm" type="button">
-                    <span className="material-icons text-sm mr-1">person_add</span>
+                    <Plus className="w-4 h-4 mr-1" />
                     Nouveau client
                   </Button>
                 }
