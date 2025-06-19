@@ -16,6 +16,7 @@ import { Company, Sale } from "@shared/schema";
 import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } from "@/lib/utils/tax";
 import { QuickAddClient } from "@/components/QuickAddClient";
 import { Plus } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface SaleItem {
   productId: number;
@@ -28,6 +29,7 @@ interface SaleItem {
 export default function AddSale() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
   
   // Get URL parameters for product preselection
   const searchParams = new URLSearchParams(window.location.search);
@@ -415,7 +417,7 @@ export default function AddSale() {
             <div className="flex space-x-2">
               <div className="flex-1 relative" ref={dropdownRef}>
                 <Input
-                  placeholder="Rechercher un produit..."
+                  placeholder={t('searchProduct')}
                   value={productSearchTerm}
                   onChange={(e) => {
                     setProductSearchTerm(e.target.value);
@@ -454,11 +456,11 @@ export default function AddSale() {
                       ))
                     ) : productSearchTerm ? (
                       <div className="p-3 text-center text-gray-500">
-                        Aucun produit trouvé pour "{productSearchTerm}"
+                        {t('noProductFound')} "{productSearchTerm}"
                       </div>
                     ) : (
                       <div className="p-3 text-center text-gray-500">
-                        Tapez pour rechercher un produit
+                        {t('language') === 'fr' ? 'Tapez pour rechercher un produit' : 'Type to search for a product'}
                       </div>
                     )}
                   </div>

@@ -15,6 +15,12 @@ export const translations = {
     settings: "Paramètres",
     more: "Plus",
     
+    // Quick actions
+    newSale: "Nouvelle vente",
+    newClient: "Nouveau client",
+    newProduct: "Nouveau produit",
+    quickActions: "Actions rapides",
+    
     // Common actions
     add: "Ajouter",
     edit: "Modifier",
@@ -32,6 +38,8 @@ export const translations = {
     price: "Prix",
     quantity: "Quantité",
     category: "Catégorie",
+    searchProduct: "Rechercher un produit...",
+    noProductFound: "Aucun produit trouvé",
     
     // Client management
     addClient: "Ajouter un client",
@@ -45,6 +53,10 @@ export const translations = {
     invoiceNumber: "Numéro de facture",
     total: "Total",
     tax: "TVA",
+    registerSale: "Enregistrer la vente",
+    printInvoice: "Imprimer automatiquement la facture après la vente",
+    notes: "Notes",
+    additionalNotes: "Notes supplémentaires (optionnel)",
     
     // Settings
     language: "Langue",
@@ -52,12 +64,17 @@ export const translations = {
     darkMode: "Mode sombre",
     autoBackup: "Sauvegarde automatique",
     companyInfo: "Informations de l'entreprise",
+    displayPreferences: "Préférences d'affichage",
+    chooseLanguage: "Choisir la langue de l'interface",
+    enableDarkTheme: "Activer le thème sombre pour l'application",
     
     // Messages
     success: "Succès",
     error: "Erreur",
     loading: "Chargement...",
     noData: "Aucune donnée disponible",
+    languageChanged: "Langue modifiée",
+    interfaceInFrench: "L'interface est maintenant en français",
     
     // Form validation
     required: "Ce champ est requis",
@@ -76,6 +93,12 @@ export const translations = {
     settings: "Settings",
     more: "More",
     
+    // Quick actions
+    newSale: "New Sale",
+    newClient: "New Client",
+    newProduct: "New Product",
+    quickActions: "Quick Actions",
+    
     // Common actions
     add: "Add",
     edit: "Edit",
@@ -93,6 +116,8 @@ export const translations = {
     price: "Price",
     quantity: "Quantity",
     category: "Category",
+    searchProduct: "Search for a product...",
+    noProductFound: "No product found",
     
     // Client management
     addClient: "Add Client",
@@ -106,6 +131,10 @@ export const translations = {
     invoiceNumber: "Invoice Number",
     total: "Total",
     tax: "Tax",
+    registerSale: "Register Sale",
+    printInvoice: "Automatically print invoice after sale",
+    notes: "Notes",
+    additionalNotes: "Additional notes (optional)",
     
     // Settings
     language: "Language",
@@ -113,12 +142,17 @@ export const translations = {
     darkMode: "Dark Mode",
     autoBackup: "Auto Backup",
     companyInfo: "Company Information",
+    displayPreferences: "Display Preferences",
+    chooseLanguage: "Choose the interface language",
+    enableDarkTheme: "Enable dark theme for the application",
     
     // Messages
     success: "Success",
     error: "Error",
     loading: "Loading...",
     noData: "No data available",
+    languageChanged: "Language changed",
+    interfaceInEnglish: "Interface is now in English",
     
     // Form validation
     required: "This field is required",
@@ -134,5 +168,5 @@ export type TranslationKey = keyof typeof translations.fr;
  */
 export function t(key: TranslationKey, language?: 'fr' | 'en'): string {
   const currentLang = language || getCurrentLanguage();
-  return translations[currentLang][key] || translations.fr[key] || key;
+  return (translations[currentLang] as any)[key] || (translations.fr as any)[key] || key;
 }
