@@ -17,6 +17,7 @@ import { Company, InsertCompany } from "@shared/schema";
 import { useTheme } from "@/components/theme-provider";
 import { getCurrentLanguage, setCurrentLanguage, LANGUAGES, Language } from "@/lib/utils/helpers";
 import { useTranslation } from "@/hooks/useTranslation";
+import { InstallPrompt } from "@/components/ui/install-prompt";
 
 export default function Settings() {
   const { setActivePage } = useAppContext();
@@ -362,6 +363,9 @@ export default function Settings() {
 
       {/* Tax Rate Settings */}
       <TaxRateSelector />
+
+      {/* Installation PWA */}
+      <InstallPrompt />
     </div>
   );
 }
