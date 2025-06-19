@@ -117,8 +117,8 @@ export default function AddProduct() {
           {isEditing ? "Modifier le produit" : "Ajouter un nouveau produit"}
         </h2>
       </div>
-      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 shadow-lg">
-        <CardContent className="pt-6 bg-gradient-to-r from-purple-100 to-pink-100 m-6 rounded-lg border border-purple-200">
+      <Card className="bg-gradient-to-r from-blue-50 to-slate-50 border-blue-200 shadow-lg">
+        <CardContent className="pt-6 bg-white m-6 rounded-lg border border-gray-200">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
@@ -253,7 +253,7 @@ export default function AddProduct() {
                 )}
                 <Button 
                   type="submit" 
-                  className={`${isEditing ? 'flex-1' : 'w-full'} bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg`}
+                  className={`${isEditing ? 'flex-1' : 'w-full'} bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg`}
                   disabled={productMutation.isPending}
                 >
                   <span className="material-icons mr-2">save</span>
