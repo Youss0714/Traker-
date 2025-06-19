@@ -180,6 +180,8 @@ export default function BackupPanel({ className }: BackupPanelProps) {
   };
 
   const handleExportProducts = () => {
+    console.log('Export products clicked', { products, length: products?.length });
+    
     if (!products || products.length === 0) {
       toast({
         title: "Aucune donnée",
@@ -189,16 +191,27 @@ export default function BackupPanel({ className }: BackupPanelProps) {
       return;
     }
 
-    const timestamp = new Date().toISOString().slice(0, 10);
-    downloadJSON(products, `produits_${timestamp}.json`);
-    
-    toast({
-      title: "Export réussi",
-      description: `${products.length} produits exportés`
-    });
+    try {
+      const timestamp = new Date().toISOString().slice(0, 10);
+      downloadJSON(products, `produits_${timestamp}.json`);
+      
+      toast({
+        title: "Export réussi",
+        description: `${products.length} produits exportés`
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Erreur d'export",
+        description: "Une erreur est survenue lors de l'export",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleExportClients = () => {
+    console.log('Export clients clicked', { clients, length: clients?.length });
+    
     if (!clients || clients.length === 0) {
       toast({
         title: "Aucune donnée",
@@ -208,13 +221,22 @@ export default function BackupPanel({ className }: BackupPanelProps) {
       return;
     }
 
-    const timestamp = new Date().toISOString().slice(0, 10);
-    downloadJSON(clients, `clients_${timestamp}.json`);
-    
-    toast({
-      title: "Export réussi",
-      description: `${clients.length} clients exportés`
-    });
+    try {
+      const timestamp = new Date().toISOString().slice(0, 10);
+      downloadJSON(clients, `clients_${timestamp}.json`);
+      
+      toast({
+        title: "Export réussi",
+        description: `${clients.length} clients exportés`
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Erreur d'export",
+        description: "Une erreur est survenue lors de l'export",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleExportSales = () => {
