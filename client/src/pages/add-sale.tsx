@@ -15,6 +15,7 @@ import { formatCurrency } from "@/lib/utils/helpers";
 import { Company, Sale } from "@shared/schema";
 import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } from "@/lib/utils/tax";
 import { QuickAddClient } from "@/components/QuickAddClient";
+import { ProductSearch } from "@/components/ProductSearch";
 import { Plus } from "lucide-react";
 
 interface SaleItem {
@@ -39,6 +40,7 @@ export default function AddSale() {
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<SaleItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState(preselectedProductId || "");
+  const [selectedProductObj, setSelectedProductObj] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [shouldPrintInvoice, setShouldPrintInvoice] = useState(true);
   
@@ -96,10 +98,9 @@ export default function AddSale() {
   });
   
   const handleAddItem = () => {
-    if (!selectedProduct || quantity <= 0) return;
+    if (!selectedProductObj || quantity <= 0) return;
     
-    const product = products?.find((p: any) => p.id === parseInt(selectedProduct));
-    if (!product) return;
+    const product = selectedProductObj;
     
     // Check if we already have this product in the items
     const existingItemIndex = items.findIndex(item => item.productId === product.id);
@@ -127,6 +128,7 @@ export default function AddSale() {
     
     // Reset selection
     setSelectedProduct("");
+    setSelectedProductObj(null);
     setQuantity(1);
   };
   
@@ -388,18 +390,14 @@ export default function AddSale() {
             
             <div className="flex space-x-2">
               <div className="flex-1">
-                <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un produit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products?.map((product: any) => (
-                      <SelectItem key={product.id} value={product.id.toString()}>
-                        {product.name} - {formatCurrency(product.price)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <ProductSearch
+                  products={products || []}
+                  onProductSelect={(product) => {
+                    setSelectedProductObj(product);
+                    setSelectedProduct(product.id.toString());
+                  }}
+                  placeholder="Rechercher un produit..."
+                />
               </div>
               <div className="w-20">
                 <Input 
@@ -410,7 +408,7 @@ export default function AddSale() {
                 />
               </div>
               <Button onClick={handleAddItem} className="bg-[#1976D2]">
-                <span className="material-icons text-sm">add</span>
+                <Plus className="w-4 h-4" />
               </Button>
             </div>
             
