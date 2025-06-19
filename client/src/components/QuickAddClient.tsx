@@ -142,7 +142,7 @@ export function QuickAddClient({ onClientCreated, trigger }: QuickAddClientProps
                     </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="+226 70 00 00 00" 
+                        placeholder="+225 07 00 00 00 00" 
                         {...field}
                         value={field.value || ""}
                         className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
