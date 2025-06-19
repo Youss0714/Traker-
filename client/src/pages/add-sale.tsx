@@ -15,7 +15,6 @@ import { formatCurrency } from "@/lib/utils/helpers";
 import { Company, Sale } from "@shared/schema";
 import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } from "@/lib/utils/tax";
 import { QuickAddClient } from "@/components/QuickAddClient";
-import { ProductSearch } from "@/components/ProductSearch";
 import { Plus } from "lucide-react";
 
 interface SaleItem {
@@ -390,14 +389,22 @@ export default function AddSale() {
             
             <div className="flex space-x-2">
               <div className="flex-1">
-                <ProductSearch
-                  products={products || []}
-                  onProductSelect={(product) => {
-                    setSelectedProductObj(product);
-                    setSelectedProduct(product.id.toString());
-                  }}
-                  placeholder="Rechercher un produit..."
-                />
+                <Select value={selectedProduct} onValueChange={(value) => {
+                  setSelectedProduct(value);
+                  const product = products?.find(p => p.id.toString() === value);
+                  setSelectedProductObj(product || null);
+                }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner un produit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products?.map((product: any) => (
+                      <SelectItem key={product.id} value={product.id.toString()}>
+                        {product.name} - {formatCurrency(product.price)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="w-20">
                 <Input 
