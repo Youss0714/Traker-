@@ -100,110 +100,128 @@ const EditClientDialog = ({ client }: { client: Client }) => {
           Modifier
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-white dark:bg-gray-800 border shadow-lg">
         <DialogHeader>
-          <DialogTitle>Modifier le client</DialogTitle>
+          <DialogTitle className="text-gray-900 dark:text-white font-semibold">Modifier le client</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nom complet</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nom du client" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="client@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Téléphone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="+225 07 00 00 00 00" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type de client</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 p-6 rounded-lg border border-orange-200 dark:border-gray-600">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-orange-800 dark:text-orange-200 font-medium">Nom complet</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner le type" />
-                      </SelectTrigger>
+                      <Input 
+                        placeholder="Nom du client" 
+                        {...field}
+                        className="bg-white dark:bg-gray-700 border-orange-300 dark:border-gray-500 text-gray-900 dark:text-white focus:border-orange-500 dark:focus:border-orange-400"
+                      />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="regular">Client régulier</SelectItem>
-                      <SelectItem value="new">Nouveau client</SelectItem>
-                      <SelectItem value="vip">Client VIP</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Adresse</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Adresse du client" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-orange-800 dark:text-orange-200 font-medium">Email</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="client@example.com" 
+                        {...field}
+                        className="bg-white dark:bg-gray-700 border-orange-300 dark:border-gray-500 text-gray-900 dark:text-white focus:border-orange-500 dark:focus:border-orange-400"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="flex gap-3 pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => setOpen(false)}
-                className="flex-1"
-              >
-                Annuler
-              </Button>
-              <Button 
-                type="submit" 
-                disabled={updateClientMutation.isPending}
-                className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-              >
-                {updateClientMutation.isPending ? "Modification..." : "Modifier"}
-              </Button>
-            </div>
-          </form>
-        </Form>
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-orange-800 dark:text-orange-200 font-medium">Téléphone</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="+225 07 00 00 00 00" 
+                        {...field}
+                        className="bg-white dark:bg-gray-700 border-orange-300 dark:border-gray-500 text-gray-900 dark:text-white focus:border-orange-500 dark:focus:border-orange-400"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-orange-800 dark:text-orange-200 font-medium">Type de client</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-white dark:bg-gray-700 border-orange-300 dark:border-gray-500 text-gray-900 dark:text-white focus:border-orange-500 dark:focus:border-orange-400">
+                          <SelectValue placeholder="Sélectionner le type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-white dark:bg-gray-700 border-orange-300 dark:border-gray-500">
+                        <SelectItem value="regular" className="text-gray-900 dark:text-white hover:bg-orange-50 dark:hover:bg-gray-600">Client régulier</SelectItem>
+                        <SelectItem value="new" className="text-gray-900 dark:text-white hover:bg-orange-50 dark:hover:bg-gray-600">Nouveau client</SelectItem>
+                        <SelectItem value="vip" className="text-gray-900 dark:text-white hover:bg-orange-50 dark:hover:bg-gray-600">Client VIP</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-orange-800 dark:text-orange-200 font-medium">Adresse</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Adresse du client" 
+                        {...field}
+                        className="bg-white dark:bg-gray-700 border-orange-300 dark:border-gray-500 text-gray-900 dark:text-white focus:border-orange-500 dark:focus:border-orange-400 min-h-[80px]"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex gap-3 pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setOpen(false)}
+                  className="flex-1 border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-gray-500 dark:text-gray-300 dark:hover:bg-gray-600"
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={updateClientMutation.isPending}
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-medium shadow-md"
+                >
+                  {updateClientMutation.isPending ? "Modification..." : "Modifier"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
       </DialogContent>
     </Dialog>
   );
