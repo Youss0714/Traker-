@@ -271,9 +271,9 @@ export default function Invoices() {
     setViewMode('create');
     // Reset invoice data
     setInvoiceData({
-      clientId: 0,
-      clientName: "",
-      clientAddress: "",
+      clientId: clients && clients.length > 0 ? clients[0].id : 0,
+      clientName: clients && clients.length > 0 ? clients[0].name : "Client par défaut",
+      clientAddress: clients && clients.length > 0 ? clients[0].address || "" : "",
       invoiceNumber: `INV-${Date.now()}`,
       date: new Date().toISOString().split('T')[0],
       time: new Date().toTimeString().slice(0, 5),
@@ -281,17 +281,17 @@ export default function Invoices() {
       items: [
         {
           id: "1",
-          description: "",
+          description: "Service de consultation",
           quantity: 1,
-          unitPrice: 0,
-          total: 0
+          unitPrice: 100.00,
+          total: 100.00
         }
       ],
       notes: "",
-      subtotal: 0,
+      subtotal: 100.00,
       taxRate: 19.25,
-      taxAmount: 0,
-      total: 0
+      taxAmount: 19.25,
+      total: 119.25
     });
   };
 
