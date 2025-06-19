@@ -8,8 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
 import { InvoiceHeader, PrintableInvoiceHeader } from "@/components/invoice/InvoiceHeader";
-import { Plus, Trash2, FileText, Download, Eye } from "lucide-react";
+import { Plus, Trash2, FileText, Download, Eye, List, Printer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatCurrency } from "@/lib/utils/helpers";
 
 interface InvoiceItem {
   id: string;
@@ -40,6 +41,7 @@ export default function Invoices() {
   const { setActivePage } = useAppContext();
   const { toast } = useToast();
   const [showPreview, setShowPreview] = useState(false);
+  const [viewMode, setViewMode] = useState<'list' | 'create'>('list');
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
     clientId: 0,
     clientName: "",
@@ -70,6 +72,11 @@ export default function Invoices() {
 
   const { data: products } = useQuery<any[]>({
     queryKey: ['/api/products'],
+  });
+
+  // Fetch sales data to display as invoices
+  const { data: sales } = useQuery<any[]>({
+    queryKey: ['/api/sales'],
   });
 
   useEffect(() => {
@@ -174,6 +181,163 @@ export default function Invoices() {
     }
   };
 
+  const printInvoice = (sale: any) => {
+    // Create a temporary invoice data from sale
+    const tempInvoiceData = {
+      ...invoiceData,
+      invoiceNumber: sale.invoiceNumber,
+      date: sale.date || new Date().toISOString().split('T')[0],
+      clientName: sale.clientName || sale.client || "Client",
+      clientAddress: sale.clientAddress || "",
+      items: sale.items || [
+        {
+          id: "1",
+          description: sale.description || "Produit/Service",
+          quantity: sale.quantity || 1,
+          unitPrice: sale.total || 0,
+          total: sale.total || 0
+        }
+      ],
+      total: sale.total || 0,
+      subtotal: sale.total || 0,
+      taxAmount: 0
+    };
+
+    // Set the data and show preview
+    setInvoiceData(tempInvoiceData);
+    setShowPreview(true);
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  };
+
+  const createNewInvoice = () => {
+    setViewMode('create');
+    // Reset invoice data
+    setInvoiceData({
+      clientId: 0,
+      clientName: "",
+      clientAddress: "",
+      invoiceNumber: `INV-${Date.now()}`,
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toTimeString().slice(0, 5),
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      items: [
+        {
+          id: "1",
+          description: "",
+          quantity: 1,
+          unitPrice: 0,
+          total: 0
+        }
+      ],
+      notes: "",
+      subtotal: 0,
+      taxRate: 19.25,
+      taxAmount: 0,
+      total: 0
+    });
+  };
+
+  // Invoice List View Component
+  const InvoiceListView = () => (
+    <div className="p-4 space-y-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-medium text-[#212121]">Liste des factures</h2>
+        <Button onClick={createNewInvoice} className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white">
+          <Plus className="w-4 h-4 mr-2" />
+          Nouvelle facture
+        </Button>
+      </div>
+
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-blue-800 flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+              <FileText className="w-5 h-5 text-white" />
+            </div>
+            Factures existantes
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {sales && sales.length > 0 ? (
+            <div className="space-y-4">
+              {sales.map((sale: any) => (
+                <Card key={sale.id} className="bg-white shadow-sm border border-blue-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-blue-800">
+                            {sale.invoiceNumber || `INV-${sale.id}`}
+                          </span>
+                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                            {sale.status || 'Payé'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Client: {sale.clientName || sale.client || 'Client inconnu'}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Date: {sale.date ? new Date(sale.date).toLocaleDateString('fr-FR') : 'Date inconnue'}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="font-semibold text-blue-800">
+                            {formatCurrency(sale.total || 0)}
+                          </p>
+                          <p className="text-xs text-gray-500">Total</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => printInvoice(sale)}
+                            className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                          >
+                            <Printer className="w-4 h-4 mr-1" />
+                            Imprimer
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setInvoiceData({
+                                ...invoiceData,
+                                invoiceNumber: sale.invoiceNumber || `INV-${sale.id}`,
+                                clientName: sale.clientName || sale.client || "",
+                                total: sale.total || 0
+                              });
+                              setShowPreview(true);
+                            }}
+                            className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            Voir
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500 mb-4">Aucune facture trouvée</p>
+              <Button onClick={createNewInvoice} className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Créer votre première facture
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   if (showPreview) {
     return (
       <div className="min-h-screen bg-white p-8 print:p-0">
@@ -262,10 +426,25 @@ export default function Invoices() {
     );
   }
 
+  // Show list view by default, create view when requested
+  if (viewMode === 'list') {
+    return <InvoiceListView />;
+  }
+
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium text-[#212121]">Nouvelle Facture</h2>
+        <div className="flex items-center gap-4">
+          <Button 
+            onClick={() => setViewMode('list')} 
+            variant="outline"
+            className="border-blue-300 text-blue-600 hover:bg-blue-50"
+          >
+            <List className="w-4 h-4 mr-2" />
+            Liste des factures
+          </Button>
+          <h2 className="text-lg font-medium text-[#212121]">Nouvelle Facture</h2>
+        </div>
         <div className="flex gap-2">
           <Button onClick={() => setShowPreview(true)} variant="outline">
             <Eye className="w-4 h-4 mr-2" />
