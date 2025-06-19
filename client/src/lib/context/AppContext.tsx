@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useLocation } from "wouter";
 
-type ActivePage = 'dashboard' | 'inventory' | 'clients' | 'sales' | 'more' | 'categories' | 'backup';
+export type ActivePage = 'dashboard' | 'inventory' | 'clients' | 'sales' | 'more' | 'categories' | 'backup';
 
 interface AppContextType {
   activePage: ActivePage;

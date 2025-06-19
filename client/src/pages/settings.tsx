@@ -16,6 +16,7 @@ import { TaxRateSelector } from "@/components/ui/tax-rate-selector";
 import { Company, InsertCompany } from "@shared/schema";
 import { useTheme } from "@/components/theme-provider";
 import { getCurrentLanguage, setCurrentLanguage, LANGUAGES, Language } from "@/lib/utils/helpers";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Settings() {
   const { setActivePage } = useAppContext();
