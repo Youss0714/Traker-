@@ -11,6 +11,8 @@ import { InvoiceHeader, PrintableInvoiceHeader } from "@/components/invoice/Invo
 import { Plus, Trash2, FileText, Download, Eye, List, Printer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface InvoiceItem {
   id: string;
@@ -40,6 +42,7 @@ interface InvoiceData {
 export default function Invoices() {
   const { setActivePage } = useAppContext();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [showPreview, setShowPreview] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'create'>('list');
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
@@ -82,6 +85,40 @@ export default function Invoices() {
   // Fetch sales data to display as fallback invoices
   const { data: sales } = useQuery<any[]>({
     queryKey: ['/api/sales'],
+  });
+
+  // Mutation pour créer une facture
+  const createInvoiceMutation = useMutation({
+    mutationFn: async (invoicePayload: any) => {
+      const response = await fetch('/api/invoices', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(invoicePayload),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erreur lors de la création de la facture');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Succès",
+        description: "Facture sauvegardée avec succès",
+      });
+      setViewMode('list');
+      queryClient.invalidateQueries({ queryKey: ['/api/invoices'] });
+    },
+    onError: () => {
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder la facture",
+        variant: "destructive"
+      });
+    }
   });
 
   useEffect(() => {
@@ -176,19 +213,24 @@ export default function Invoices() {
   };
 
   const saveInvoice = async () => {
-    try {
-      // Ici vous pourriez sauvegarder la facture dans la base de données
-      toast({
-        title: "Facture sauvegardée",
-        description: `Facture ${invoiceData.invoiceNumber} sauvegardée avec succès`
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder la facture",
-        variant: "destructive"
-      });
-    }
+    // Préparer les données de la facture pour l'API
+    const invoicePayload = {
+      invoiceNumber: invoiceData.invoiceNumber,
+      clientId: invoiceData.clientId || null,
+      clientName: invoiceData.clientName,
+      clientAddress: invoiceData.clientAddress || null,
+      status: "draft",
+      subtotal: invoiceData.subtotal,
+      taxRate: invoiceData.taxRate,
+      taxAmount: invoiceData.taxAmount,
+      total: invoiceData.total,
+      issueDate: new Date(invoiceData.date).toISOString(),
+      dueDate: new Date(invoiceData.dueDate).toISOString(),
+      notes: invoiceData.notes || null,
+      items: invoiceData.items
+    };
+
+    createInvoiceMutation.mutate(invoicePayload);
   };
 
   const printInvoice = (sale: any) => {
@@ -274,9 +316,76 @@ export default function Invoices() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {sales && sales.length > 0 ? (
+          {(invoices && invoices.length > 0) || (sales && sales.length > 0) ? (
             <div className="space-y-4">
-              {sales.map((sale: any) => (
+              {/* Afficher d'abord les vraies factures */}
+              {invoices && invoices.map((invoice: any) => (
+                <Card key={invoice.id} className="bg-white shadow-sm border border-blue-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-blue-800">
+                            {invoice.invoiceNumber}
+                          </span>
+                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                            {invoice.status === 'draft' ? 'Brouillon' : 
+                             invoice.status === 'sent' ? 'Envoyée' : 
+                             invoice.status === 'paid' ? 'Payée' : invoice.status}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Client: {invoice.clientName}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Date: {invoice.issueDate ? new Date(invoice.issueDate).toLocaleDateString('fr-FR') : 'Date inconnue'}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="font-semibold text-blue-800">
+                            {formatCurrency(invoice.total || 0)}
+                          </p>
+                          <p className="text-xs text-gray-500">Total</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => printInvoice(invoice)}
+                            className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                          >
+                            <Printer className="w-4 h-4 mr-1" />
+                            Imprimer
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setInvoiceData({
+                                ...invoiceData,
+                                invoiceNumber: invoice.invoiceNumber,
+                                clientName: invoice.clientName,
+                                clientAddress: invoice.clientAddress || "",
+                                total: invoice.total || 0,
+                                items: Array.isArray(invoice.items) ? invoice.items : []
+                              });
+                              setShowPreview(true);
+                            }}
+                            className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            Voir
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {/* Afficher les ventes comme factures de secours si pas de vraies factures */}
+              {(!invoices || invoices.length === 0) && sales && sales.map((sale: any) => (
                 <Card key={sale.id} className="bg-white shadow-sm border border-blue-200">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
