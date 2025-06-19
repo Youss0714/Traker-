@@ -67,12 +67,12 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
 
 
         <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-lg border border-purple-300">
-          <p className="text-xs text-purple-700 flex items-center gap-2">
+          <div className="text-xs text-purple-700 flex items-center gap-2">
             <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center">
               <span className="material-icons text-white text-xs">info</span>
             </div>
-            Ce taux sera appliqué par défaut sur toutes les nouvelles ventes et factures.
-          </p>
+            <span>Ce taux sera appliqué par défaut sur toutes les nouvelles ventes et factures.</span>
+          </div>
         </div>
       </CardContent>
     </Card>

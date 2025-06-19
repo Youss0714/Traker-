@@ -14,10 +14,12 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { CurrencySelector } from "@/components/ui/currency-selector";
 import { TaxRateSelector } from "@/components/ui/tax-rate-selector";
 import { Company, InsertCompany } from "@shared/schema";
+import { useTheme } from "@/components/theme-provider";
 
 export default function Settings() {
   const { setActivePage } = useAppContext();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   
   const [companyData, setCompanyData] = useState({
     name: "",

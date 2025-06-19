@@ -29,6 +29,7 @@ import { SplashScreen } from "@/components/SplashScreen";
 import { CompanySetup } from "@/components/CompanySetup";
 import { useQuery } from "@tanstack/react-query";
 import { RecoveryDialog, useRecoveryDetection } from "@/components/backup/RecoveryDialog";
+import { ThemeProvider } from "@/components/theme-provider";
 
 function Router() {
   return (
@@ -113,7 +114,9 @@ function AppContent() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      <ThemeProvider defaultTheme="light" storageKey="gys-ui-theme">
+        <AppContent />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

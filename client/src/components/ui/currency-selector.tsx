@@ -75,12 +75,12 @@ export function CurrencySelector({ onCurrencyChange }: CurrencySelectorProps) {
 
 
         <div className="bg-gradient-to-r from-green-100 to-emerald-100 p-3 rounded-lg border border-green-300">
-          <p className="text-xs text-green-700 flex items-center gap-2">
+          <div className="text-xs text-green-700 flex items-center gap-2">
             <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
               <span className="material-icons text-white text-xs">info</span>
             </div>
-            Le changement de devise s'appliquera à toute l'application et sera sauvegardé.
-          </p>
+            <span>Le changement de devise s'appliquera à toute l'application et sera sauvegardé.</span>
+          </div>
         </div>
       </CardContent>
     </Card>
