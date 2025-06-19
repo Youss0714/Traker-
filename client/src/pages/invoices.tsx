@@ -64,9 +64,9 @@ export default function Invoices() {
     ],
     notes: "",
     subtotal: 100.00,
-    taxRate: 19.25,
-    taxAmount: 19.25,
-    total: 119.25
+    taxRate: 18,
+    taxAmount: 18.00,
+    total: 118.00
   });
 
   const { data: clients } = useQuery<any[]>({
@@ -252,9 +252,9 @@ export default function Invoices() {
       })) : [],
       notes: sale.notes || "",
       subtotal: sale.total || 0,
-      taxRate: 0,
-      taxAmount: 0,
-      total: sale.total || 0
+      taxRate: 18,
+      taxAmount: (sale.total || 0) * 0.18,
+      total: (sale.total || 0) * 1.18
     };
 
     // Set the data and show preview
@@ -288,9 +288,9 @@ export default function Invoices() {
         })) : [],
         notes: firstSale.notes || "",
         subtotal: firstSale.total || 0,
-        taxRate: 0,
-        taxAmount: 0,
-        total: firstSale.total || 0
+        taxRate: 18,
+        taxAmount: (firstSale.total || 0) * 0.18,
+        total: (firstSale.total || 0) * 1.18
       });
     } else {
       // Fallback if no sales exist
@@ -305,7 +305,7 @@ export default function Invoices() {
         items: [],
         notes: "",
         subtotal: 0,
-        taxRate: 19.25,
+        taxRate: 18,
         taxAmount: 0,
         total: 0
       });
@@ -460,9 +460,9 @@ export default function Invoices() {
                                 })) : [],
                                 notes: sale.notes || "",
                                 subtotal: sale.total || 0,
-                                taxRate: 0,
-                                taxAmount: 0,
-                                total: sale.total || 0
+                                taxRate: 18,
+                                taxAmount: (sale.total || 0) * 0.18,
+                                total: (sale.total || 0) * 1.18
                               });
                               setShowPreview(true);
                             }}
