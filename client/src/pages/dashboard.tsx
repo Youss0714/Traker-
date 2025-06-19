@@ -76,6 +76,11 @@ export default function Dashboard() {
     queryKey: ['/api/dashboard', timeRange, filters],
     retry: false,
   });
+
+  // Query products for stock alerts
+  const { data: products } = useQuery<any[]>({
+    queryKey: ['/api/products'],
+  });
   
   if (isLoading) {
     return (
@@ -316,77 +321,72 @@ export default function Dashboard() {
       })) || []} />
 
       {/* Alertes de stock faible */}
-      <Card className="shadow-sm border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
-        <CardHeader className="flex justify-between items-center pb-2">
-          <CardTitle className="text-sm font-medium text-amber-800 flex items-center">
-            <span className="material-icons text-amber-600 mr-2">warning</span>
-            Alertes Stock Faible
-          </CardTitle>
-          <Badge variant="destructive" className="bg-amber-500 hover:bg-amber-600">
-            3 alertes
-          </Badge>
-        </CardHeader>
-        <CardContent className="space-y-3 p-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="material-icons text-white text-sm">inventory</span>
-                </div>
-                <div>
-                  <p className="font-medium text-amber-800">Pagne Wax Vlisco</p>
-                  <p className="text-xs text-amber-600">Stock: 3 unités restantes</p>
-                </div>
-              </div>
-              <Badge variant="outline" className="border-amber-400 text-amber-700">
-                Critique
+      {(() => {
+        const lowStockProducts = Array.isArray(products) ? products.filter((product: any) => {
+          const quantity = product.quantity || product.stock || 0;
+          return quantity <= 10;
+        }) : [];
+
+        return (
+          <Card className="shadow-sm border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
+            <CardHeader className="flex justify-between items-center pb-2">
+              <CardTitle className="text-sm font-medium text-amber-800 flex items-center">
+                <span className="material-icons text-amber-600 mr-2">warning</span>
+                Alertes Stock Faible
+              </CardTitle>
+              <Badge variant="destructive" className="bg-amber-500 hover:bg-amber-600">
+                {lowStockProducts.length} alertes
               </Badge>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="material-icons text-white text-sm">inventory</span>
+            </CardHeader>
+            <CardContent className="space-y-3 p-4">
+              {lowStockProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <span className="material-icons text-4xl text-green-500 mb-2">check_circle</span>
+                  <p className="text-sm text-gray-600">Aucune alerte stock</p>
                 </div>
-                <div>
-                  <p className="font-medium text-amber-800">Chaussures Élégantes</p>
-                  <p className="text-xs text-amber-600">Stock: 5 unités restantes</p>
+              ) : (
+                <div className="space-y-2">
+                  {lowStockProducts.slice(0, 3).map((product: any) => {
+                    const quantity = product.quantity || product.stock || 0;
+                    const status = quantity <= 5 ? 
+                      { label: 'Critique', className: 'border-red-400 text-red-700' } :
+                      { label: 'Faible', className: 'border-yellow-400 text-yellow-700' };
+                    
+                    return (
+                      <div key={product.id} className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                            <span className="material-icons text-white text-sm">inventory</span>
+                          </div>
+                          <div>
+                            <p className="font-medium text-amber-800">{product.name}</p>
+                            <p className="text-xs text-amber-600">Stock: {quantity} unités restantes</p>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className={status.className}>
+                          {status.label}
+                        </Badge>
+                      </div>
+                    );
+                  })}
                 </div>
+              )}
+              
+              <div className="pt-2 border-t border-amber-200">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
+                  onClick={() => navigate('/inventory')}
+                >
+                  <span className="material-icons mr-2 text-sm">add_box</span>
+                  Réapprovisionner les stocks
+                </Button>
               </div>
-              <Badge variant="outline" className="border-yellow-400 text-yellow-700">
-                Faible
-              </Badge>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="material-icons text-white text-sm">inventory</span>
-                </div>
-                <div>
-                  <p className="font-medium text-amber-800">Sac à Main Cuir</p>
-                  <p className="text-xs text-amber-600">Stock: 7 unités restantes</p>
-                </div>
-              </div>
-              <Badge variant="outline" className="border-yellow-400 text-yellow-700">
-                Faible
-              </Badge>
-            </div>
-          </div>
-          
-          <div className="pt-2 border-t border-amber-200">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
-              onClick={() => navigate('/inventory')}
-            >
-              <span className="material-icons mr-2 text-sm">add_box</span>
-              Réapprovisionner les stocks
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* Recent Activity */}
       <Card className="shadow-sm">
