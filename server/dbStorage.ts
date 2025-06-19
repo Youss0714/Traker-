@@ -334,6 +334,39 @@ export class DBStorage implements IStorage {
       ]),
       notes: ""
     });
+
+    // Créer des factures d'exemple avec TVA de 18%
+    await this.createInvoice({
+      clientId: client1.id,
+      clientName: client1.name,
+      clientEmail: client1.email,
+      clientAddress: client1.address || "",
+      invoiceNumber: "FACT-2024-001",
+      status: "paid",
+      subtotal: 88000,
+      items: JSON.stringify([
+        { id: "1", description: "Smartphone XYZ", quantity: 2, unitPrice: 125000, total: 250000 },
+        { id: "2", description: "T-shirt Coton", quantity: 5, unitPrice: 8500, total: 42500 }
+      ]),
+      dueDate: "2024-07-15",
+      notes: "Commande livrée avec succès"
+    });
+
+    await this.createInvoice({
+      clientId: client3.id,
+      clientName: client3.name,
+      clientEmail: client3.email,
+      clientAddress: client3.address || "",
+      invoiceNumber: "FACT-2024-002",
+      status: "pending",
+      subtotal: 475000,
+      items: JSON.stringify([
+        { id: "1", description: "Ordinateur portable", quantity: 1, unitPrice: 450000, total: 450000 },
+        { id: "2", description: "T-shirt Coton", quantity: 3, unitPrice: 8500, total: 25500 }
+      ]),
+      dueDate: "2024-07-25",
+      notes: "En attente de paiement"
+    });
   }
 
   // Invoice methods
@@ -353,7 +386,19 @@ export class DBStorage implements IStorage {
   }
 
   async createInvoice(insertInvoice: InsertInvoice): Promise<Invoice> {
-    const result = await db.insert(invoices).values(insertInvoice).returning();
+    // Calculer automatiquement la TVA de 18%
+    const subtotal = insertInvoice.subtotal || 0;
+    const taxRate = 18;
+    const taxAmount = subtotal * 0.18;
+    const total = subtotal + taxAmount;
+
+    const result = await db.insert(invoices).values({
+      ...insertInvoice,
+      taxRate,
+      taxAmount,
+      total,
+      createdAt: new Date()
+    }).returning();
     return result[0];
   }
 
@@ -414,76 +459,6 @@ export class DBStorage implements IStorage {
     return result.length > 0;
   }
 
-  // Invoice methods
-  async getInvoices(): Promise<Invoice[]> {
-    return await db.select().from(invoices).orderBy(invoices.createdAt);
-  }
-
-  async getInvoice(id: number): Promise<Invoice | undefined> {
-    const result = await db.select().from(invoices).where(eq(invoices.id, id)).limit(1);
-    return result[0];
-  }
-
-  async getInvoiceByNumber(invoiceNumber: string): Promise<Invoice | undefined> {
-    const result = await db.select().from(invoices).where(eq(invoices.invoiceNumber, invoiceNumber)).limit(1);
-    return result[0];
-  }
-
-  async createInvoice(insertInvoice: InsertInvoice): Promise<Invoice> {
-    // Calculer automatiquement la TVA de 18%
-    const subtotal = insertInvoice.subtotal || 0;
-    const taxRate = 18;
-    const taxAmount = subtotal * 0.18;
-    const total = subtotal + taxAmount;
-
-    const result = await db.insert(invoices).values({
-      ...insertInvoice,
-      taxRate,
-      taxAmount,
-      total,
-      createdAt: new Date()
-    }).returning();
-    return result[0];
-  }
-
-  async updateInvoice(id: number, invoiceUpdate: Partial<InsertInvoice>): Promise<Invoice | undefined> {
-    // Recalculer la TVA si le subtotal change
-    if (invoiceUpdate.subtotal !== undefined) {
-      const subtotal = invoiceUpdate.subtotal;
-      invoiceUpdate.taxRate = 18;
-      invoiceUpdate.taxAmount = subtotal * 0.18;
-      invoiceUpdate.total = subtotal + invoiceUpdate.taxAmount;
-    }
-
-    const result = await db.update(invoices)
-      .set(invoiceUpdate)
-      .where(eq(invoices.id, id))
-      .returning();
-    return result[0];
-  }
-
-  async deleteInvoice(id: number): Promise<boolean> {
-    const result = await db.delete(invoices).where(eq(invoices.id, id));
-    return (result.rowCount || 0) > 0;
-  }
-
-  async getInvoicesByStatus(status: string): Promise<Invoice[]> {
-    return await db.select().from(invoices).where(eq(invoices.status, status));
-  }
-
-  async getOverdueInvoices(): Promise<Invoice[]> {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    return await db.select().from(invoices)
-      .where(
-        and(
-          eq(invoices.status, 'pending'),
-          // Assuming dueDate is stored as string in YYYY-MM-DD format
-          sql`${invoices.dueDate} < ${today.toISOString().split('T')[0]}`
-        )
-      );
-  }
 }
 
 export const dbStorage = new DBStorage();
