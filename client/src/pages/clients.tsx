@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,15 @@ import { Input } from "@/components/ui/input";
 import { AvatarInitials } from "@/components/ui/avatar-initials";
 import { useAppContext } from "@/lib/context/AppContext";
 import { formatCurrency } from "@/lib/utils/helpers";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Client {
   id: number;
@@ -15,7 +24,190 @@ interface Client {
   type: string;
   totalSpent: number;
   lastOrderDate: string;
+  address?: string;
 }
+
+// Schema de validation pour la modification de client
+const clientSchema = z.object({
+  name: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+  email: z.string().email({ message: "Email invalide" }).optional().or(z.literal('')),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  type: z.string().default("regular")
+});
+
+type ClientFormValues = z.infer<typeof clientSchema>;
+
+// Composant de modification de client
+const EditClientDialog = ({ client }: { client: Client }) => {
+  const [open, setOpen] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<ClientFormValues>({
+    resolver: zodResolver(clientSchema),
+    defaultValues: {
+      name: client.name || "",
+      email: client.email || "",
+      phone: client.phone || "",
+      address: client.address || "",
+      type: client.type || "regular"
+    }
+  });
+
+  const updateClientMutation = useMutation({
+    mutationFn: async (data: ClientFormValues) => {
+      const response = await fetch(`/api/clients/${client.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update client');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setOpen(false);
+      form.reset();
+      toast({
+        title: "Succès",
+        description: "Client modifié avec succès",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la modification du client",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const onSubmit = (data: ClientFormValues) => {
+    updateClientMutation.mutate(data);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-md flex-1">
+          <span className="material-icons text-sm mr-1">edit</span>
+          Modifier
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Modifier le client</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nom complet</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nom du client" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="client@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Téléphone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+225 07 00 00 00 00" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type de client</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner le type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="regular">Client régulier</SelectItem>
+                      <SelectItem value="new">Nouveau client</SelectItem>
+                      <SelectItem value="vip">Client VIP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adresse</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Adresse du client" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex gap-3 pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setOpen(false)}
+                className="flex-1"
+              >
+                Annuler
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={updateClientMutation.isPending}
+                className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+              >
+                {updateClientMutation.isPending ? "Modification..." : "Modifier"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 // Client item card component
 const ClientItem = ({ client }: { client: Client }) => {
@@ -53,10 +245,7 @@ const ClientItem = ({ client }: { client: Client }) => {
           </div>
         </div>
         <div className="mt-3 flex gap-2">
-          <Button size="sm" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-md flex-1">
-            <span className="material-icons text-sm mr-1">edit</span>
-            Modifier
-          </Button>
+          <EditClientDialog client={client} />
           <Button size="sm" variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
             <span className="material-icons text-sm">visibility</span>
           </Button>
