@@ -109,9 +109,10 @@ export class DBStorage implements IStorage {
     const client = await this.getClient(id);
     if (!client) return undefined;
     
-    // Calculer les nouvelles valeurs
+    // Calculer les nouvelles valeurs avec TVA de 18%
     const totalOrders = (client.totalOrders || 0) + 1;
-    const totalSpent = (client.totalSpent || 0) + orderAmount;
+    const orderAmountWithTax = orderAmount * 1.18; // Ajouter 18% de TVA
+    const totalSpent = (client.totalSpent || 0) + orderAmountWithTax;
     
     // Mettre à jour le client
     const result = await db.update(clients)
