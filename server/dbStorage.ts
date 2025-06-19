@@ -13,7 +13,13 @@ import {
   type InsertSale,
   categories,
   type Category,
-  type InsertCategory
+  type InsertCategory,
+  company,
+  type Company,
+  type InsertCompany,
+  invoices,
+  type Invoice,
+  type InsertInvoice
 } from "@shared/schema";
 import { db } from "./db";
 import { IStorage } from "./storage";

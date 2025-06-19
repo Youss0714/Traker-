@@ -16,7 +16,10 @@ import {
   type InsertCategory,
   company,
   type Company,
-  type InsertCompany
+  type InsertCompany,
+  invoices,
+  type Invoice,
+  type InsertInvoice
 } from "@shared/schema";
 
 export interface IStorage {
@@ -60,6 +63,16 @@ export interface IStorage {
   createCompany(company: InsertCompany): Promise<Company>;
   updateCompany(id: number, company: Partial<InsertCompany>): Promise<Company | undefined>;
   isCompanySetup(): Promise<boolean>;
+  
+  // Invoice methods
+  getInvoices(): Promise<Invoice[]>;
+  getInvoice(id: number): Promise<Invoice | undefined>;
+  getInvoiceByNumber(invoiceNumber: string): Promise<Invoice | undefined>;
+  createInvoice(invoice: InsertInvoice): Promise<Invoice>;
+  updateInvoice(id: number, invoice: Partial<InsertInvoice>): Promise<Invoice | undefined>;
+  deleteInvoice(id: number): Promise<boolean>;
+  getInvoicesByStatus(status: string): Promise<Invoice[]>;
+  getOverdueInvoices(): Promise<Invoice[]>;
 }
 
 export class MemStorage implements IStorage {

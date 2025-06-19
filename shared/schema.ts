@@ -113,6 +113,44 @@ export const saleItemSchema = z.object({
 
 export const saleItemsSchema = z.array(saleItemSchema);
 
+// Invoices schema - dedicated table for invoices
+export const invoices = pgTable("invoices", {
+  id: serial("id").primaryKey(),
+  invoiceNumber: text("invoice_number").notNull().unique(),
+  clientId: integer("client_id"),
+  clientName: text("client_name").notNull(),
+  clientAddress: text("client_address"),
+  status: text("status").default("draft"), // draft, sent, paid, overdue, canceled
+  subtotal: doublePrecision("subtotal").notNull().default(0),
+  taxRate: doublePrecision("tax_rate").notNull().default(19.25),
+  taxAmount: doublePrecision("tax_amount").notNull().default(0),
+  total: doublePrecision("total").notNull().default(0),
+  issueDate: timestamp("issue_date").defaultNow().notNull(),
+  dueDate: timestamp("due_date").notNull(),
+  notes: text("notes"),
+  items: jsonb("items").notNull(), // Array of invoice items
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertInvoiceSchema = createInsertSchema(invoices).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Invoice items schema for validation
+export const invoiceItemSchema = z.object({
+  id: z.string(),
+  productId: z.number().optional(),
+  description: z.string(),
+  quantity: z.number().min(1),
+  unitPrice: z.number().min(0),
+  total: z.number().min(0),
+});
+
+export const invoiceItemsSchema = z.array(invoiceItemSchema);
+
 // Export types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -132,4 +170,8 @@ export type Category = typeof categories.$inferSelect;
 export type InsertCompany = z.infer<typeof insertCompanySchema>;
 export type Company = typeof company.$inferSelect;
 
+export type InsertInvoice = z.infer<typeof insertInvoiceSchema>;
+export type Invoice = typeof invoices.$inferSelect;
+
 export type SaleItem = z.infer<typeof saleItemSchema>;
+export type InvoiceItem = z.infer<typeof invoiceItemSchema>;
