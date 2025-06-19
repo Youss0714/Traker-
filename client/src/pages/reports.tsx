@@ -108,6 +108,34 @@ export default function Reports() {
     setSelectedReport('monthly');
   };
 
+  const generateAnnualReport = () => {
+    if (!sales) return;
+    
+    const today = new Date();
+    const yearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+    
+    const annualSales = sales.filter((sale: any) => {
+      const saleDate = new Date(sale.date || sale.createdAt);
+      return saleDate >= yearAgo && saleDate <= today;
+    });
+
+    const totalSales = annualSales.reduce((sum: number, sale: any) => sum + (sale.total || 0), 0);
+    const salesCount = annualSales.length;
+    
+    // Calcul de la moyenne mensuelle
+    const monthlyAverage = totalSales / 12;
+
+    setReportData({
+      title: 'Rapport annuel',
+      period: `${yearAgo.toLocaleDateString('fr-FR')} - ${today.toLocaleDateString('fr-FR')}`,
+      totalSales,
+      salesCount,
+      monthlyAverage,
+      details: annualSales
+    });
+    setSelectedReport('annual');
+  };
+
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center justify-between mb-4">
@@ -155,6 +183,13 @@ export default function Reports() {
                     <span className="material-icons text-sm">event_note</span>
                     Rapport mensuel
                   </Button>
+                  <Button 
+                    onClick={generateAnnualReport}
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <span className="material-icons text-sm">date_range</span>
+                    Rapport annuel
+                  </Button>
                 </div>
                 
                 {/* Affichage des résultats du rapport */}
@@ -163,7 +198,7 @@ export default function Reports() {
                     <h4 className="text-lg font-semibold text-emerald-800 mb-2">{reportData.title}</h4>
                     <p className="text-emerald-600 mb-4">Période: {reportData.period}</p>
                     
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className={`grid gap-4 mb-4 ${reportData.monthlyAverage ? 'grid-cols-3' : 'grid-cols-2'}`}>
                       <div className="bg-emerald-50 p-3 rounded-lg">
                         <p className="text-sm text-emerald-600">Total des ventes</p>
                         <p className="text-xl font-bold text-emerald-800">{formatCurrency(reportData.totalSales)}</p>
@@ -172,6 +207,12 @@ export default function Reports() {
                         <p className="text-sm text-emerald-600">Nombre de ventes</p>
                         <p className="text-xl font-bold text-emerald-800">{reportData.salesCount}</p>
                       </div>
+                      {reportData.monthlyAverage && (
+                        <div className="bg-emerald-50 p-3 rounded-lg">
+                          <p className="text-sm text-emerald-600">Moyenne mensuelle</p>
+                          <p className="text-xl font-bold text-emerald-800">{formatCurrency(reportData.monthlyAverage)}</p>
+                        </div>
+                      )}
                     </div>
 
                     {reportData.details && reportData.details.length > 0 && (
