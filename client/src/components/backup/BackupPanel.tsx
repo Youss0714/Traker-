@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useQuery } from '@tanstack/react-query';
 
 interface BackupPanelProps {
   className?: string;
@@ -16,6 +17,19 @@ export default function BackupPanel({ className }: BackupPanelProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [backupStatus, setBackupStatus] = useState(backupManager.getBackupStatus());
   const { toast } = useToast();
+
+  // Query data for exports
+  const { data: products } = useQuery<any[]>({
+    queryKey: ['/api/products'],
+  });
+
+  const { data: clients } = useQuery<any[]>({
+    queryKey: ['/api/clients'],
+  });
+
+  const { data: sales } = useQuery<any[]>({
+    queryKey: ['/api/sales'],
+  });
 
   useEffect(() => {
     loadBackups();
@@ -153,6 +167,97 @@ export default function BackupPanel({ className }: BackupPanelProps) {
     }
   };
 
+  const downloadJSON = (data: any, filename: string) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportProducts = () => {
+    if (!products || products.length === 0) {
+      toast({
+        title: "Aucune donnée",
+        description: "Aucun produit à exporter",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const timestamp = new Date().toISOString().slice(0, 10);
+    downloadJSON(products, `produits_${timestamp}.json`);
+    
+    toast({
+      title: "Export réussi",
+      description: `${products.length} produits exportés`
+    });
+  };
+
+  const handleExportClients = () => {
+    if (!clients || clients.length === 0) {
+      toast({
+        title: "Aucune donnée",
+        description: "Aucun client à exporter",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const timestamp = new Date().toISOString().slice(0, 10);
+    downloadJSON(clients, `clients_${timestamp}.json`);
+    
+    toast({
+      title: "Export réussi",
+      description: `${clients.length} clients exportés`
+    });
+  };
+
+  const handleExportSales = () => {
+    if (!sales || sales.length === 0) {
+      toast({
+        title: "Aucune donnée",
+        description: "Aucune vente à exporter",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const timestamp = new Date().toISOString().slice(0, 10);
+    downloadJSON(sales, `ventes_${timestamp}.json`);
+    
+    toast({
+      title: "Export réussi",
+      description: `${sales.length} ventes exportées`
+    });
+  };
+
+  const handleExportAll = () => {
+    const allData = {
+      exportDate: new Date().toISOString(),
+      products: products || [],
+      clients: clients || [],
+      sales: sales || [],
+      summary: {
+        totalProducts: (products || []).length,
+        totalClients: (clients || []).length,
+        totalSales: (sales || []).length
+      }
+    };
+
+    const timestamp = new Date().toISOString().slice(0, 10);
+    downloadJSON(allData, `export_complet_${timestamp}.json`);
+    
+    toast({
+      title: "Export complet réussi",
+      description: "Toutes les données ont été exportées"
+    });
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Statut et contrôles */}
@@ -207,6 +312,56 @@ export default function BackupPanel({ className }: BackupPanelProps) {
               Importer
             </div>
           </label>
+        </div>
+      </MobileCard>
+
+      {/* Export de données */}
+      <MobileCard>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="material-icons text-blue-600">download</span>
+          <h3 className="font-semibold text-gray-900">Exporter vos données</h3>
+        </div>
+        
+        <p className="text-sm text-gray-600 mb-4">
+          Téléchargez vos données d'entreprise pour les conserver ou les utiliser dans d'autres applications.
+        </p>
+
+        <div className="grid grid-cols-2 gap-3">
+          <MobileButton
+            onClick={handleExportProducts}
+            disabled={isLoading}
+            icon={<span className="material-icons text-sm">inventory</span>}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white"
+          >
+            Exporter les produits
+          </MobileButton>
+
+          <MobileButton
+            onClick={handleExportClients}
+            disabled={isLoading}
+            icon={<span className="material-icons text-sm">people</span>}
+            className="bg-gradient-to-r from-purple-500 to-purple-600 text-white"
+          >
+            Exporter les clients
+          </MobileButton>
+
+          <MobileButton
+            onClick={handleExportSales}
+            disabled={isLoading}
+            icon={<span className="material-icons text-sm">receipt</span>}
+            className="bg-gradient-to-r from-blue-400 to-cyan-500 text-white"
+          >
+            Exporter les ventes
+          </MobileButton>
+
+          <MobileButton
+            onClick={handleExportAll}
+            disabled={isLoading}
+            icon={<span className="material-icons text-sm">download</span>}
+            className="bg-gradient-to-r from-green-500 to-green-600 text-white"
+          >
+            Exporter tout
+          </MobileButton>
         </div>
       </MobileCard>
 
