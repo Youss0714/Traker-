@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
@@ -42,11 +42,28 @@ export default function AddSale() {
   const [selectedProductObj, setSelectedProductObj] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [shouldPrintInvoice, setShouldPrintInvoice] = useState(true);
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [showProductDropdown, setShowProductDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   // Generate invoice number on mount
   useEffect(() => {
     const timestamp = Date.now().toString().slice(-6);
     setInvoiceNumber(`INV-${timestamp}`);
+  }, []);
+
+  // Handle click outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowProductDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
   
   // Query clients
@@ -58,6 +75,12 @@ export default function AddSale() {
   const { data: products } = useQuery<any[]>({
     queryKey: ['/api/products'],
   });
+
+  // Filter products based on search term
+  const filteredProducts = products?.filter((product: any) => 
+    product.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+    product.category?.toLowerCase().includes(productSearchTerm.toLowerCase())
+  ) || [];
 
   // Query company for invoice printing
   const { data: company } = useQuery<Company>({
@@ -129,6 +152,8 @@ export default function AddSale() {
     setSelectedProduct("");
     setSelectedProductObj(null);
     setQuantity(1);
+    setProductSearchTerm("");
+    setShowProductDropdown(false);
   };
   
   const handleRemoveItem = (index: number) => {
@@ -388,23 +413,56 @@ export default function AddSale() {
             <h3 className="font-medium">Produits</h3>
             
             <div className="flex space-x-2">
-              <div className="flex-1">
-                <Select value={selectedProduct} onValueChange={(value) => {
-                  setSelectedProduct(value);
-                  const product = products?.find(p => p.id.toString() === value);
-                  setSelectedProductObj(product || null);
-                }}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un produit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products?.map((product: any) => (
-                      <SelectItem key={product.id} value={product.id.toString()}>
-                        {product.name} - {formatCurrency(product.price)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="flex-1 relative">
+                <Input
+                  placeholder="Rechercher un produit..."
+                  value={productSearchTerm}
+                  onChange={(e) => {
+                    setProductSearchTerm(e.target.value);
+                    setShowProductDropdown(e.target.value.length > 0);
+                  }}
+                  onFocus={() => setShowProductDropdown(productSearchTerm.length > 0 || filteredProducts.length > 0)}
+                  className="w-full"
+                />
+                
+                {/* Dropdown des produits filtrés */}
+                {showProductDropdown && (
+                  <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto">
+                    {filteredProducts.length > 0 ? (
+                      filteredProducts.map((product: any) => (
+                        <div
+                          key={product.id}
+                          className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                          onClick={() => {
+                            setSelectedProduct(product.id.toString());
+                            setSelectedProductObj(product);
+                            setProductSearchTerm(product.name);
+                            setShowProductDropdown(false);
+                          }}
+                        >
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <p className="font-medium text-gray-900">{product.name}</p>
+                              <p className="text-sm text-gray-500">{product.category}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-semibold text-blue-600">{formatCurrency(product.price)}</p>
+                              <p className="text-xs text-gray-500">Stock: {product.quantity}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : productSearchTerm ? (
+                      <div className="p-3 text-center text-gray-500">
+                        Aucun produit trouvé pour "{productSearchTerm}"
+                      </div>
+                    ) : (
+                      <div className="p-3 text-center text-gray-500">
+                        Tapez pour rechercher un produit
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="w-20">
                 <Input 
