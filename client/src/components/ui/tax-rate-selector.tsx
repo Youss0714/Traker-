@@ -50,10 +50,14 @@ export function TaxRateSelector({ onTaxRateChange }: TaxRateSelectorProps) {
             <SelectTrigger className="w-full border-purple-300 focus:border-purple-500 focus:ring-purple-500">
               <SelectValue placeholder="Sélectionner un taux de TVA" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white dark:bg-gray-800 border border-purple-300 dark:border-gray-600 shadow-lg">
               {Object.entries(TAX_RATES).map(([rate, config]) => (
-                <SelectItem key={rate} value={rate}>
-                  <span className="font-medium">{config.label}</span>
+                <SelectItem 
+                  key={rate} 
+                  value={rate}
+                  className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 hover:from-purple-100 hover:to-pink-100 dark:hover:from-gray-600 dark:hover:to-gray-500 text-purple-800 dark:text-purple-200 border-b border-purple-100 dark:border-gray-600 last:border-b-0"
+                >
+                  <span className="font-medium text-purple-700 dark:text-purple-300">{config.label}</span>
                 </SelectItem>
               ))}
             </SelectContent>

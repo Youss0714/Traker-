@@ -35,27 +35,27 @@ export function CurrencyDropdown() {
           <span className="material-icons text-sm">keyboard_arrow_down</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" side="bottom" className="w-56 bg-white border shadow-xl z-[9999] mt-2">
-        <div className="px-3 py-2 text-sm font-medium text-gray-700 border-b">
+      <DropdownMenuContent align="end" side="bottom" className="w-56 bg-white dark:bg-gray-800 border border-blue-300 dark:border-gray-600 shadow-xl z-[9999] mt-2">
+        <div className="px-3 py-2 text-sm font-medium text-blue-800 dark:text-blue-200 border-b border-blue-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-700 dark:to-gray-600">
           Choisir une devise
         </div>
         {Object.entries(CURRENCIES).map(([code, config]) => (
           <DropdownMenuItem
             key={code}
             onClick={() => handleCurrencyChange(code as Currency)}
-            className={`flex items-center justify-between p-3 cursor-pointer hover:bg-gray-50 ${
-              selectedCurrency === code ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500' : 'text-gray-700'
+            className={`flex items-center justify-between p-3 cursor-pointer bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-700 dark:to-gray-600 hover:from-blue-100 hover:to-cyan-100 dark:hover:from-gray-600 dark:hover:to-gray-500 border-b border-blue-100 dark:border-gray-600 last:border-b-0 ${
+              selectedCurrency === code ? 'bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 dark:text-blue-300 border-l-4 border-blue-500 dark:border-blue-400' : 'text-blue-800 dark:text-blue-200'
             }`}
           >
             <div className="flex items-center gap-3">
-              <span className="font-bold text-lg w-8">{config.symbol}</span>
+              <span className="font-bold text-lg w-8 text-blue-700 dark:text-blue-300">{config.symbol}</span>
               <div>
-                <div className="font-medium">{config.name}</div>
-                <div className="text-xs text-gray-500">{code}</div>
+                <div className="font-medium text-blue-800 dark:text-blue-200">{config.name}</div>
+                <div className="text-xs text-blue-600 dark:text-blue-400">{code}</div>
               </div>
             </div>
             {selectedCurrency === code && (
-              <span className="material-icons text-blue-600">check_circle</span>
+              <span className="material-icons text-blue-600 dark:text-blue-400">check_circle</span>
             )}
           </DropdownMenuItem>
         ))}

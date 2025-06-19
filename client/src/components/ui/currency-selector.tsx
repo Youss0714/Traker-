@@ -55,12 +55,16 @@ export function CurrencySelector({ onCurrencyChange }: CurrencySelectorProps) {
             <SelectTrigger className="w-full border-green-300 focus:border-green-500 focus:ring-green-500">
               <SelectValue placeholder="Sélectionner une devise" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white dark:bg-gray-800 border border-green-300 dark:border-gray-600 shadow-lg">
               {Object.entries(CURRENCIES).map(([code, config]) => (
-                <SelectItem key={code} value={code}>
+                <SelectItem 
+                  key={code} 
+                  value={code}
+                  className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-700 dark:to-gray-600 hover:from-green-100 hover:to-emerald-100 dark:hover:from-gray-600 dark:hover:to-gray-500 text-green-800 dark:text-green-200 border-b border-green-100 dark:border-gray-600 last:border-b-0"
+                >
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">{config.symbol}</span>
-                    <span>{config.name}</span>
+                    <span className="font-medium text-green-700 dark:text-green-300">{config.symbol}</span>
+                    <span className="text-green-800 dark:text-green-200">{config.name}</span>
                   </div>
                 </SelectItem>
               ))}
