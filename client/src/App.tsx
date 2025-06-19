@@ -28,6 +28,7 @@ import { AppProvider } from "./lib/context/AppContext";
 import { SplashScreen } from "@/components/SplashScreen";
 import { CompanySetup } from "@/components/CompanySetup";
 import { useQuery } from "@tanstack/react-query";
+import { initializeLanguage } from "@/lib/utils/helpers";
 import { RecoveryDialog, useRecoveryDetection } from "@/components/backup/RecoveryDialog";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -62,6 +63,11 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const [needsSetup, setNeedsSetup] = useState<boolean | null>(null);
   const { recoveryBackup, showRecoveryDialog, closeRecoveryDialog } = useRecoveryDetection();
+
+  // Initialize language to English on app start
+  useEffect(() => {
+    initializeLanguage();
+  }, []);
 
   const { data: companyStatus, isLoading } = useQuery<{ isSetup: boolean; company?: any }>({
     queryKey: ['/api/company/status'],

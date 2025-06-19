@@ -35,6 +35,16 @@ export function setCurrentLanguage(language: Language): void {
 }
 
 /**
+ * Initialize application language to English
+ */
+export function initializeLanguage(): void {
+  if (typeof window !== 'undefined') {
+    // Force English as default language
+    localStorage.setItem('language', 'en');
+  }
+}
+
+/**
  * Available currencies in the application
  */
 export type Currency = 'FCFA' | 'USD' | 'GHS';
