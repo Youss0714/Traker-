@@ -13,14 +13,14 @@ export const LANGUAGES = {
 } as const;
 
 /**
- * Get the current language from localStorage or default to French
+ * Get the current language from localStorage or default to English
  */
 export function getCurrentLanguage(): Language {
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem('language') as Language;
-    return stored && stored in LANGUAGES ? stored : 'fr';
+    return stored && stored in LANGUAGES ? stored : 'en';
   }
-  return 'fr';
+  return 'en';
 }
 
 /**

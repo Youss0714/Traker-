@@ -33,7 +33,7 @@ export default function Settings() {
     description: ""
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [currentLanguage, setCurrentLanguageState] = useState<Language>(getCurrentLanguage());
+  const [currentLanguage, setCurrentLanguageState] = useState<Language>('en');
   
   useEffect(() => {
     setActivePage('more');
@@ -118,7 +118,7 @@ export default function Settings() {
       <Card className="border-blue-200 shadow-sm">
         <CardContent className="p-6 space-y-6">
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h3 className="text-sm font-medium text-blue-800 mb-4">{currentLanguage === 'fr' ? 'Préférences d\'affichage' : 'Display Preferences'}</h3>
+            <h3 className="text-sm font-medium text-blue-800 mb-4">Display Preferences</h3>
             
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-lg border border-indigo-300 shadow-sm">
@@ -127,8 +127,8 @@ export default function Settings() {
                     <span className="material-icons text-white text-lg">dark_mode</span>
                   </div>
                   <div>
-                    <Label htmlFor="dark-mode" className="text-sm font-medium text-indigo-800">{t('darkMode')}</Label>
-                    <p className="text-xs text-indigo-600">{t('language') === 'fr' ? 'Activer le thème sombre pour l\'application' : 'Enable dark theme for the application'}</p>
+                    <Label htmlFor="dark-mode" className="text-sm font-medium text-indigo-800">Dark Mode</Label>
+                    <p className="text-xs text-indigo-600">Enable dark theme for the application</p>
                   </div>
                 </div>
                 <Switch 
@@ -163,8 +163,8 @@ export default function Settings() {
                     <span className="material-icons text-white text-lg">language</span>
                   </div>
                   <div>
-                    <Label htmlFor="language" className="text-sm font-medium text-blue-800">{t('language')}</Label>
-                    <p className="text-xs text-blue-600">{currentLanguage === 'fr' ? 'Choisir la langue de l\'interface' : 'Choose the interface language'}</p>
+                    <Label htmlFor="language" className="text-sm font-medium text-blue-800">Language</Label>
+                    <p className="text-xs text-blue-600">Choose the interface language</p>
                   </div>
                 </div>
                 <Select value={currentLanguage} onValueChange={handleLanguageChange}>
@@ -194,7 +194,7 @@ export default function Settings() {
           
           <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-orange-800">{t('companyInfo')}</h3>
+              <h3 className="text-sm font-medium text-orange-800">Company Information</h3>
               {!isEditing ? (
                 <Button 
                   variant="outline" 

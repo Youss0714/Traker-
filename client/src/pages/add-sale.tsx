@@ -460,7 +460,7 @@ export default function AddSale() {
                       </div>
                     ) : (
                       <div className="p-3 text-center text-gray-500">
-                        {t('language') === 'fr' ? 'Tapez pour rechercher un produit' : 'Type to search for a product'}
+                        Type to search for a product
                       </div>
                     )}
                   </div>
@@ -511,7 +511,7 @@ export default function AddSale() {
               </div>
             ) : (
               <div className="text-center py-4 text-[#757575]">
-                Aucun produit ajouté
+                No products added
               </div>
             )}
           </div>

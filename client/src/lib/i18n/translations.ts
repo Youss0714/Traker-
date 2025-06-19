@@ -168,5 +168,5 @@ export type TranslationKey = keyof typeof translations.fr;
  */
 export function t(key: TranslationKey, language?: 'fr' | 'en'): string {
   const currentLang = language || getCurrentLanguage();
-  return (translations[currentLang] as any)[key] || (translations.fr as any)[key] || key;
+  return (translations[currentLang] as any)[key] || (translations.en as any)[key] || key;
 }
