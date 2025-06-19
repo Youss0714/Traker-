@@ -517,12 +517,12 @@ export default function AddSale() {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">{t('notes')}</Label>
             <Input 
               id="notes" 
               value={notes} 
               onChange={(e) => setNotes(e.target.value)} 
-              placeholder="Notes supplémentaires (optionnel)"
+              placeholder={t('additionalNotes')}
             />
           </div>
 
@@ -533,7 +533,7 @@ export default function AddSale() {
               onCheckedChange={(checked) => setShouldPrintInvoice(checked as boolean)}
             />
             <Label htmlFor="print-invoice" className="text-sm">
-              Imprimer automatiquement la facture après la vente
+              {t('printInvoice')}
             </Label>
           </div>
           
@@ -544,14 +544,14 @@ export default function AddSale() {
               onClick={() => navigate('/dashboard')}
             >
               <span className="material-icons mr-2">cancel</span>
-              Annuler
+              {t('cancel')}
             </Button>
             <Button 
               className="flex-1 bg-[#1976D2]" 
               onClick={handleSubmit}
               disabled={addSaleMutation.isPending}
             >
-              {addSaleMutation.isPending ? "Enregistrement..." : "Enregistrer la vente"}
+              {addSaleMutation.isPending ? (t('language') === 'fr' ? "Enregistrement..." : "Saving...") : t('registerSale')}
             </Button>
           </div>
         </CardContent>
