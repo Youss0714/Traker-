@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Badge } from '@/components/ui/badge';
 import { PWAInstaller } from '@/components/PWAInstaller';
 import { BackupStatus } from '@/components/backup/BackupStatus';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
   const [location] = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState(3);
+  const { t } = useTranslation();
 
   // Ajuster la hauteur de la fenêtre pour Android
   useEffect(() => {
@@ -33,21 +35,21 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
   }, []);
 
   const navigationItems = [
-    { icon: 'dashboard', label: 'Tableau de bord', href: '/', key: 'dashboard' },
-    { icon: 'inventory_2', label: 'Inventaire', href: '/inventory', key: 'inventory' },
-    { icon: 'shopping_cart', label: 'Ventes', href: '/sales', key: 'sales' },
-    { icon: 'people', label: 'Clients', href: '/clients', key: 'clients' },
-    { icon: 'category', label: 'Catégories', href: '/categories', key: 'categories' },
-    { icon: 'library_books', label: 'Catalogue', href: '/catalog', key: 'catalog' },
-    { icon: 'receipt_long', label: 'Factures', href: '/invoices', key: 'invoices' },
-    { icon: 'assessment', label: 'Rapports', href: '/reports', key: 'reports' },
-    { icon: 'backup', label: 'Sauvegarde', href: '/backup', key: 'backup' },
+    { icon: 'dashboard', label: t('dashboard'), href: '/', key: 'dashboard' },
+    { icon: 'inventory_2', label: t('inventory'), href: '/inventory', key: 'inventory' },
+    { icon: 'shopping_cart', label: t('sales'), href: '/sales', key: 'sales' },
+    { icon: 'people', label: t('clients'), href: '/clients', key: 'clients' },
+    { icon: 'category', label: 'Categories', href: '/categories', key: 'categories' },
+    { icon: 'library_books', label: 'Catalog', href: '/catalog', key: 'catalog' },
+    { icon: 'receipt_long', label: t('invoices'), href: '/invoices', key: 'invoices' },
+    { icon: 'assessment', label: t('reports'), href: '/reports', key: 'reports' },
+    { icon: 'backup', label: 'Backup', href: '/backup', key: 'backup' },
   ];
 
   const quickActions = [
-    { icon: 'add_shopping_cart', label: 'Nouvelle vente', href: '/add-sale', color: 'bg-blue-500' },
-    { icon: 'add_box', label: 'Nouveau produit', href: '/add-product', color: 'bg-green-500' },
-    { icon: 'person_add', label: 'Nouveau client', href: '/add-client', color: 'bg-purple-500' },
+    { icon: 'add_shopping_cart', label: t('newSale'), href: '/add-sale', color: 'bg-blue-500' },
+    { icon: 'add_box', label: t('newProduct'), href: '/add-product', color: 'bg-green-500' },
+    { icon: 'person_add', label: t('newClient'), href: '/add-client', color: 'bg-purple-500' },
   ];
 
   const getCurrentPageTitle = () => {
@@ -102,7 +104,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
               {/* Actions rapides */}
               <div className="p-4 border-t">
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  Actions rapides
+                  {t('quickActions')}
                 </h3>
                 <div className="space-y-2">
                   {quickActions.map((action, index) => (

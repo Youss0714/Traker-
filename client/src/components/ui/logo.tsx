@@ -152,7 +152,7 @@ export function Logo({ size = 'md', variant = 'icon', className = '' }: LogoProp
           gYS
         </h1>
         <p className="text-xs font-medium bg-gradient-to-r from-gray-600 to-gray-500 bg-clip-text text-transparent">
-          Gestion d'Entreprise
+          Business Management
         </p>
       </div>
     </div>
