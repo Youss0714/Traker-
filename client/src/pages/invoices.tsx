@@ -289,9 +289,9 @@ export default function Invoices() {
           total: item.subtotal || (item.price * item.quantity) || 0
         })) : [],
         notes: firstSale.notes || "",
-        subtotal: firstSale.subtotal || firstSale.total || 0,
-        taxRate: 19.25,
-        taxAmount: (firstSale.total || 0) * 0.1925,
+        subtotal: firstSale.total || 0,
+        taxRate: 0,
+        taxAmount: 0,
         total: firstSale.total || 0
       });
     } else {
@@ -461,9 +461,9 @@ export default function Invoices() {
                                   total: item.subtotal || (item.price * item.quantity) || 0
                                 })) : [],
                                 notes: sale.notes || "",
-                                subtotal: sale.subtotal || sale.total || 0,
-                                taxRate: 19.25,
-                                taxAmount: (sale.total || 0) * 0.1925,
+                                subtotal: sale.total || 0,
+                                taxRate: 0,
+                                taxAmount: 0,
                                 total: sale.total || 0
                               });
                               setShowPreview(true);
@@ -542,8 +542,8 @@ export default function Invoices() {
                     <tr key={item.id}>
                       <td className="border border-gray-300 p-3">{item.description || ""}</td>
                       <td className="border border-gray-300 p-3 text-center">{item.quantity || 0}</td>
-                      <td className="border border-gray-300 p-3 text-right">{(item.unitPrice || 0).toFixed(2)} €</td>
-                      <td className="border border-gray-300 p-3 text-right">{(item.total || 0).toFixed(2)} €</td>
+                      <td className="border border-gray-300 p-3 text-right">{formatCurrency(item.unitPrice || 0)}</td>
+                      <td className="border border-gray-300 p-3 text-right">{formatCurrency(item.total || 0)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -556,15 +556,17 @@ export default function Invoices() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Sous-total:</span>
-                    <span>{(invoiceData.subtotal || 0).toFixed(2)} €</span>
+                    <span>{formatCurrency(invoiceData.subtotal || 0)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>TVA ({invoiceData.taxRate || 0}%):</span>
-                    <span>{(invoiceData.taxAmount || 0).toFixed(2)} €</span>
-                  </div>
+                  {(invoiceData.taxRate || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span>TVA ({invoiceData.taxRate || 0}%):</span>
+                      <span>{formatCurrency(invoiceData.taxAmount || 0)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-bold text-lg border-t pt-2">
                     <span>Total:</span>
-                    <span>{(invoiceData.total || 0).toFixed(2)} €</span>
+                    <span>{formatCurrency(invoiceData.total || 0)}</span>
                   </div>
                 </div>
               </div>
@@ -794,15 +796,17 @@ export default function Invoices() {
               <div className="bg-gray-50 p-4 rounded space-y-2">
                 <div className="flex justify-between">
                   <span>Sous-total:</span>
-                  <span className="font-medium">{(invoiceData.subtotal || 0).toFixed(2)} €</span>
+                  <span className="font-medium">{formatCurrency(invoiceData.subtotal || 0)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>TVA ({invoiceData.taxRate || 0}%):</span>
-                  <span className="font-medium">{(invoiceData.taxAmount || 0).toFixed(2)} €</span>
-                </div>
+                {(invoiceData.taxRate || 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span>TVA ({invoiceData.taxRate || 0}%):</span>
+                    <span className="font-medium">{formatCurrency(invoiceData.taxAmount || 0)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-lg font-bold border-t pt-2">
                   <span>Total:</span>
-                  <span>{(invoiceData.total || 0).toFixed(2)} €</span>
+                  <span>{formatCurrency(invoiceData.total || 0)}</span>
                 </div>
               </div>
             </div>
