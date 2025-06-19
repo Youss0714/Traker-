@@ -413,7 +413,7 @@ export default function AddSale() {
             <h3 className="font-medium">Produits</h3>
             
             <div className="flex space-x-2">
-              <div className="flex-1 relative">
+              <div className="flex-1 relative" ref={dropdownRef}>
                 <Input
                   placeholder="Rechercher un produit..."
                   value={productSearchTerm}
