@@ -1,15 +1,112 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/lib/context/AppContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// Format currency helper
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'XOF',
+    minimumFractionDigits: 0
+  }).format(amount).replace('XOF', 'FCFA');
+};
 
 export default function Reports() {
   const { setActivePage } = useAppContext();
+  const [selectedReport, setSelectedReport] = useState<string | null>(null);
+  const [reportData, setReportData] = useState<any>(null);
   
   useEffect(() => {
     setActivePage('more');
   }, [setActivePage]);
+
+  // Fetch sales data for reports
+  const { data: sales } = useQuery({
+    queryKey: ['/api/sales'],
+    select: (data: any[]) => data || []
+  });
+
+  const { data: products } = useQuery({
+    queryKey: ['/api/products'],
+    select: (data: any[]) => data || []
+  });
+
+  const { data: clients } = useQuery({
+    queryKey: ['/api/clients'],
+    select: (data: any[]) => data || []
+  });
+
+  const generateDailyReport = () => {
+    if (!sales) return;
+    
+    const today = new Date();
+    const todaySales = sales.filter((sale: any) => {
+      const saleDate = new Date(sale.date || sale.createdAt);
+      return saleDate.toDateString() === today.toDateString();
+    });
+
+    const totalSales = todaySales.reduce((sum: number, sale: any) => sum + (sale.total || 0), 0);
+    const salesCount = todaySales.length;
+
+    setReportData({
+      title: 'Rapport quotidien',
+      period: today.toLocaleDateString('fr-FR'),
+      totalSales,
+      salesCount,
+      details: todaySales
+    });
+    setSelectedReport('daily');
+  };
+
+  const generateWeeklyReport = () => {
+    if (!sales) return;
+    
+    const today = new Date();
+    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    const weeklySales = sales.filter((sale: any) => {
+      const saleDate = new Date(sale.date || sale.createdAt);
+      return saleDate >= weekAgo && saleDate <= today;
+    });
+
+    const totalSales = weeklySales.reduce((sum: number, sale: any) => sum + (sale.total || 0), 0);
+    const salesCount = weeklySales.length;
+
+    setReportData({
+      title: 'Rapport hebdomadaire',
+      period: `${weekAgo.toLocaleDateString('fr-FR')} - ${today.toLocaleDateString('fr-FR')}`,
+      totalSales,
+      salesCount,
+      details: weeklySales
+    });
+    setSelectedReport('weekly');
+  };
+
+  const generateMonthlyReport = () => {
+    if (!sales) return;
+    
+    const today = new Date();
+    const monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    
+    const monthlySales = sales.filter((sale: any) => {
+      const saleDate = new Date(sale.date || sale.createdAt);
+      return saleDate >= monthAgo && saleDate <= today;
+    });
+
+    const totalSales = monthlySales.reduce((sum: number, sale: any) => sum + (sale.total || 0), 0);
+    const salesCount = monthlySales.length;
+
+    setReportData({
+      title: 'Rapport mensuel',
+      period: `${monthAgo.toLocaleDateString('fr-FR')} - ${today.toLocaleDateString('fr-FR')}`,
+      totalSales,
+      salesCount,
+      details: monthlySales
+    });
+    setSelectedReport('monthly');
+  };
 
   return (
     <div className="p-4 space-y-6">
@@ -37,19 +134,69 @@ export default function Reports() {
                 </p>
                 
                 <div className="grid grid-cols-1 gap-4 max-w-md mx-auto">
-                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2">
+                  <Button 
+                    onClick={generateDailyReport}
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2"
+                  >
                     <span className="material-icons text-sm">calendar_today</span>
                     Rapport quotidien
                   </Button>
-                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2">
+                  <Button 
+                    onClick={generateWeeklyReport}
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2"
+                  >
                     <span className="material-icons text-sm">date_range</span>
                     Rapport hebdomadaire
                   </Button>
-                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2">
+                  <Button 
+                    onClick={generateMonthlyReport}
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg flex items-center justify-center gap-2"
+                  >
                     <span className="material-icons text-sm">event_note</span>
                     Rapport mensuel
                   </Button>
                 </div>
+                
+                {/* Affichage des résultats du rapport */}
+                {reportData && (
+                  <div className="mt-6 p-4 bg-white rounded-lg border border-emerald-200">
+                    <h4 className="text-lg font-semibold text-emerald-800 mb-2">{reportData.title}</h4>
+                    <p className="text-emerald-600 mb-4">Période: {reportData.period}</p>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="bg-emerald-50 p-3 rounded-lg">
+                        <p className="text-sm text-emerald-600">Total des ventes</p>
+                        <p className="text-xl font-bold text-emerald-800">{formatCurrency(reportData.totalSales)}</p>
+                      </div>
+                      <div className="bg-emerald-50 p-3 rounded-lg">
+                        <p className="text-sm text-emerald-600">Nombre de ventes</p>
+                        <p className="text-xl font-bold text-emerald-800">{reportData.salesCount}</p>
+                      </div>
+                    </div>
+
+                    {reportData.details && reportData.details.length > 0 && (
+                      <div>
+                        <h5 className="font-medium text-emerald-800 mb-2">Détails des ventes</h5>
+                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                          {reportData.details.map((sale: any, index: number) => (
+                            <div key={index} className="flex justify-between items-center p-2 bg-emerald-50 rounded">
+                              <span className="text-sm">{sale.invoiceNumber || `Vente #${sale.id}`}</span>
+                              <span className="font-medium">{formatCurrency(sale.total)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    <Button 
+                      onClick={() => setSelectedReport(null)}
+                      variant="outline"
+                      className="mt-4 w-full border-emerald-300 text-emerald-600 hover:bg-emerald-50"
+                    >
+                      Fermer le rapport
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
