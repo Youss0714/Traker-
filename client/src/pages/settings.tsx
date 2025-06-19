@@ -47,10 +47,6 @@ export default function Settings() {
       title: language === 'fr' ? "Langue modifiée" : "Language changed",
       description: language === 'fr' ? "L'interface est maintenant en français" : "Interface is now in English",
     });
-    // Force page reload to apply translations
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
   };
 
   // Query company data
