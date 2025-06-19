@@ -165,21 +165,21 @@ export default function Settings() {
                     <p className="text-xs text-blue-600">Choisir la langue de l'interface</p>
                   </div>
                 </div>
-                <Select defaultValue="fr">
+                <Select value={currentLanguage} onValueChange={handleLanguageChange}>
                   <SelectTrigger id="language" className="border-blue-300 focus:border-blue-500 focus:ring-blue-500">
                     <SelectValue placeholder="Sélectionner une langue" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="fr">
                       <div className="flex items-center gap-2">
-                        <span className="text-blue-600">🇫🇷</span>
-                        <span>Français</span>
+                        <span className="text-blue-600">{LANGUAGES.fr.flag}</span>
+                        <span>{LANGUAGES.fr.name}</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="en">
                       <div className="flex items-center gap-2">
-                        <span className="text-blue-600">🇺🇸</span>
-                        <span>English</span>
+                        <span className="text-blue-600">{LANGUAGES.en.flag}</span>
+                        <span>{LANGUAGES.en.name}</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
