@@ -269,30 +269,49 @@ export default function Invoices() {
 
   const createNewInvoice = () => {
     setViewMode('create');
-    // Reset invoice data
-    setInvoiceData({
-      clientId: clients && clients.length > 0 ? clients[0].id : 0,
-      clientName: clients && clients.length > 0 ? clients[0].name : "Client par défaut",
-      clientAddress: clients && clients.length > 0 ? clients[0].address || "" : "",
-      invoiceNumber: `INV-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
-      time: new Date().toTimeString().slice(0, 5),
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      items: [
-        {
-          id: "1",
-          description: "Service de consultation",
-          quantity: 1,
-          unitPrice: 100.00,
-          total: 100.00
-        }
-      ],
-      notes: "",
-      subtotal: 100.00,
-      taxRate: 19.25,
-      taxAmount: 19.25,
-      total: 119.25
-    });
+    // Use data from the first available sale if exists
+    const firstSale = sales && sales.length > 0 ? sales[0] : null;
+    
+    if (firstSale) {
+      setInvoiceData({
+        clientId: firstSale.clientId || 0,
+        clientName: firstSale.clientName || "",
+        clientAddress: firstSale.clientAddress || "",
+        invoiceNumber: `INV-${Date.now()}`,
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().slice(0, 5),
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        items: Array.isArray(firstSale.items) ? firstSale.items.map((item: any, index: number) => ({
+          id: (index + 1).toString(),
+          description: item.name || item.description || "Article",
+          quantity: item.quantity || 1,
+          unitPrice: item.price || 0,
+          total: item.subtotal || (item.price * item.quantity) || 0
+        })) : [],
+        notes: firstSale.notes || "",
+        subtotal: firstSale.subtotal || firstSale.total || 0,
+        taxRate: 19.25,
+        taxAmount: (firstSale.total || 0) * 0.1925,
+        total: firstSale.total || 0
+      });
+    } else {
+      // Fallback if no sales exist
+      setInvoiceData({
+        clientId: clients && clients.length > 0 ? clients[0].id : 0,
+        clientName: clients && clients.length > 0 ? clients[0].name : "",
+        clientAddress: clients && clients.length > 0 ? clients[0].address || "" : "",
+        invoiceNumber: `INV-${Date.now()}`,
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().slice(0, 5),
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        items: [],
+        notes: "",
+        subtotal: 0,
+        taxRate: 19.25,
+        taxAmount: 0,
+        total: 0
+      });
+    }
   };
 
   // Invoice List View Component
@@ -427,9 +446,24 @@ export default function Invoices() {
                             variant="outline"
                             onClick={() => {
                               setInvoiceData({
-                                ...invoiceData,
+                                clientId: sale.clientId || 0,
+                                clientName: sale.clientName || "",
+                                clientAddress: sale.clientAddress || "",
                                 invoiceNumber: sale.invoiceNumber || `INV-${sale.id}`,
-                                clientName: sale.clientName || sale.client || "",
+                                date: sale.date ? new Date(sale.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+                                time: new Date().toTimeString().slice(0, 5),
+                                dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                                items: Array.isArray(sale.items) ? sale.items.map((item: any, index: number) => ({
+                                  id: (index + 1).toString(),
+                                  description: item.name || item.description || "Article",
+                                  quantity: item.quantity || 1,
+                                  unitPrice: item.price || 0,
+                                  total: item.subtotal || (item.price * item.quantity) || 0
+                                })) : [],
+                                notes: sale.notes || "",
+                                subtotal: sale.subtotal || sale.total || 0,
+                                taxRate: 19.25,
+                                taxAmount: (sale.total || 0) * 0.1925,
                                 total: sale.total || 0
                               });
                               setShowPreview(true);
