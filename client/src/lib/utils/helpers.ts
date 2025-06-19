@@ -3,6 +3,38 @@
  */
 
 /**
+ * Available languages in the application
+ */
+export type Language = 'fr' | 'en';
+
+export const LANGUAGES = {
+  fr: { name: 'Français', flag: '🇫🇷' },
+  en: { name: 'English', flag: '🇺🇸' }
+} as const;
+
+/**
+ * Get the current language from localStorage or default to French
+ */
+export function getCurrentLanguage(): Language {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('language') as Language;
+    return stored && stored in LANGUAGES ? stored : 'fr';
+  }
+  return 'fr';
+}
+
+/**
+ * Set the current language in localStorage
+ */
+export function setCurrentLanguage(language: Language): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('language', language);
+    // Trigger storage event to notify other components
+    window.dispatchEvent(new Event('language-change'));
+  }
+}
+
+/**
  * Available currencies in the application
  */
 export type Currency = 'FCFA' | 'USD' | 'GHS';

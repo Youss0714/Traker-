@@ -15,6 +15,7 @@ import { CurrencySelector } from "@/components/ui/currency-selector";
 import { TaxRateSelector } from "@/components/ui/tax-rate-selector";
 import { Company, InsertCompany } from "@shared/schema";
 import { useTheme } from "@/components/theme-provider";
+import { getCurrentLanguage, setCurrentLanguage, LANGUAGES, Language } from "@/lib/utils/helpers";
 
 export default function Settings() {
   const { setActivePage } = useAppContext();
@@ -30,10 +31,21 @@ export default function Settings() {
     description: ""
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [currentLanguage, setCurrentLanguageState] = useState<Language>(getCurrentLanguage());
   
   useEffect(() => {
     setActivePage('more');
   }, [setActivePage]);
+
+  // Handle language change
+  const handleLanguageChange = (language: Language) => {
+    setCurrentLanguage(language);
+    setCurrentLanguageState(language);
+    toast({
+      title: language === 'fr' ? "Langue modifiée" : "Language changed",
+      description: language === 'fr' ? "L'interface est maintenant en français" : "Interface is now in English",
+    });
+  };
 
   // Query company data
   const { data: company, isLoading } = useQuery<Company>({
