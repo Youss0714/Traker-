@@ -506,10 +506,10 @@ export default function Invoices() {
                 <tbody>
                   {Array.isArray(invoiceData.items) && invoiceData.items.map(item => (
                     <tr key={item.id}>
-                      <td className="border border-gray-300 p-3">{item.description}</td>
-                      <td className="border border-gray-300 p-3 text-center">{item.quantity}</td>
-                      <td className="border border-gray-300 p-3 text-right">{item.unitPrice.toFixed(2)} €</td>
-                      <td className="border border-gray-300 p-3 text-right">{item.total.toFixed(2)} €</td>
+                      <td className="border border-gray-300 p-3">{item.description || ""}</td>
+                      <td className="border border-gray-300 p-3 text-center">{item.quantity || 0}</td>
+                      <td className="border border-gray-300 p-3 text-right">{(item.unitPrice || 0).toFixed(2)} €</td>
+                      <td className="border border-gray-300 p-3 text-right">{(item.total || 0).toFixed(2)} €</td>
                     </tr>
                   ))}
                 </tbody>
@@ -522,15 +522,15 @@ export default function Invoices() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Sous-total:</span>
-                    <span>{invoiceData.subtotal.toFixed(2)} €</span>
+                    <span>{(invoiceData.subtotal || 0).toFixed(2)} €</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>TVA ({invoiceData.taxRate}%):</span>
-                    <span>{invoiceData.taxAmount.toFixed(2)} €</span>
+                    <span>TVA ({invoiceData.taxRate || 0}%):</span>
+                    <span>{(invoiceData.taxAmount || 0).toFixed(2)} €</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t pt-2">
                     <span>Total:</span>
-                    <span>{invoiceData.total.toFixed(2)} €</span>
+                    <span>{(invoiceData.total || 0).toFixed(2)} €</span>
                   </div>
                 </div>
               </div>
@@ -717,7 +717,7 @@ export default function Invoices() {
                     <div>
                       <Label>Total</Label>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{item.total.toFixed(2)} €</span>
+                        <span className="font-medium">{(item.total || 0).toFixed(2)} €</span>
                         <Button 
                           onClick={() => removeItem(item.id)}
                           size="sm"
@@ -760,15 +760,15 @@ export default function Invoices() {
               <div className="bg-gray-50 p-4 rounded space-y-2">
                 <div className="flex justify-between">
                   <span>Sous-total:</span>
-                  <span className="font-medium">{invoiceData.subtotal.toFixed(2)} €</span>
+                  <span className="font-medium">{(invoiceData.subtotal || 0).toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>TVA ({invoiceData.taxRate}%):</span>
-                  <span className="font-medium">{invoiceData.taxAmount.toFixed(2)} €</span>
+                  <span>TVA ({invoiceData.taxRate || 0}%):</span>
+                  <span className="font-medium">{(invoiceData.taxAmount || 0).toFixed(2)} €</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold border-t pt-2">
                   <span>Total:</span>
-                  <span>{invoiceData.total.toFixed(2)} €</span>
+                  <span>{(invoiceData.total || 0).toFixed(2)} €</span>
                 </div>
               </div>
             </div>
