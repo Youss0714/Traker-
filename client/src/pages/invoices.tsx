@@ -88,6 +88,11 @@ export default function Invoices() {
   }, [invoiceData.items, invoiceData.taxRate]);
 
   const calculateTotals = () => {
+    if (!Array.isArray(invoiceData.items)) {
+      console.warn('invoiceData.items is not an array:', invoiceData.items);
+      return;
+    }
+    
     const subtotal = invoiceData.items.reduce((sum, item) => sum + item.total, 0);
     const taxAmount = (subtotal * invoiceData.taxRate) / 100;
     const total = subtotal + taxAmount;
@@ -183,13 +188,15 @@ export default function Invoices() {
 
   const printInvoice = (sale: any) => {
     // Create a temporary invoice data from sale
-    const tempInvoiceData = {
-      ...invoiceData,
-      invoiceNumber: sale.invoiceNumber,
-      date: sale.date || new Date().toISOString().split('T')[0],
+    const tempInvoiceData: InvoiceData = {
+      clientId: sale.clientId || 0,
       clientName: sale.clientName || sale.client || "Client",
       clientAddress: sale.clientAddress || "",
-      items: sale.items || [
+      invoiceNumber: sale.invoiceNumber || `INV-${sale.id}`,
+      date: sale.date || new Date().toISOString().split('T')[0],
+      time: sale.time || new Date().toTimeString().slice(0, 5),
+      dueDate: sale.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      items: Array.isArray(sale.items) ? sale.items : [
         {
           id: "1",
           description: sale.description || "Produit/Service",
@@ -198,9 +205,11 @@ export default function Invoices() {
           total: sale.total || 0
         }
       ],
-      total: sale.total || 0,
+      notes: sale.notes || "",
       subtotal: sale.total || 0,
-      taxAmount: 0
+      taxRate: 19.25,
+      taxAmount: 0,
+      total: sale.total || 0
     };
 
     // Set the data and show preview
@@ -381,7 +390,7 @@ export default function Invoices() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoiceData.items.map(item => (
+                  {Array.isArray(invoiceData.items) && invoiceData.items.map(item => (
                     <tr key={item.id}>
                       <td className="border border-gray-300 p-3">{item.description}</td>
                       <td className="border border-gray-300 p-3 text-center">{item.quantity}</td>
@@ -543,7 +552,7 @@ export default function Invoices() {
             </div>
 
             <div className="space-y-4">
-              {invoiceData.items.map((item) => (
+              {Array.isArray(invoiceData.items) && invoiceData.items.map((item) => (
                 <Card key={item.id} className="p-4">
                   <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                     <div className="md:col-span-2">
