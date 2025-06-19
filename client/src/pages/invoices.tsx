@@ -350,7 +350,7 @@ export default function Invoices() {
   if (showPreview) {
     return (
       <div className="min-h-screen bg-white p-8 print:p-0">
-        <div className="max-w-4xl mx-auto print:max-w-none">
+        <div className="max-w-4xl mx-auto print:max-w-none printable-invoice">
           <div className="no-print mb-4 flex gap-2">
             <Button onClick={() => setShowPreview(false)} variant="outline">
               Retour à l'édition

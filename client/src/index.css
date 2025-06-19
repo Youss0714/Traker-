@@ -73,8 +73,45 @@
 
 /* Styles d'impression pour les factures */
 @media print {
-  .no-print {
+  /* Masquer tous les éléments par défaut */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Afficher seulement le contenu de la facture */
+  .printable-invoice,
+  .printable-invoice * {
+    visibility: visible;
+  }
+  
+  /* Positionner la facture pour remplir la page */
+  .printable-invoice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+  }
+  
+  /* Masquer la navigation et les barres latérales */
+  .sidebar,
+  .navbar,
+  .header,
+  .navigation,
+  nav,
+  aside,
+  .no-print,
+  [data-sidebar],
+  [class*="sidebar"],
+  [class*="navbar"],
+  [class*="header"]:not(.invoice-header) {
     display: none !important;
+    visibility: hidden !important;
   }
   
   body {
