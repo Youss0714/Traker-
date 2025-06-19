@@ -349,41 +349,45 @@ export default function BackupPanel({ className }: BackupPanelProps) {
         </p>
 
         <div className="grid grid-cols-2 gap-3">
-          <MobileButton
+          <button
             onClick={handleExportProducts}
             disabled={isLoading}
-            icon={<span className="material-icons text-sm">inventory</span>}
-            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white"
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg transition-all duration-150 touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ WebkitTapHighlightColor: "transparent" }}
           >
+            <span className="material-icons text-sm">inventory</span>
             Exporter les produits
-          </MobileButton>
+          </button>
 
-          <MobileButton
+          <button
             onClick={handleExportClients}
             disabled={isLoading}
-            icon={<span className="material-icons text-sm">people</span>}
-            className="bg-gradient-to-r from-purple-500 to-purple-600 text-white"
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg transition-all duration-150 touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ WebkitTapHighlightColor: "transparent" }}
           >
+            <span className="material-icons text-sm">people</span>
             Exporter les clients
-          </MobileButton>
+          </button>
 
-          <MobileButton
+          <button
             onClick={handleExportSales}
             disabled={isLoading}
-            icon={<span className="material-icons text-sm">receipt</span>}
-            className="bg-gradient-to-r from-blue-400 to-cyan-500 text-white"
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-medium rounded-lg transition-all duration-150 touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ WebkitTapHighlightColor: "transparent" }}
           >
+            <span className="material-icons text-sm">receipt</span>
             Exporter les ventes
-          </MobileButton>
+          </button>
 
-          <MobileButton
+          <button
             onClick={handleExportAll}
             disabled={isLoading}
-            icon={<span className="material-icons text-sm">download</span>}
-            className="bg-gradient-to-r from-green-500 to-green-600 text-white"
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg transition-all duration-150 touch-manipulation active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ WebkitTapHighlightColor: "transparent" }}
           >
+            <span className="material-icons text-sm">download</span>
             Exporter tout
-          </MobileButton>
+          </button>
         </div>
       </MobileCard>
 
