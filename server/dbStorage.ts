@@ -23,7 +23,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { IStorage } from "./storage";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 
 export class DBStorage implements IStorage {
   
@@ -412,6 +412,77 @@ export class DBStorage implements IStorage {
   async isCompanySetup(): Promise<boolean> {
     const result = await db.select().from(company).where(eq(company.isSetup, true)).limit(1);
     return result.length > 0;
+  }
+
+  // Invoice methods
+  async getInvoices(): Promise<Invoice[]> {
+    return await db.select().from(invoices).orderBy(invoices.createdAt);
+  }
+
+  async getInvoice(id: number): Promise<Invoice | undefined> {
+    const result = await db.select().from(invoices).where(eq(invoices.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getInvoiceByNumber(invoiceNumber: string): Promise<Invoice | undefined> {
+    const result = await db.select().from(invoices).where(eq(invoices.invoiceNumber, invoiceNumber)).limit(1);
+    return result[0];
+  }
+
+  async createInvoice(insertInvoice: InsertInvoice): Promise<Invoice> {
+    // Calculer automatiquement la TVA de 18%
+    const subtotal = insertInvoice.subtotal || 0;
+    const taxRate = 18;
+    const taxAmount = subtotal * 0.18;
+    const total = subtotal + taxAmount;
+
+    const result = await db.insert(invoices).values({
+      ...insertInvoice,
+      taxRate,
+      taxAmount,
+      total,
+      createdAt: new Date()
+    }).returning();
+    return result[0];
+  }
+
+  async updateInvoice(id: number, invoiceUpdate: Partial<InsertInvoice>): Promise<Invoice | undefined> {
+    // Recalculer la TVA si le subtotal change
+    if (invoiceUpdate.subtotal !== undefined) {
+      const subtotal = invoiceUpdate.subtotal;
+      invoiceUpdate.taxRate = 18;
+      invoiceUpdate.taxAmount = subtotal * 0.18;
+      invoiceUpdate.total = subtotal + invoiceUpdate.taxAmount;
+    }
+
+    const result = await db.update(invoices)
+      .set(invoiceUpdate)
+      .where(eq(invoices.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteInvoice(id: number): Promise<boolean> {
+    const result = await db.delete(invoices).where(eq(invoices.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async getInvoicesByStatus(status: string): Promise<Invoice[]> {
+    return await db.select().from(invoices).where(eq(invoices.status, status));
+  }
+
+  async getOverdueInvoices(): Promise<Invoice[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return await db.select().from(invoices)
+      .where(
+        and(
+          eq(invoices.status, 'pending'),
+          // Assuming dueDate is stored as string in YYYY-MM-DD format
+          sql`${invoices.dueDate} < ${today.toISOString().split('T')[0]}`
+        )
+      );
   }
 }
 
