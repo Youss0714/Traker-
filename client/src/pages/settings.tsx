@@ -117,7 +117,12 @@ export default function Settings() {
                     <p className="text-xs text-indigo-600">Activer le thème sombre pour l'application</p>
                   </div>
                 </div>
-                <Switch id="dark-mode" className="data-[state=checked]:bg-indigo-500" />
+                <Switch 
+                  id="dark-mode" 
+                  checked={theme === "dark"}
+                  onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                  className="data-[state=checked]:bg-indigo-500" 
+                />
               </div>
               
               <div className="flex items-center justify-between p-3 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-lg border border-emerald-300 shadow-sm">
