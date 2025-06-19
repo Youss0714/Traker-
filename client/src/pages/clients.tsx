@@ -23,7 +23,7 @@ interface Client {
   phone: string;
   type: string;
   totalSpent: number;
-  lastOrderDate: string;
+  totalOrders: number;
   address?: string;
 }
 
@@ -256,9 +256,15 @@ const ClientItem = ({ client }: { client: Client }) => {
             </div>
             <p className="text-sm text-orange-600">{client.email}</p>
             <p className="text-sm text-orange-600">{client.phone}</p>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-lg font-semibold text-orange-800">{formatCurrency(client.totalSpent)}</span>
-              <span className="text-sm text-orange-600">Total dépensé</span>
+            <div className="mt-2 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-semibold text-orange-800">{formatCurrency(client.totalSpent || 0)}</span>
+                <span className="text-sm text-orange-600">Total dépensé</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-orange-700">{client.totalOrders || 0} commandes</span>
+                <span className="text-xs text-orange-500">Nombre d'achats</span>
+              </div>
             </div>
           </div>
         </div>
