@@ -237,24 +237,22 @@ export default function Invoices() {
     // Create a temporary invoice data from sale
     const tempInvoiceData: InvoiceData = {
       clientId: sale.clientId || 0,
-      clientName: sale.clientName || sale.client || "Client",
+      clientName: sale.clientName || "",
       clientAddress: sale.clientAddress || "",
       invoiceNumber: sale.invoiceNumber || `INV-${sale.id}`,
-      date: sale.date || new Date().toISOString().split('T')[0],
-      time: sale.time || new Date().toTimeString().slice(0, 5),
-      dueDate: sale.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      items: Array.isArray(sale.items) ? sale.items : [
-        {
-          id: "1",
-          description: sale.description || "Produit/Service",
-          quantity: sale.quantity || 1,
-          unitPrice: sale.total || 0,
-          total: sale.total || 0
-        }
-      ],
+      date: sale.date ? new Date(sale.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      time: new Date().toTimeString().slice(0, 5),
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      items: Array.isArray(sale.items) ? sale.items.map((item: any, index: number) => ({
+        id: (index + 1).toString(),
+        description: item.name || item.description || "Article",
+        quantity: item.quantity || 1,
+        unitPrice: item.price || 0,
+        total: item.subtotal || (item.price * item.quantity) || 0
+      })) : [],
       notes: sale.notes || "",
       subtotal: sale.total || 0,
-      taxRate: 19.25,
+      taxRate: 0,
       taxAmount: 0,
       total: sale.total || 0
     };
