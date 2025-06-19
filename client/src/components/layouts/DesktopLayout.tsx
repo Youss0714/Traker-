@@ -4,6 +4,7 @@ import { useAppContext } from "@/lib/context/AppContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/ui/logo";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface DesktopLayoutProps {
   children: ReactNode;
@@ -12,27 +13,28 @@ interface DesktopLayoutProps {
 export default function DesktopLayout({ children }: DesktopLayoutProps) {
   const { activePage } = useAppContext();
   const [location] = useLocation();
+  const { t } = useTranslation();
 
   const navigationItems = [
-    { icon: "dashboard", label: "Tableau de bord", href: "/", key: "dashboard" },
-    { icon: "inventory_2", label: "Inventaire", href: "/inventory", key: "inventory" },
-    { icon: "shopping_cart", label: "Ventes", href: "/sales", key: "sales" },
-    { icon: "people", label: "Clients", href: "/clients", key: "clients" },
-    { icon: "category", label: "Catégories", href: "/categories", key: "categories" },
-    { icon: "library_books", label: "Catalogue", href: "/catalog", key: "catalog" },
-    { icon: "receipt_long", label: "Factures", href: "/invoices", key: "invoices" },
-    { icon: "assessment", label: "Rapports", href: "/reports", key: "reports" },
-    { icon: "file_download", label: "Export", href: "/export", key: "export" },
-    { icon: "sync", label: "Synchronisation", href: "/sync", key: "sync" },
-    { icon: "settings", label: "Paramètres", href: "/settings", key: "settings" },
-    { icon: "account_circle", label: "Profil", href: "/profile", key: "profile" },
-    { icon: "help_outline", label: "Aide", href: "/help", key: "help" },
+    { icon: "dashboard", label: t('dashboard'), href: "/", key: "dashboard" },
+    { icon: "inventory_2", label: t('inventory'), href: "/inventory", key: "inventory" },
+    { icon: "shopping_cart", label: t('sales'), href: "/sales", key: "sales" },
+    { icon: "people", label: t('clients'), href: "/clients", key: "clients" },
+    { icon: "category", label: t('categories'), href: "/categories", key: "categories" },
+    { icon: "library_books", label: t('catalog'), href: "/catalog", key: "catalog" },
+    { icon: "receipt_long", label: t('invoices'), href: "/invoices", key: "invoices" },
+    { icon: "assessment", label: t('reports'), href: "/reports", key: "reports" },
+    { icon: "file_download", label: t('export'), href: "/export", key: "export" },
+    { icon: "sync", label: t('sync'), href: "/sync", key: "sync" },
+    { icon: "settings", label: t('settings'), href: "/settings", key: "settings" },
+    { icon: "account_circle", label: t('profile'), href: "/profile", key: "profile" },
+    { icon: "help_outline", label: t('help'), href: "/help", key: "help" },
   ];
 
   const quickActions = [
-    { icon: "add_shopping_cart", label: "Nouvelle vente", href: "/add-sale", color: "bg-blue-600 hover:bg-blue-700" },
-    { icon: "person_add", label: "Nouveau client", href: "/add-client", color: "bg-green-600 hover:bg-green-700" },
-    { icon: "add_box", label: "Nouveau produit", href: "/add-product", color: "bg-purple-600 hover:bg-purple-700" },
+    { icon: "add_shopping_cart", label: t('newSale'), href: "/add-sale", color: "bg-blue-600 hover:bg-blue-700" },
+    { icon: "person_add", label: t('newClient'), href: "/add-client", color: "bg-green-600 hover:bg-green-700" },
+    { icon: "add_box", label: t('newProduct'), href: "/add-product", color: "bg-purple-600 hover:bg-purple-700" },
   ];
 
   return (
@@ -46,7 +48,7 @@ export default function DesktopLayout({ children }: DesktopLayoutProps) {
 
         {/* Quick Actions */}
         <div className="p-4 border-b border-gray-200">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Actions rapides</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{t('quickActions')}</h3>
           <div className="space-y-2">
             {quickActions.map((action) => (
               <Link key={action.href} to={action.href}>

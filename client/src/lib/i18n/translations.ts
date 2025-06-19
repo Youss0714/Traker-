@@ -79,7 +79,15 @@ export const translations = {
     // Form validation
     required: "Ce champ est requis",
     invalidEmail: "Email invalide",
-    invalidPhone: "Numéro de téléphone invalide"
+    invalidPhone: "Numéro de téléphone invalide",
+    
+    // Additional navigation items
+    categories: "Catégories",
+    catalog: "Catalogue",
+    export: "Export",
+    sync: "Synchronisation",
+    profile: "Profil",
+    help: "Aide"
   },
   
   en: {
@@ -157,7 +165,15 @@ export const translations = {
     // Form validation
     required: "This field is required",
     invalidEmail: "Invalid email",
-    invalidPhone: "Invalid phone number"
+    invalidPhone: "Invalid phone number",
+    
+    // Additional navigation items
+    categories: "Categories",
+    catalog: "Catalog",
+    export: "Export",
+    sync: "Sync",
+    profile: "Profile",
+    help: "Help"
   }
 } as const;
 
