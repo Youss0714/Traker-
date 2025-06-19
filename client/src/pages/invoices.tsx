@@ -56,17 +56,17 @@ export default function Invoices() {
     items: [
       {
         id: "1",
-        description: "",
+        description: "Service de consultation",
         quantity: 1,
-        unitPrice: 0,
-        total: 0
+        unitPrice: 100.00,
+        total: 100.00
       }
     ],
     notes: "",
-    subtotal: 0,
+    subtotal: 100.00,
     taxRate: 19.25,
-    taxAmount: 0,
-    total: 0
+    taxAmount: 19.25,
+    total: 119.25
   });
 
   const { data: clients } = useQuery<any[]>({
