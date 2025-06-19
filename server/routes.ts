@@ -1,12 +1,13 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { dbStorage as storage } from "./dbStorage";
 import { 
   insertProductSchema, 
   insertClientSchema, 
   insertSaleSchema,
   insertCategorySchema,
   insertCompanySchema,
+  insertInvoiceSchema,
   saleItemsSchema
 } from "@shared/schema";
 import { z } from "zod";
@@ -505,6 +506,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Dashboard error:", error);
       res.status(500).json({ message: "Error fetching dashboard data" });
+    }
+  });
+
+  // Invoices API routes
+  app.get("/api/invoices", async (req: Request, res: Response) => {
+    try {
+      const invoices = await storage.getInvoices();
+      res.json(invoices);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving invoices" });
+    }
+  });
+
+  app.get("/api/invoices/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid invoice ID" });
+      }
+      
+      const invoice = await storage.getInvoice(id);
+      if (!invoice) {
+        return res.status(404).json({ message: "Invoice not found" });
+      }
+      
+      res.json(invoice);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving invoice" });
+    }
+  });
+
+  app.get("/api/invoices/number/:invoiceNumber", async (req: Request, res: Response) => {
+    try {
+      const { invoiceNumber } = req.params;
+      const invoice = await storage.getInvoiceByNumber(invoiceNumber);
+      
+      if (!invoice) {
+        return res.status(404).json({ message: "Invoice not found" });
+      }
+      
+      res.json(invoice);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving invoice" });
+    }
+  });
+
+  app.post("/api/invoices", async (req: Request, res: Response) => {
+    try {
+      const invoiceData = insertInvoiceSchema.parse(req.body);
+      const invoice = await storage.createInvoice(invoiceData);
+      res.status(201).json(invoice);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      res.status(500).json({ message: "Error creating invoice" });
+    }
+  });
+
+  app.patch("/api/invoices/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid invoice ID" });
+      }
+      
+      const invoiceUpdate = insertInvoiceSchema.partial().parse(req.body);
+      const updatedInvoice = await storage.updateInvoice(id, invoiceUpdate);
+      
+      if (!updatedInvoice) {
+        return res.status(404).json({ message: "Invoice not found" });
+      }
+      
+      res.json(updatedInvoice);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      res.status(500).json({ message: "Error updating invoice" });
+    }
+  });
+
+  app.delete("/api/invoices/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid invoice ID" });
+      }
+      
+      const deleted = await storage.deleteInvoice(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Invoice not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting invoice" });
+    }
+  });
+
+  app.get("/api/invoices/status/:status", async (req: Request, res: Response) => {
+    try {
+      const { status } = req.params;
+      const invoices = await storage.getInvoicesByStatus(status);
+      res.json(invoices);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving invoices by status" });
+    }
+  });
+
+  app.get("/api/invoices/overdue", async (req: Request, res: Response) => {
+    try {
+      const overdueInvoices = await storage.getOverdueInvoices();
+      res.json(overdueInvoices);
+    } catch (error) {
+      res.status(500).json({ message: "Error retrieving overdue invoices" });
     }
   });
 

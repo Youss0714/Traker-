@@ -334,6 +334,84 @@ export class DBStorage implements IStorage {
       notes: ""
     });
   }
+
+  // Invoice methods
+  async getInvoices(): Promise<Invoice[]> {
+    const result = await db.select().from(invoices).orderBy(desc(invoices.createdAt));
+    return result;
+  }
+
+  async getInvoice(id: number): Promise<Invoice | undefined> {
+    const result = await db.select().from(invoices).where(eq(invoices.id, id));
+    return result[0];
+  }
+
+  async getInvoiceByNumber(invoiceNumber: string): Promise<Invoice | undefined> {
+    const result = await db.select().from(invoices).where(eq(invoices.invoiceNumber, invoiceNumber));
+    return result[0];
+  }
+
+  async createInvoice(insertInvoice: InsertInvoice): Promise<Invoice> {
+    const result = await db.insert(invoices).values(insertInvoice).returning();
+    return result[0];
+  }
+
+  async updateInvoice(id: number, invoiceUpdate: Partial<InsertInvoice>): Promise<Invoice | undefined> {
+    const result = await db.update(invoices)
+      .set({ ...invoiceUpdate, updatedAt: new Date() })
+      .where(eq(invoices.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteInvoice(id: number): Promise<boolean> {
+    const result = await db.delete(invoices).where(eq(invoices.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getInvoicesByStatus(status: string): Promise<Invoice[]> {
+    const result = await db.select().from(invoices)
+      .where(eq(invoices.status, status))
+      .orderBy(desc(invoices.createdAt));
+    return result;
+  }
+
+  async getOverdueInvoices(): Promise<Invoice[]> {
+    const result = await db.select().from(invoices)
+      .where(eq(invoices.status, 'sent'))
+      .orderBy(desc(invoices.createdAt));
+    
+    // Filter overdue invoices on the application side
+    const now = new Date();
+    return result.filter(invoice => new Date(invoice.dueDate) < now);
+  }
+
+  // Company methods (existing implementation would be here)
+  async getCompany(): Promise<Company | undefined> {
+    const result = await db.select().from(company).limit(1);
+    return result[0];
+  }
+
+  async createCompany(insertCompany: InsertCompany): Promise<Company> {
+    const result = await db.insert(company).values({
+      ...insertCompany,
+      isSetup: true
+    }).returning();
+    return result[0];
+  }
+
+  async updateCompany(id: number, companyUpdate: Partial<InsertCompany>): Promise<Company | undefined> {
+    const result = await db.update(company)
+      .set(companyUpdate)
+      .where(eq(company.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async isCompanySetup(): Promise<boolean> {
+    const result = await db.select().from(company).where(eq(company.isSetup, true)).limit(1);
+    return result.length > 0;
+  }
 }
 
 export const dbStorage = new DBStorage();

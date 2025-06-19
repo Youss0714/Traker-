@@ -74,7 +74,12 @@ export default function Invoices() {
     queryKey: ['/api/products'],
   });
 
-  // Fetch sales data to display as invoices
+  // Fetch invoices data
+  const { data: invoices } = useQuery<any[]>({
+    queryKey: ['/api/invoices'],
+  });
+
+  // Fetch sales data to display as fallback invoices
   const { data: sales } = useQuery<any[]>({
     queryKey: ['/api/sales'],
   });
