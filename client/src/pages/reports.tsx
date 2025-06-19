@@ -230,7 +230,10 @@ export default function Reports() {
                     )}
                     
                     <Button 
-                      onClick={() => setSelectedReport(null)}
+                      onClick={() => {
+                        setSelectedReport(null);
+                        setReportData(null);
+                      }}
                       variant="outline"
                       className="mt-4 w-full border-emerald-300 text-emerald-600 hover:bg-emerald-50"
                     >
