@@ -753,7 +753,7 @@ export default function Invoices() {
                     <div>
                       <Label>Total</Label>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{(item.total || 0).toFixed(2)} €</span>
+                        <span className="font-medium">{formatCurrency(item.total || 0)}</span>
                         <Button 
                           onClick={() => removeItem(item.id)}
                           size="sm"
