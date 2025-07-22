@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppContext } from "@/lib/context/AppContext";
 import { formatCurrency } from "@/lib/utils/helpers";
+import { printInvoice } from "@/components/invoice/InvoicePrintWrapper";
+import InvoiceTemplate from "@/components/invoice/InvoiceTemplate";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Sale {
@@ -30,114 +32,7 @@ const SaleItem = ({ sale }: { sale: Sale }) => {
   const statusTag = statusMap[sale.status] || statusMap['pending'];
 
   const handlePrint = () => {
-    // Parse items correctly
-    let items = [];
-    try {
-      if (typeof sale.items === 'string') {
-        items = JSON.parse(sale.items);
-      } else if (Array.isArray(sale.items)) {
-        items = sale.items;
-      }
-    } catch (e) {
-      console.error('Error parsing items for print:', e);
-    }
-
-    // Calculate VAT
-    const VAT_RATE = 0.18; // 18% TVA
-    const subtotalHT = sale.total / (1 + VAT_RATE);
-    const vatAmount = sale.total - subtotalHT;
-
-    const printContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #1976D2; margin: 0;">gYS - Système de Gestion</h1>
-          <p style="margin: 5px 0; color: #666;">Facture</p>
-        </div>
-        
-        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-          <div>
-            <h3 style="margin: 0 0 10px 0; color: #333;">Informations de la vente</h3>
-            <p style="margin: 3px 0;"><strong>Numéro:</strong> ${sale.invoiceNumber}</p>
-            <p style="margin: 3px 0;"><strong>Date:</strong> ${new Date(sale.date).toLocaleDateString()}</p>
-            <p style="margin: 3px 0;"><strong>Statut:</strong> ${statusTag.label}</p>
-          </div>
-          <div>
-            <h3 style="margin: 0 0 10px 0; color: #333;">Client</h3>
-            <p style="margin: 3px 0;"><strong>${sale.clientName}</strong></p>
-          </div>
-        </div>
-        
-        <div style="margin-bottom: 30px;">
-          <h3 style="margin: 0 0 15px 0; color: #333;">Articles</h3>
-          <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-            <thead>
-              <tr style="background-color: #f5f5f5;">
-                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Article</th>
-                <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Qté</th>
-                <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Prix unit.</th>
-                <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${items.length > 0 ? items.map(item => `
-                <tr>
-                  <td style="padding: 10px; border: 1px solid #ddd;">${item.name || 'Article'}</td>
-                  <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">${item.quantity || 1}</td>
-                  <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(item.price || 0)}</td>
-                  <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(item.subtotal || 0)}</td>
-                </tr>
-              `).join('') : '<tr><td colspan="4" style="padding: 10px; text-align: center; border: 1px solid #ddd;">Aucun article</td></tr>'}
-            </tbody>
-          </table>
-        </div>
-        
-        <div style="text-align: right; margin-top: 20px;">
-          <div style="display: inline-block; text-align: left;">
-            <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span>Sous-total HT:</span>
-                <span>${formatCurrency(subtotalHT)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span>TVA (18%):</span>
-                <span>${formatCurrency(vatAmount)}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; border-top: 1px solid #333; padding-top: 5px; font-weight: bold; font-size: 18px;">
-                <span>Total TTC:</span>
-                <span>${formatCurrency(sale.total)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div style="margin-top: 40px; text-align: center; color: #666; font-size: 12px;">
-          <p>Merci pour votre confiance !</p>
-          <p>gYS - Système de gestion d'entreprise</p>
-        </div>
-      </div>
-    `;
-    
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Facture ${sale.invoiceNumber}</title>
-            <style>
-              @media print {
-                body { margin: 0; }
-                @page { margin: 20mm; }
-              }
-            </style>
-          </head>
-          <body>
-            ${printContent}
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
+    printInvoice(sale);
   };
 
   return (
@@ -169,97 +64,48 @@ const SaleItem = ({ sale }: { sale: Sale }) => {
                 Voir détails
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl">
+            <DialogContent className="sm:max-w-4xl max-w-[95vw]">
               <DialogHeader>
-                <DialogTitle className="text-xl font-semibold text-green-800">
-                  Détails de la vente - {sale.invoiceNumber}
+                <DialogTitle className="text-xl font-semibold text-indigo-800">
+                  Aperçu de la facture - {sale.invoiceNumber}
                 </DialogTitle>
               </DialogHeader>
-              <div className="space-y-6 mt-4">
-                {/* Info générale */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h4 className="font-medium text-green-800 mb-2">Informations de la vente</h4>
-                    <div className="space-y-1 text-sm">
-                      <p><span className="font-medium">Numéro:</span> {sale.invoiceNumber}</p>
-                      <p><span className="font-medium">Date:</span> {new Date(sale.date).toLocaleDateString()}</p>
-                      <p><span className="font-medium">Statut:</span> <span className={`px-2 py-1 rounded text-xs ${statusTag.className}`}>{statusTag.label}</span></p>
-                    </div>
-                  </div>
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h4 className="font-medium text-blue-800 mb-2">Client</h4>
-                    <div className="space-y-1 text-sm">
-                      <p><span className="font-medium">Nom:</span> {sale.clientName}</p>
-                    </div>
-                  </div>
-                </div>
+              
+              <div className="max-h-[80vh] overflow-y-auto">
+                {(() => {
+                  // Parse items correctly
+                  let items = [];
+                  try {
+                    if (typeof sale.items === 'string') {
+                      items = JSON.parse(sale.items);
+                    } else if (Array.isArray(sale.items)) {
+                      items = sale.items;
+                    }
+                  } catch (e) {
+                    console.error('Error parsing items:', e);
+                    items = [];
+                  }
 
-                {/* Articles */}
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <h4 className="font-medium text-gray-800 mb-3">Articles vendus</h4>
-                  <div className="space-y-2">
-                    {(() => {
-                      let items = [];
-                      try {
-                        if (typeof sale.items === 'string') {
-                          items = JSON.parse(sale.items);
-                        } else if (Array.isArray(sale.items)) {
-                          items = sale.items;
-                        }
-                      } catch (e) {
-                        console.error('Error parsing items:', e);
-                      }
-                      
-                      return items.length > 0 ? (
-                        items.map((item: any, index: number) => (
-                          <div key={index} className="flex justify-between items-center bg-white p-3 rounded border">
-                            <div>
-                              <p className="font-medium">{item.name || 'Article'}</p>
-                              <p className="text-sm text-gray-600">Quantité: {item.quantity || 1}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-medium">{formatCurrency(item.subtotal || 0)}</p>
-                              <p className="text-sm text-gray-600">{formatCurrency(item.price || 0)} / unité</p>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-gray-500 text-center py-4">Aucun article disponible</p>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                {/* Calculs de total avec TVA */}
-                <div className="bg-green-100 p-4 rounded-lg border border-green-300">
-                  {(() => {
-                    const VAT_RATE = 0.18; // 18% TVA
-                    const subtotalHT = sale.total / (1 + VAT_RATE);
-                    const vatAmount = sale.total - subtotalHT;
-                    
-                    return (
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-green-700">Sous-total HT:</span>
-                          <span className="text-sm text-green-800">{formatCurrency(subtotalHT)}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-green-700">TVA (18%):</span>
-                          <span className="text-sm text-green-800">{formatCurrency(vatAmount)}</span>
-                        </div>
-                        <div className="border-t border-green-300 pt-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-lg font-semibold text-green-800">Total TTC:</span>
-                            <span className="text-2xl font-bold text-green-800">{formatCurrency(sale.total)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
+                  return (
+                    <InvoiceTemplate
+                      invoiceNumber={sale.invoiceNumber}
+                      date={new Date(sale.date).toLocaleDateString()}
+                      clientName={sale.clientName}
+                      items={items.map((item: any) => ({
+                        name: item.name || 'Article',
+                        quantity: item.quantity || 1,
+                        price: item.price || 0,
+                        subtotal: item.subtotal || 0
+                      }))}
+                      total={sale.total}
+                      status={sale.status}
+                      isPrintMode={false}
+                    />
+                  );
+                })()}
 
                 {/* Actions */}
-                <div className="flex gap-2 pt-4">
+                <div className="flex gap-2 pt-6 border-t mt-6">
                   <Button 
                     onClick={handlePrint}
                     className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 flex-1"
