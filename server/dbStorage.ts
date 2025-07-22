@@ -455,8 +455,20 @@ export class DBStorage implements IStorage {
   }
 
   async isCompanySetup(): Promise<boolean> {
-    const result = await db.select().from(company).where(eq(company.isSetup, true)).limit(1);
-    return result.length > 0;
+    try {
+      const result = await db.select().from(company).where(eq(company.isSetup, true)).limit(1);
+      return result.length > 0;
+    } catch (error) {
+      console.log('Company setup check error (likely missing columns):', error);
+      // Fallback: check if any company exists without new columns
+      try {
+        const basicResult = await db.select({ id: company.id, isSetup: company.isSetup }).from(company).limit(1);
+        return basicResult.length > 0 && basicResult[0].isSetup;
+      } catch (basicError) {
+        console.log('Basic company check failed:', basicError);
+        return false;
+      }
+    }
   }
 
 }

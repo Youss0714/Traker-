@@ -23,7 +23,7 @@ export default function CompanyInvoiceHeader({
   isPrintMode = false,
   showBorder = true 
 }: CompanyInvoiceHeaderProps) {
-  const { data: company } = useQuery<CompanyData>({
+  const { data: company, isLoading, error } = useQuery<CompanyData>({
     queryKey: ['/api/company'],
   });
 
@@ -35,7 +35,22 @@ export default function CompanyInvoiceHeader({
       .slice(0, 2);
   };
 
-  if (!company) {
+  if (isLoading) {
+    return (
+      <div className={`
+        ${className}
+        ${isPrintMode ? 'mb-6' : 'mb-8'}
+        ${showBorder ? 'pb-6 border-b-2 border-gray-200' : ''}
+        text-center
+      `}>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p className="text-blue-700">Chargement des informations de l'entreprise...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !company) {
     // Afficher un message si aucune entreprise n'est définie
     return (
       <div className={`
@@ -46,7 +61,7 @@ export default function CompanyInvoiceHeader({
       `}>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center justify-center mb-2">
-            <span className="material-icons text-red-500 mr-2">warning</span>
+            <span className="text-red-500 mr-2">⚠️</span>
             <span className="text-red-700 font-medium">Entreprise non définie</span>
           </div>
           <p className="text-red-600 text-sm">
