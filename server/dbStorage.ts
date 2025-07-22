@@ -306,7 +306,7 @@ export class DBStorage implements IStorage {
       status: "paid",
       total: 75000,
       items: JSON.stringify([
-        { productId: product1.id, name: product1.name, price: product1.price, quantity: 0.6, subtotal: 75000 }
+        { productId: product1.id, name: product1.name, price: product1.price, quantity: 1, subtotal: 75000 }
       ]),
       notes: ""
     });
@@ -339,7 +339,7 @@ export class DBStorage implements IStorage {
     await this.createInvoice({
       clientId: client1.id,
       clientName: client1.name,
-      clientEmail: client1.email,
+
       clientAddress: client1.address || "",
       invoiceNumber: "FACT-2024-001",
       status: "paid",
@@ -348,14 +348,14 @@ export class DBStorage implements IStorage {
         { id: "1", description: "Smartphone XYZ", quantity: 2, unitPrice: 125000, total: 250000 },
         { id: "2", description: "T-shirt Coton", quantity: 5, unitPrice: 8500, total: 42500 }
       ]),
-      dueDate: "2024-07-15",
+      dueDate: new Date("2024-07-15"),
       notes: "Commande livrée avec succès"
     });
 
     await this.createInvoice({
       clientId: client3.id,
       clientName: client3.name,
-      clientEmail: client3.email,
+
       clientAddress: client3.address || "",
       invoiceNumber: "FACT-2024-002",
       status: "pending",
@@ -364,7 +364,7 @@ export class DBStorage implements IStorage {
         { id: "1", description: "Ordinateur portable", quantity: 1, unitPrice: 450000, total: 450000 },
         { id: "2", description: "T-shirt Coton", quantity: 3, unitPrice: 8500, total: 25500 }
       ]),
-      dueDate: "2024-07-25",
+      dueDate: new Date("2024-07-25"),
       notes: "En attente de paiement"
     });
   }

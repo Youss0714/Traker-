@@ -81,6 +81,7 @@ export class MemStorage implements IStorage {
   private clients: Map<number, Client>;
   private sales: Map<number, Sale>;
   private categories: Map<number, Category>;
+  private invoices: Map<number, Invoice>;
   private companyData: Company | null;
   
   private currentUserId: number;
@@ -88,6 +89,7 @@ export class MemStorage implements IStorage {
   private currentClientId: number;
   private currentSaleId: number;
   private currentCategoryId: number;
+  private currentInvoiceId: number;
   private currentCompanyId: number;
 
   constructor() {
@@ -96,6 +98,7 @@ export class MemStorage implements IStorage {
     this.clients = new Map();
     this.sales = new Map();
     this.categories = new Map();
+    this.invoices = new Map();
     this.companyData = null;
     
     this.currentUserId = 1;
@@ -103,6 +106,7 @@ export class MemStorage implements IStorage {
     this.currentClientId = 1;
     this.currentSaleId = 1;
     this.currentCategoryId = 1;
+    this.currentInvoiceId = 1;
     this.currentCompanyId = 1;
     
     // Add some initial data
@@ -365,7 +369,11 @@ export class MemStorage implements IStorage {
     const id = this.currentClientId++;
     const client: Client = { 
       ...insertClient, 
-      id, 
+      id,
+      type: insertClient.type || null,
+      email: insertClient.email || null,
+      phone: insertClient.phone || null,
+      address: insertClient.address || null,
       totalOrders: 0,
       totalSpent: 0 
     };
@@ -392,8 +400,8 @@ export class MemStorage implements IStorage {
     
     const updatedClient = { 
       ...client, 
-      totalOrders: client.totalOrders + 1,
-      totalSpent: client.totalSpent + orderAmount
+      totalOrders: (client.totalOrders || 0) + 1,
+      totalSpent: (client.totalSpent || 0) + orderAmount
     };
     this.clients.set(id, updatedClient);
     return updatedClient;
@@ -413,6 +421,9 @@ export class MemStorage implements IStorage {
     const sale: Sale = { 
       ...insertSale, 
       id,
+      status: insertSale.status || null,
+      clientId: insertSale.clientId || null,
+      notes: insertSale.notes || null,
       date: new Date()
     };
     this.sales.set(id, sale);
@@ -457,8 +468,8 @@ export class MemStorage implements IStorage {
     const allSales = Array.from(this.sales.values());
     return allSales
       .sort((a, b) => {
-        const dateA = a.date instanceof Date ? a.date : new Date(a.date);
-        const dateB = b.date instanceof Date ? b.date : new Date(b.date);
+        const dateA = a.date instanceof Date ? a.date : (a.date ? new Date(a.date) : new Date());
+        const dateB = b.date instanceof Date ? b.date : (b.date ? new Date(b.date) : new Date());
         return dateB.getTime() - dateA.getTime();
       })
       .slice(0, limit);
@@ -478,6 +489,8 @@ export class MemStorage implements IStorage {
     const category: Category = { 
       ...insertCategory, 
       id,
+      description: insertCategory.description || null,
+      isActive: insertCategory.isActive || null,
       createdAt: new Date()
     };
     this.categories.set(id, category);
@@ -507,6 +520,8 @@ export class MemStorage implements IStorage {
     const company: Company = { 
       ...insertCompany, 
       id,
+      description: insertCompany.description || null,
+      website: insertCompany.website || null,
       isSetup: true,
       createdAt: new Date()
     };
@@ -524,6 +539,70 @@ export class MemStorage implements IStorage {
 
   async isCompanySetup(): Promise<boolean> {
     return this.companyData?.isSetup || false;
+  }
+
+  // Invoice methods
+  async getInvoices(): Promise<Invoice[]> {
+    return Array.from(this.invoices.values());
+  }
+
+  async getInvoice(id: number): Promise<Invoice | undefined> {
+    return this.invoices.get(id);
+  }
+
+  async getInvoiceByNumber(invoiceNumber: string): Promise<Invoice | undefined> {
+    return Array.from(this.invoices.values()).find(invoice => invoice.invoiceNumber === invoiceNumber);
+  }
+
+  async createInvoice(insertInvoice: InsertInvoice): Promise<Invoice> {
+    const id = this.currentInvoiceId++;
+    const invoice: Invoice = {
+      ...insertInvoice,
+      id,
+      status: insertInvoice.status || null,
+      clientId: insertInvoice.clientId || null,
+      notes: insertInvoice.notes || null,
+      clientAddress: insertInvoice.clientAddress || null,
+      total: insertInvoice.total || 0,
+      subtotal: insertInvoice.subtotal || 0,
+      taxRate: insertInvoice.taxRate || 0,
+      taxAmount: insertInvoice.taxAmount || 0,
+      issueDate: insertInvoice.issueDate || new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.invoices.set(id, invoice);
+    return invoice;
+  }
+
+  async updateInvoice(id: number, invoiceUpdate: Partial<InsertInvoice>): Promise<Invoice | undefined> {
+    const invoice = this.invoices.get(id);
+    if (!invoice) return undefined;
+
+    const updatedInvoice: Invoice = { 
+      ...invoice, 
+      ...invoiceUpdate,
+      updatedAt: new Date()
+    };
+    this.invoices.set(id, updatedInvoice);
+    return updatedInvoice;
+  }
+
+  async deleteInvoice(id: number): Promise<boolean> {
+    return this.invoices.delete(id);
+  }
+
+  async getInvoicesByStatus(status: string): Promise<Invoice[]> {
+    return Array.from(this.invoices.values()).filter(invoice => invoice.status === status);
+  }
+
+  async getOverdueInvoices(): Promise<Invoice[]> {
+    const now = new Date();
+    return Array.from(this.invoices.values()).filter(invoice => {
+      if (!invoice.dueDate) return false;
+      const dueDate = invoice.dueDate instanceof Date ? invoice.dueDate : new Date(invoice.dueDate);
+      return dueDate < now && invoice.status !== 'paid';
+    });
   }
 }
 
