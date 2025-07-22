@@ -120,11 +120,11 @@ export default function MobileDashboard() {
           <MobileCard padding="sm" className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-700">
-                {formatCurrency(metrics.sales.total)}
+                {metrics?.sales ? formatCurrency(metrics.sales.total) : '0 FCFA'}
               </div>
               <div className="text-sm text-blue-600 font-medium">Ventes</div>
-              <div className={`text-xs mt-1 ${getTrendColor(metrics.sales.trend)}`}>
-                {metrics.sales.trend}
+              <div className={`text-xs mt-1 ${getTrendColor(metrics?.sales?.trend || '')}`}>
+                {metrics?.sales?.trend || '+0%'}
               </div>
             </div>
           </MobileCard>
@@ -132,11 +132,11 @@ export default function MobileDashboard() {
           <MobileCard padding="sm" className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-700">
-                {metrics.orders.total}
+                {metrics?.orders?.total || 0}
               </div>
               <div className="text-sm text-green-600 font-medium">Commandes</div>
-              <div className={`text-xs mt-1 ${getTrendColor(metrics.orders.trend)}`}>
-                {metrics.orders.trend}
+              <div className={`text-xs mt-1 ${getTrendColor(metrics?.orders?.trend || '')}`}>
+                {metrics?.orders?.trend || '+0%'}
               </div>
             </div>
           </MobileCard>
@@ -144,11 +144,11 @@ export default function MobileDashboard() {
           <MobileCard padding="sm" className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-700">
-                {metrics.products.total}
+                {metrics?.products?.total || 0}
               </div>
               <div className="text-sm text-orange-600 font-medium">Produits</div>
-              <div className={`text-xs mt-1 ${getTrendColor(metrics.products.trend)}`}>
-                {metrics.products.trend}
+              <div className={`text-xs mt-1 ${getTrendColor(metrics?.products?.trend || '')}`}>
+                {metrics?.products?.trend || '+0%'}
               </div>
             </div>
           </MobileCard>
@@ -156,11 +156,11 @@ export default function MobileDashboard() {
           <MobileCard padding="sm" className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-700">
-                {metrics.clients.total}
+                {metrics?.clients?.total || 0}
               </div>
               <div className="text-sm text-purple-600 font-medium">Clients</div>
-              <div className={`text-xs mt-1 ${getTrendColor(metrics.clients.trend)}`}>
-                {metrics.clients.trend}
+              <div className={`text-xs mt-1 ${getTrendColor(metrics?.clients?.trend || '')}`}>
+                {metrics?.clients?.trend || '+0%'}
               </div>
             </div>
           </MobileCard>
