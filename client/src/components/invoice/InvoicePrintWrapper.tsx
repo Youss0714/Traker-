@@ -1,5 +1,6 @@
 import InvoiceTemplate from "./InvoiceTemplate";
 import { formatCurrency } from "@/lib/utils/helpers";
+import { CompanyInvoiceHeaderPrint } from "./CompanyInvoiceHeader";
 
 interface Sale {
   id: number;
@@ -93,120 +94,153 @@ export function printInvoice(sale: Sale) {
     'canceled': 'Annulé'
   };
 
-  const printContent = `
-    <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: white;">
-      <!-- En-tête -->
-      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #6366f1;">
-        <div style="display: flex; align-items: center;">
-          <div style="width: 64px; height: 64px; background: linear-gradient(45deg, #6366f1, #8b5cf6); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-            <span style="color: white; font-weight: bold; font-size: 18px;">gYS</span>
-          </div>
-          <div>
-            <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: bold; color: #1e3a8a;">gYS - Système de Gestion</h1>
-            <p style="margin: 0; color: #6b7280; font-size: 14px;">Système de gestion d'entreprise</p>
-          </div>
-        </div>
-        <div style="background: #f0f9ff; padding: 16px; border-radius: 8px; border: 1px solid #bfdbfe;">
-          <h2 style="margin: 0 0 12px 0; font-size: 20px; font-weight: bold; color: #1e3a8a;">FACTURE</h2>
-          <div style="font-size: 14px; line-height: 1.5;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <span style="font-weight: 500;">N°:</span>
-              <span style="font-family: monospace; font-weight: 600;">${sale.invoiceNumber}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-              <span style="font-weight: 500;">Date:</span>
-              <span>${new Date(sale.date).toLocaleDateString()}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid #bfdbfe;">
-              <span style="font-weight: 500;">Statut:</span>
-              <span style="background: #059669; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">${statusMap[sale.status] || 'En attente'}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Client -->
-      <div style="margin-bottom: 30px;">
-        <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 600; color: #374151;">Facturé à:</h3>
-        <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #d1d5db;">
-          <p style="margin: 0 0 4px 0; font-weight: 600; color: #374151; font-size: 16px;">${sale.clientName}</p>
-        </div>
-      </div>
-
-      <!-- Articles -->
-      <div style="margin-bottom: 30px;">
-        <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #374151;">Articles</h3>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;">
-          <thead>
-            <tr style="background-color: #f3f4f6;">
-              <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db; font-weight: 600; color: #374151;">Désignation</th>
-              <th style="padding: 12px; text-align: center; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 80px;">Qté</th>
-              <th style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 120px;">Prix unit.</th>
-              <th style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 120px;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${items.length > 0 ? items.map((item: any) => `
-              <tr>
-                <td style="padding: 12px; border: 1px solid #d1d5db; color: #374151;">${item.name || 'Article'}</td>
-                <td style="padding: 12px; text-align: center; border: 1px solid #d1d5db; color: #374151;">${item.quantity || 1}</td>
-                <td style="padding: 12px; text-align: right; border: 1px solid #d1d5db; color: #374151;">${formatCurrency(item.price || 0)}</td>
-                <td style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 500; color: #374151;">${formatCurrency(item.subtotal || 0)}</td>
-              </tr>
-            `).join('') : '<tr><td colspan="4" style="padding: 20px; text-align: center; border: 1px solid #d1d5db; color: #6b7280;">Aucun article</td></tr>'}
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Totaux -->
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
-        <div style="width: 320px;">
-          <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #d1d5db;">
-            <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;">
-              <span style="color: #6b7280;">Sous-total HT:</span>
-              <span style="font-weight: 500; color: #374151;">${formatCurrency(subtotalHT)}</span>
-            </div>
-            <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;">
-              <span style="color: #6b7280;">TVA (18%):</span>
-              <span style="font-weight: 500; color: #374151;">${formatCurrency(vatAmount)}</span>
-            </div>
-            <div style="border-top: 1px solid #d1d5db; padding-top: 8px; margin-top: 8px;">
-              <div style="display: flex; justify-content: space-between;">
-                <span style="font-weight: bold; color: #374151; font-size: 18px;">Total TTC:</span>
-                <span style="font-weight: bold; color: #6366f1; font-size: 18px;">${formatCurrency(sale.total)}</span>
+  // Fetch company data pour l'en-tête unifié
+  fetch('/api/company')
+    .then(response => response.json())
+    .then(company => {
+      const printContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: white;">
+          <!-- En-tête unifié avec informations entreprise -->
+          ${CompanyInvoiceHeaderPrint({ company })}
+          
+          <!-- Informations de la facture -->
+          <div style="background: #f0f9ff; padding: 16px; margin-bottom: 30px; border-radius: 8px; border: 1px solid #bfdbfe;">
+            <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: bold; color: #1e3a8a;">Informations de la facture</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px; line-height: 1.5;">
+              <div>
+                <div style="margin-bottom: 4px;">
+                  <span style="font-weight: 500;">N°:</span>
+                  <span style="font-family: monospace; font-weight: 600; margin-left: 8px;">${sale.invoiceNumber}</span>
+                </div>
+                <div style="margin-bottom: 4px;">
+                  <span style="font-weight: 500;">Date:</span>
+                  <span style="margin-left: 8px;">${new Date(sale.date).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <div>
+                <div style="margin-bottom: 4px;">
+                  <span style="font-weight: 500;">Statut:</span>
+                  <span style="background: #059669; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-left: 8px;">${statusMap[sale.status] || 'En attente'}</span>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- Client -->
+          <div style="margin-bottom: 30px;">
+            <h3 style="font-weight: 600; color: #374151; margin-bottom: 12px;">Facturé à:</h3>
+            <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #d1d5db;">
+              <p style="margin: 0; font-weight: 600; color: #374151; font-size: 16px;">${sale.clientName}</p>
+            </div>
+          </div>
+
+          <!-- Articles -->
+          <div style="margin-bottom: 30px;">
+            <h3 style="font-weight: 600; color: #374151; margin-bottom: 16px;">Articles</h3>
+            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;">
+              <thead>
+                <tr style="background-color: #f3f4f6;">
+                  <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db; font-weight: 600; color: #374151;">Désignation</th>
+                  <th style="padding: 12px; text-align: center; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 80px;">Qté</th>
+                  <th style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 120px;">Prix unit.</th>
+                  <th style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 120px;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${items.length > 0 ? items.map((item: any) => `
+                  <tr>
+                    <td style="padding: 12px; border: 1px solid #d1d5db; color: #374151;">${item.name || 'Article'}</td>
+                    <td style="padding: 12px; text-align: center; border: 1px solid #d1d5db; color: #374151;">${item.quantity || 1}</td>
+                    <td style="padding: 12px; text-align: right; border: 1px solid #d1d5db; color: #374151;">${formatCurrency(item.price || 0)}</td>
+                    <td style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 500; color: #374151;">${formatCurrency(item.subtotal || 0)}</td>
+                  </tr>
+                `).join('') : '<tr><td colspan="4" style="padding: 20px; text-align: center; border: 1px solid #d1d5db; color: #6b7280;">Aucun article</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Totaux -->
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
+            <div style="width: 320px;">
+              <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #d1d5db;">
+                <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;">
+                  <span style="color: #6b7280;">Sous-total HT:</span>
+                  <span style="font-weight: 500; color: #374151;">${formatCurrency(subtotalHT)}</span>
+                </div>
+                <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;">
+                  <span style="color: #6b7280;">TVA (18%):</span>
+                  <span style="font-weight: 500; color: #374151;">${formatCurrency(vatAmount)}</span>
+                </div>
+                <div style="border-top: 1px solid #d1d5db; padding-top: 8px; margin-top: 8px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="font-weight: bold; color: #374151; font-size: 18px;">Total TTC:</span>
+                    <span style="font-weight: bold; color: #6366f1; font-size: 18px;">${formatCurrency(sale.total)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pied de page -->
+          <div style="border-top: 1px solid #d1d5db; padding-top: 20px; text-align: center; color: #6b7280;">
+            <p style="margin: 0 0 4px 0; font-size: 14px;">Merci pour votre confiance !</p>
+            <p style="margin: 0; font-size: 12px;">gYS - Système de gestion d'entreprise</p>
+          </div>
         </div>
-      </div>
+      `;
 
-      <!-- Pied de page -->
-      <div style="border-top: 1px solid #d1d5db; padding-top: 20px; text-align: center; color: #6b7280;">
-        <p style="margin: 0 0 4px 0; font-size: 14px;">Merci pour votre confiance !</p>
-        <p style="margin: 0; font-size: 12px;">gYS - Système de gestion d'entreprise</p>
-      </div>
-    </div>
-  `;
-
-  const printWindow = window.open('', '_blank');
-  if (printWindow) {
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Facture ${sale.invoiceNumber}</title>
-          <style>
-            @media print {
-              body { margin: 0; }
-              @page { margin: 15mm; }
-            }
-          </style>
-        </head>
-        <body>
-          ${printContent}
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-  }
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Facture ${sale.invoiceNumber}</title>
+              <style>
+                @media print {
+                  body { margin: 0; }
+                  @page { margin: 15mm; }
+                }
+              </style>
+            </head>
+            <body>
+              ${printContent}
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching company data:', error);
+      // Fallback sans données entreprise
+      const fallbackContent = `
+        <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+          ${CompanyInvoiceHeaderPrint({})}
+          <div style="text-align: center; margin: 30px 0; padding: 20px; border: 1px solid #d1d5db; border-radius: 8px;">
+            <h2 style="color: #1e3a8a; margin-bottom: 16px;">Facture ${sale.invoiceNumber}</h2>
+            <p style="margin: 8px 0;">Date: ${new Date(sale.date).toLocaleDateString()}</p>
+            <p style="margin: 8px 0;">Client: ${sale.clientName}</p>
+            <p style="margin: 8px 0; font-weight: bold; font-size: 18px; color: #6366f1;">Total: ${formatCurrency(sale.total)}</p>
+          </div>
+        </div>
+      `;
+      
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Facture ${sale.invoiceNumber}</title>
+              <style>
+                @media print { body { margin: 0; } @page { margin: 15mm; } }
+              </style>
+            </head>
+            <body>${fallbackContent}</body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+      }
+    });
 }

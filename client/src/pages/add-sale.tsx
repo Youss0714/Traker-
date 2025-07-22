@@ -17,6 +17,7 @@ import { getCurrentTaxRate, calculateTaxAmount, calculateBasePriceFromTotal } fr
 import { QuickAddClient } from "@/components/QuickAddClient";
 import { Plus } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { CompanyInvoiceHeaderPrint } from "@/components/invoice/CompanyInvoiceHeader";
 
 interface SaleItem {
   productId: number;
@@ -182,7 +183,7 @@ export default function AddSale() {
     });
   };
 
-  // Fonction pour imprimer une facture
+  // Fonction pour imprimer une facture avec header unifié
   const printInvoice = (sale: Sale) => {
     const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
     const currentTaxRate = getCurrentTaxRate();
@@ -195,6 +196,7 @@ export default function AddSale() {
     const taxAmount = calculateTaxAmount(subtotalHT, currentTaxRate);
     const totalTTC = subtotalHT + taxAmount;
     
+    // Récupérer les données de l'entreprise pour l'en-tête unifié
     const printContent = `
       <!DOCTYPE html>
       <html>
@@ -203,9 +205,6 @@ export default function AddSale() {
         <title>Facture ${sale.invoiceNumber}</title>
         <style>
           body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-          .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
-          .company { font-size: 24px; font-weight: bold; color: #1976D2; }
-          .company-info { margin-top: 10px; font-size: 14px; color: #555; }
           .invoice-info { display: flex; justify-content: space-between; margin-bottom: 30px; }
           .invoice-details, .client-details { flex: 1; }
           .invoice-details { text-align: right; }
@@ -221,86 +220,105 @@ export default function AddSale() {
         </style>
       </head>
       <body>
-        <div class="header">
-          ${company ? `
-            <div class="company">${company.name}</div>
-            <div class="company-info">
-              ${company.address}<br>
-              Tél: ${company.phone} | Email: ${company.email}<br>
-              ${company.website ? `Site: ${company.website}<br>` : ''}
-            </div>
-          ` : `
-            <div class="company">gYS - Gestion d'Entreprise</div>
-            <div>Système de gestion commerciale</div>
-          `}
-        </div>
+        <!-- En-tête unifié avec informations entreprise -->
+        ${CompanyInvoiceHeaderPrint({ company })}
         
-        <div class="invoice-info">
-          <div class="client-details">
-            <h3>Facturé à:</h3>
-            <strong>${sale.clientName}</strong><br>
-            ${sale.clientId ? `Réf. Client: ${sale.clientId}` : ''}
-          </div>
-          <div class="invoice-details">
-            <h3>Détails de la facture:</h3>
-            <strong>N° Facture: ${sale.invoiceNumber}</strong><br>
-            Date: ${formatDate(sale.date)}<br>
-            Statut: ${sale.status === 'paid' ? 'Payée' : sale.status === 'pending' ? 'En attente' : 'Autre'}
-          </div>
-        </div>
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Article</th>
-              <th>Quantité</th>
-              <th>Prix unitaire</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${Array.isArray(items) ? items.map((item: any) => `
-              <tr>
-                <td>${item.name || item.productName || 'Article'}</td>
-                <td>${item.quantity || 1}</td>
-                <td>${formatAmount(item.price || item.unitPrice || 0)}</td>
-                <td>${formatAmount((item.quantity || 1) * (item.price || item.unitPrice || 0))}</td>
-              </tr>
-            `).join('') : '<tr><td colspan="4">Aucun article disponible</td></tr>'}
-          </tbody>
-        </table>
-
-        <div class="total-section">
-          <div style="margin-bottom: 10px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span>Sous-total HT:</span>
-              <span><strong>${formatAmount(subtotalHT)}</strong></span>
+        <!-- Informations de la facture -->
+        <div style="background: #f0f9ff; padding: 16px; margin-bottom: 30px; border-radius: 8px; border: 1px solid #bfdbfe;">
+          <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: bold; color: #1e3a8a;">Informations de la facture</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px; line-height: 1.5;">
+            <div>
+              <div style="margin-bottom: 4px;">
+                <span style="font-weight: 500;">N°:</span>
+                <span style="font-family: monospace; font-weight: 600; margin-left: 8px;">${sale.invoiceNumber}</span>
+              </div>
+              <div style="margin-bottom: 4px;">
+                <span style="font-weight: 500;">Date:</span>
+                <span style="margin-left: 8px;">${formatDate(sale.date)}</span>
+              </div>
             </div>
-            ${currentTaxRate > 0 ? `
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span>TVA (${currentTaxRate}%):</span>
-                <span><strong>${formatAmount(taxAmount)}</strong></span>
+            <div>
+              <div style="margin-bottom: 4px;">
+                <span style="font-weight: 500;">Statut:</span>
+                <span style="background: #059669; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-left: 8px;">
+                  ${sale.status === 'paid' ? 'Payée' : sale.status === 'pending' ? 'En attente' : 'Autre'}
+                </span>
               </div>
-              <div style="border-top: 1px solid #ddd; padding-top: 5px; display: flex; justify-content: space-between;">
-                <span>Total TTC:</span>
-                <span><strong>${formatAmount(totalTTC)}</strong></span>
-              </div>
-            ` : `
-              <div style="border-top: 1px solid #ddd; padding-top: 5px; display: flex; justify-content: space-between;">
-                <span>Total:</span>
-                <span><strong>${formatAmount(subtotalHT)}</strong></span>
-              </div>
-            `}
+            </div>
           </div>
         </div>
 
-        <div class="footer">
-          <p>Merci pour votre confiance !</p>
-          ${company ? `
-            <p>Cette facture a été générée par ${company.name} le ${new Date().toLocaleDateString('fr-FR')}</p>
-          ` : `
-            <p>Cette facture a été générée automatiquement par gYS le ${new Date().toLocaleDateString('fr-FR')}</p>
-          `}
+        <!-- Client -->
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: 600; color: #374151; margin-bottom: 12px;">Facturé à:</h3>
+          <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #d1d5db;">
+            <p style="margin: 0; font-weight: 600; color: #374151; font-size: 16px;">${sale.clientName}</p>
+            ${sale.clientId ? `<p style="margin: 4px 0 0 0; color: #6b7280; font-size: 14px;">Réf. Client: ${sale.clientId}</p>` : ''}
+          </div>
+        </div>
+
+        <!-- Articles -->
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: 600; color: #374151; margin-bottom: 16px;">Articles</h3>
+          <table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;">
+            <thead>
+              <tr style="background-color: #f3f4f6;">
+                <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db; font-weight: 600; color: #374151;">Désignation</th>
+                <th style="padding: 12px; text-align: center; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 80px;">Qté</th>
+                <th style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 120px;">Prix unit.</th>
+                <th style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 600; color: #374151; width: 120px;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Array.isArray(items) ? items.map((item: any) => `
+                <tr>
+                  <td style="padding: 12px; border: 1px solid #d1d5db; color: #374151;">${item.name || item.productName || 'Article'}</td>
+                  <td style="padding: 12px; text-align: center; border: 1px solid #d1d5db; color: #374151;">${item.quantity || 1}</td>
+                  <td style="padding: 12px; text-align: right; border: 1px solid #d1d5db; color: #374151;">${formatAmount(item.price || item.unitPrice || 0)}</td>
+                  <td style="padding: 12px; text-align: right; border: 1px solid #d1d5db; font-weight: 500; color: #374151;">${formatAmount((item.quantity || 1) * (item.price || item.unitPrice || 0))}</td>
+                </tr>
+              `).join('') : '<tr><td colspan="4" style="padding: 20px; text-align: center; border: 1px solid #d1d5db; color: #6b7280;">Aucun article disponible</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Totaux -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
+          <div style="width: 320px;">
+            <div style="background: #f9fafb; padding: 16px; border-radius: 8px; border: 1px solid #d1d5db;">
+              <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;">
+                <span style="color: #6b7280;">Sous-total HT:</span>
+                <span style="font-weight: 500; color: #374151;">${formatAmount(subtotalHT)}</span>
+              </div>
+              ${currentTaxRate > 0 ? `
+                <div style="margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;">
+                  <span style="color: #6b7280;">TVA (${currentTaxRate}%):</span>
+                  <span style="font-weight: 500; color: #374151;">${formatAmount(taxAmount)}</span>
+                </div>
+                <div style="border-top: 1px solid #d1d5db; padding-top: 8px; margin-top: 8px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="font-weight: bold; color: #374151; font-size: 18px;">Total TTC:</span>
+                    <span style="font-weight: bold; color: #6366f1; font-size: 18px;">${formatAmount(totalTTC)}</span>
+                  </div>
+                </div>
+              ` : `
+                <div style="border-top: 1px solid #d1d5db; padding-top: 8px; margin-top: 8px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <span style="font-weight: bold; color: #374151; font-size: 18px;">Total:</span>
+                    <span style="font-weight: bold; color: #6366f1; font-size: 18px;">${formatAmount(subtotalHT)}</span>
+                  </div>
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+
+        <!-- Pied de page -->
+        <div style="border-top: 1px solid #d1d5db; padding-top: 20px; text-align: center; color: #6b7280;">
+          <p style="margin: 0 0 4px 0; font-size: 14px;">Merci pour votre confiance !</p>
+          <p style="margin: 0; font-size: 12px;">
+            ${company ? `Cette facture a été générée par ${company.name} le ${new Date().toLocaleDateString('fr-FR')}` : `Cette facture a été générée automatiquement par gYS le ${new Date().toLocaleDateString('fr-FR')}`}
+          </p>
         </div>
       </body>
       </html>

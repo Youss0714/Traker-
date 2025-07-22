@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "@/lib/utils/helpers";
+import CompanyInvoiceHeader from "./CompanyInvoiceHeader";
 
 interface InvoiceItem {
   name: string;
@@ -43,18 +44,6 @@ export default function InvoiceTemplate({
   notes,
   isPrintMode = false
 }: InvoiceTemplateProps) {
-  const companyLogo = null; // Logo will be handled by the component itself
-  const { data: company } = useQuery<any>({
-    queryKey: ['/api/company'],
-  });
-
-  const getCompanyInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase())
-      .join('')
-      .slice(0, 2);
-  };
 
   // Calculs financiers
   const subtotalHT = total / (1 + vatRate);
@@ -75,92 +64,57 @@ export default function InvoiceTemplate({
       ${isPrintMode ? 'p-6 print:p-0' : 'p-8'}
       ${isPrintMode ? 'print:shadow-none' : 'shadow-lg rounded-lg'}
     `}>
-      {/* En-tête avec logo et informations entreprise */}
-      <div className="flex justify-between items-start mb-8 pb-6 border-b-2 border-indigo-100">
-        {/* Logo et informations de l'entreprise */}
-        <div className="flex items-center space-x-6">
-          <div className={`
-            ${isPrintMode ? 'w-16 h-16' : 'w-20 h-20'}
-            rounded-lg overflow-hidden bg-gray-100 border border-indigo-200 shadow-md
+      {/* En-tête avec informations entreprise */}
+      <CompanyInvoiceHeader 
+        isPrintMode={isPrintMode} 
+        className="mb-6"
+        showBorder={true}
+      />
+
+      {/* Informations de la facture */}
+      <div className="flex justify-between items-start mb-8">
+        <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200 flex-1 max-w-md">
+          <h3 className={`
+            ${isPrintMode ? 'text-base' : 'text-lg'}
+            font-bold text-indigo-800 mb-3
           `}>
-            {companyLogo ? (
-              <img 
-                src={companyLogo} 
-                alt={`Logo ${company?.name || 'Entreprise'}`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white h-full w-full flex items-center justify-center text-lg font-bold">
-                {company?.name ? getCompanyInitials(company.name) : 'E'}
+            Informations de la facture
+          </h3>
+          <div className={`
+            ${isPrintMode ? 'text-xs' : 'text-sm'}
+            space-y-1
+          `}>
+            <div className="flex justify-between">
+              <span className="font-medium">N°:</span>
+              <span className="font-mono font-semibold">{invoiceNumber}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Date:</span>
+              <span>{date}</span>
+            </div>
+            {time && (
+              <div className="flex justify-between">
+                <span className="font-medium">Heure:</span>
+                <span>{time}</span>
               </div>
             )}
-          </div>
-          
-          <div>
-            <h1 className={`
-              ${isPrintMode ? 'text-xl' : 'text-2xl'}
-              font-bold text-indigo-800 mb-2
-            `}>
-              {company?.name || 'Nom de l\'entreprise'}
-            </h1>
-            <div className={`
-              ${isPrintMode ? 'text-xs' : 'text-sm'}
-              text-gray-600 space-y-1
-            `}>
-              <p>{company?.address || 'Adresse de l\'entreprise'}</p>
-              <p>{company?.phone || 'Téléphone'} • {company?.email || 'Email'}</p>
-              {company?.website && (
-                <p className="text-indigo-600">{company.website}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Informations de la facture */}
-        <div className="text-right">
-          <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
-            <h2 className={`
-              ${isPrintMode ? 'text-lg' : 'text-xl'}
-              font-bold text-indigo-800 mb-3
-            `}>
-              FACTURE
-            </h2>
-            <div className={`
-              ${isPrintMode ? 'text-xs' : 'text-sm'}
-              space-y-1
-            `}>
+            {dueDate && (
               <div className="flex justify-between">
-                <span className="font-medium">N°:</span>
-                <span className="font-mono font-semibold">{invoiceNumber}</span>
+                <span className="font-medium">Échéance:</span>
+                <span>{dueDate}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Date:</span>
-                <span>{date}</span>
+            )}
+            {status && (
+              <div className="flex justify-between items-center mt-2 pt-2 border-t border-indigo-200">
+                <span className="font-medium">Statut:</span>
+                <span 
+                  className="px-2 py-1 rounded text-xs font-semibold text-white"
+                  style={{ backgroundColor: currentStatus.color }}
+                >
+                  {currentStatus.label}
+                </span>
               </div>
-              {time && (
-                <div className="flex justify-between">
-                  <span className="font-medium">Heure:</span>
-                  <span>{time}</span>
-                </div>
-              )}
-              {dueDate && (
-                <div className="flex justify-between">
-                  <span className="font-medium">Échéance:</span>
-                  <span>{dueDate}</span>
-                </div>
-              )}
-              {status && (
-                <div className="flex justify-between items-center mt-2 pt-2 border-t border-indigo-200">
-                  <span className="font-medium">Statut:</span>
-                  <span 
-                    className="px-2 py-1 rounded text-xs font-semibold text-white"
-                    style={{ backgroundColor: currentStatus.color }}
-                  >
-                    {currentStatus.label}
-                  </span>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </div>

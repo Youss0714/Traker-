@@ -26,6 +26,8 @@ export const company = pgTable("company", {
   phone: text("phone").notNull(),
   email: text("email").notNull(),
   website: text("website"),
+  logoUrl: text("logo_url"),
+  slogan: text("slogan"),
   description: text("description"),
   isSetup: boolean("is_setup").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
