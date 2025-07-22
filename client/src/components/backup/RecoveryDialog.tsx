@@ -156,11 +156,12 @@ export function useRecoveryDetection() {
           }
         }
       } catch (error) {
+        // Silently handle errors to avoid breaking the app
         console.error('Erreur lors de la vérification de récupération:', error);
       }
     };
 
-    // Vérifier après un délai pour laisser l'app se charger
+    // Check for recovery after a delay to let the app load
     const timer = setTimeout(checkForRecovery, 2000);
     return () => clearTimeout(timer);
   }, []);

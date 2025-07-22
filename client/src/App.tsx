@@ -62,6 +62,8 @@ function Router() {
 function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const [needsSetup, setNeedsSetup] = useState<boolean | null>(null);
+
+  // Always call all hooks first - never conditionally
   const { recoveryBackup, showRecoveryDialog, closeRecoveryDialog } = useRecoveryDetection();
 
   // Initialize language to English on app start
@@ -80,6 +82,7 @@ function AppContent() {
     }
   }, [showSplash, companyStatus]);
 
+  // Conditional rendering after all hooks are called
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
   }
@@ -93,7 +96,19 @@ function AppContent() {
   }
 
   if (needsSetup) {
-    return <CompanySetup onComplete={() => setNeedsSetup(false)} />;
+    return (
+      <>
+        <CompanySetup onComplete={() => setNeedsSetup(false)} />
+        {/* Keep recovery dialog available even during setup */}
+        {recoveryBackup && (
+          <RecoveryDialog
+            isOpen={showRecoveryDialog}
+            onClose={closeRecoveryDialog}
+            recoveryBackup={recoveryBackup}
+          />
+        )}
+      </>
+    );
   }
 
   return (
