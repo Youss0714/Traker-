@@ -63,15 +63,7 @@ export default function Dashboard() {
   const [filters, setFilters] = useState<string[]>([]);
   const { isMobileDevice } = useMobileDevice();
   
-  useEffect(() => {
-    setActivePage('dashboard');
-  }, [setActivePage]);
-
-  // Use mobile-optimized dashboard for Android and small screens
-  if (isMobileDevice) {
-    return <MobileDashboard />;
-  }
-  
+  // Always call all hooks first - never conditionally
   const { data, isLoading, error } = useQuery<DashboardData>({
     queryKey: ['/api/dashboard', timeRange, filters],
     retry: false,
@@ -81,6 +73,15 @@ export default function Dashboard() {
   const { data: products } = useQuery<any[]>({
     queryKey: ['/api/products'],
   });
+
+  useEffect(() => {
+    setActivePage('dashboard');
+  }, [setActivePage]);
+
+  // Use mobile-optimized dashboard for Android and small screens after all hooks
+  if (isMobileDevice) {
+    return <MobileDashboard />;
+  }
   
   if (isLoading) {
     return (
